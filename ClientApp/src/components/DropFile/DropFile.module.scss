@@ -1,0 +1,161 @@
+$border-color: #4267b2;
+.wrapper {
+    padding: 10px 20px;
+    .upload-area {
+        display: flex;
+        align-items: center;
+    }
+}
+
+// upload-area
+.left-part {
+    width: 390px;
+    .drop-area {
+        position: relative;
+        border: 2px dashed $border-color;
+        border-radius: 20px;
+        background-color: rgba($color: $border-color, $alpha: 0.15);
+        text-align: center;
+
+        img {
+            width: 180px;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        p {
+            color: #c8c0c0;
+            padding: 0 10px 10px;
+            font-weight: 500;
+        }
+
+        input {
+            position: absolute;
+            opacity: 0;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        &:hover,
+        &.dragover {
+            opacity: 0.6;
+        }
+    }
+}
+
+.song-details {
+    position: relative;
+    font-size: 16px;
+    font-weight: 400;
+    width: 400px;
+    margin: 0 0 24px 24px;
+
+    .add {
+        position: absolute;
+        font-size: 16px;
+        font-weight: 600;
+        top: 0;
+        right: 20px;
+        padding: 4px 20px;
+        border: 1px solid #ccc;
+        border-radius: 999px;
+        cursor: pointer;
+        &:hover {
+            background-color: rgba($color: #000, $alpha: 0.15);
+        }
+    }
+
+    .song-info {
+        .form-group {
+            padding-left: 16px;
+            label {
+                font-weight: 600;
+                color: #000000b3;
+                display: inline-block;
+                margin-top: 8px;
+                cursor: pointer;
+            }
+            .form-control {
+                width: 100%;
+                padding: 8px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+        }
+    }
+
+    .message {
+        display: none;
+        text-align: center;
+        color: red;
+        font-weight: 600;
+        font-style: italic;
+        margin-top: 10px;
+    }
+    &.invalid .message {
+        display: block;
+    }
+}
+
+// preview
+.preview {
+    margin-bottom: 10px;
+    font-weight: 500;
+    .preview-container {
+        // scroll
+        overflow-y: auto;
+        height: 200px;
+        margin-top: 5px;
+        &::-webkit-scrollbar {
+            width: 8px;
+            border-radius: 0;
+        }
+        &::-webkit-scrollbar-thumb {
+            border-radius: 4px;
+            background-color: #1618230f;
+            height: 10px;
+        }
+        &::-webkit-scrollbar-track {
+            opacity: 0;
+        }
+
+        .file-list {
+            margin: 0 10px;
+        }
+    }
+}
+
+.drop-file-item {
+    display: flex;
+    align-items: center;
+    margin-top: 15px;
+    background-color: #d9dce4;
+    padding: 10px 45px 10px 10px;
+    border-radius: 20px;
+
+    img {
+        width: 50px;
+    }
+
+    .drop-file-item-info {
+        margin-left: 20px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        & p:nth-child(1) {
+            font-size: 18px;
+            font-weight: 600;
+        }
+    }
+
+    .down-drop-file-item,
+    .del-drop-file-item {
+        font-size: 18px;
+        margin-left: 10px;
+        cursor: pointer;
+    }
+}

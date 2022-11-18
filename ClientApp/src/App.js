@@ -1,22 +1,35 @@
-import React, { Component } from 'react';
-import { Route, Routes } from 'react-router-dom';
-import AppRoutes from './AppRoutes';
-import { Layout } from './components/Layout';
-import './custom.css';
+import { Fragment } from 'react';
+import { useSelector } from 'react-redux';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { OnlyBodyLayout } from './layouts';
+import DefaultLayout from './layouts/DefaultLayout';
+import Login from './pages/Login';
+import { privateRoute, publicRoutes } from './Routes';
+import { routesConfigPrivate, routesConfigPublic, LOGIN } from './Routes/routesConfig';
 
-export default class App extends Component {
-  static displayName = App.name;
-
-  render() {
+function App() {
+    const { isLoggedIn, token } = useSelector((state) => state.auth);
+    console.log(token);
     return (
-      <Layout>
-        <Routes>
-          {AppRoutes.map((route, index) => {
-            const { element, ...rest } = route;
-            return <Route key={index} {...rest} element={element} />;
-          })}
-        </Routes>
-      </Layout>
+        <div className="App">
+            <Routes>
+                <Route path={LOGIN} element={<Login />} />
+                <Route path={routesConfigPublic.homeRoute} element={<DefaultLayout />}>
+                    {publicRoutes.map((route) => {
+                        const Page = route.page;
+                        return <Route path={route.path} element={<Page />} />;
+                    })}
+                </Route>
+                <Route path={routesConfigPrivate.system} element={<OnlyBodyLayout />}>
+                    {privateRoute.map((route) => {
+                        const Page = route.page;
+                        return <Route path={route.path} element={<Page />} />;
+                    })}
+                </Route>
+                <Route path=""></Route>
+            </Routes>
+        </div>
     );
-  }
 }
+
+export default App;

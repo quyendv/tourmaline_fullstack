@@ -1,0 +1,25 @@
+$background-wrapper: #d9dce4;
+
+.wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    // width: 100vw;
+    // min-height: 100vh;
+    height: calc(100vh - 64px);
+    background-color: $background-wrapper;
+}
+
+.container {
+    // min-width: 530px;
+    min-height: 300px;
+    border-radius: 24px;
+    margin: 24px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    background-color: #fff;
+
+    h1 {
+        padding: 20px;
+        text-align: center;
+    }
+}

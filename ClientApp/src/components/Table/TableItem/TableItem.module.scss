@@ -1,0 +1,27 @@
+.row-element {
+    border-bottom: 1px solid black;
+    color: #6a6a6a;
+    display: table-row;
+    vertical-align: inherit;
+    border-color: inherit;
+    font-family: inherit;
+}
+
+.key-col {
+    color: #b3b3b3;
+}
+
+.value-col {
+    color: rgb(40, 40, 40);
+}
+
+input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    color: #6a6a6a;
+    font-size: inherit;
+    font-family: inherit;
+}

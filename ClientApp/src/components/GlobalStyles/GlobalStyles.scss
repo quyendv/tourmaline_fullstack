@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+:root {
+    --white: #ffffff;
+    --active-color: #009cf4;
+    --sidebar-background-color: #1e1e1e;
+    --border-radius: 20px;
+    --search-btn-width: 46px;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    // font-size: 62.5%;
+}
+
+body {
+    font-family: 'ProximaNovaRegular';
+    // font-size: 1.6rem;
+    line-height: 1.5;
+}
+
+button,
+input,
+textarea {
+    border: none;
+    outline: none;
+    background: transparent;
+}
+a {
+    text-decoration: none;
+}
+
+//fonts
+
+@font-face {
+    font-family: ProximaNovaBold;
+    src: url('../../assets/fonts/Proxima-Nova-Bold.woff');
+    font-weight: 700;
+}
+
+@font-face {
+    font-family: ProximaNovaRegular;
+    src: url('../../assets/fonts/Proxima-Nova-Regular.woff2');
+    font-weight: 500;
+}
+@font-face {
+    font-family: ProximaNovaSemiBold;
+    src: url('../../assets/fonts/ProximaNova-Semibold.woff2');
+    font-weight: 600;
+}

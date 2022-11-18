@@ -1,0 +1,32 @@
+.wrapper {
+    margin-top: 30px;
+    color: var(--white);
+    
+    display: flex;
+    align-items: center;
+    margin-left: 30px;
+    .text-content {
+        font-size: 22px;
+        line-height: 27px;
+        margin-left: 26px;
+        margin-top: 4px;
+    }
+    .icon {
+        width: 23px;
+        height: 28px;
+
+    }
+
+    &:hover {
+        cursor: pointer;
+        color: var(--active-color);
+    }
+    
+
+
+}
+
+.active {
+    color: var(--active-color);
+}
+

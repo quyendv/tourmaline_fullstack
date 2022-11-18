@@ -1,0 +1,38 @@
+.wrapper {
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    display: flex;
+    // min-height: 100vh;
+    height: calc(100% - 64px);
+    background-color: aliceblue;
+    flex-direction: column;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 3rem;
+    
+    .table-container {
+        display: table;
+        justify-content: space-between;
+        text-align: start;
+        overflow-wrap: break-word;
+        font-size: inherit;
+        max-inline-size: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+        width: 50%;
+        font-family: inherit;
+    }
+
+    button {
+        font-family: inherit;
+        font-size: inherit;
+        margin: 1rem;
+        outline: auto;
+        border: 1px solid black;
+        appearance: auto;
+    }
+
+    button:hover {
+        background-color: #d9dce4;
+    }
+}
