@@ -1,20 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using tourmaline.Models;
 using tourmaline.Services;
 
-namespace tourmaline.Controllers
+namespace tourmaline_asp.net.Controllers;
+
+[ApiController]
+[Authorize]
+public class SongController : ControllerBase
 {
-    [Authorize]
-    [ApiController]
-    public class SongController : ControllerBase
-    {
-            private readonly DbConnection _connection;
+    private readonly DbConnection _connection;
 
     public SongController(DbConnection connection)
     {
@@ -103,11 +98,12 @@ namespace tourmaline.Controllers
     [Route("api/[controller]/edit")]
     public async Task<ActionResult> EditSong(string id, IDictionary<string, dynamic> infos)
     {
-        var isSongExist = (await _connection.Read("song", new Dictionary<string, dynamic>() { { "id", id } })).Count !=
+        var idConds = new Dictionary<string, dynamic>() { { "id", Int64.Parse(id) } };
+        var isSongExist = (await _connection.Read("song", idConds)).Count !=
                           0;
         if (isSongExist)
         {
-            var result = await _connection.Update("song", infos, new Dictionary<string, dynamic>() { { "id", id } });
+            var result = await _connection.Update("song", infos, idConds);
             if (result)
             {
                 return Ok();
@@ -122,5 +118,29 @@ namespace tourmaline.Controllers
             return StatusCode(StatusCodes.Status400BadRequest, "Song not found!");
         }
     }
+
+    [HttpDelete]
+    [Route("api/[controller]/delete")]
+    public async Task<ActionResult> DeleteSong(string id)
+    {
+        var idConditions = new Dictionary<string, dynamic>() { { "id", Int64.Parse(id) } };
+        var isSongExist = (await _connection.Read("song", idConditions)).Count !=
+                          0;
+
+        if (!isSongExist)
+        {
+            return StatusCode(StatusCodes.Status400BadRequest, "Song not found to delete!");
+        } else
+        {
+            var result = await _connection.Delete("song", idConditions);
+            if (result)
+            {
+                return Ok();
+            } 
+            else
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
     }
 }

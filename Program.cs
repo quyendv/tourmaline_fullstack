@@ -12,6 +12,15 @@ var configuration = builder.Configuration;
 
 services.AddControllersWithViews();
 services.Configure<FormOptions>(options => { options.MemoryBufferThreshold = int.MaxValue; });
+services.AddCors(o => o.AddPolicy("AllowLocalDebug",
+	builder =>
+	{
+		builder.WithOrigins("https://localhost:3000")
+				.AllowAnyMethod()
+				.AllowAnyHeader()
+				.SetIsOriginAllowed((host) => true)
+				.AllowCredentials();
+	}));
 services.AddSingleton(_ => new DbConnection(configuration["ConnectionStrings:DefaultConnection"]));
 services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer((o) =>
 {
@@ -40,6 +49,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+app.UseCors("AllowLocalDebug");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllerRoute(

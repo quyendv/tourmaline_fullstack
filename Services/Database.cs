@@ -1,17 +1,20 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using MySqlConnector;
 
 namespace tourmaline.Services;
 
 public class DbConnection
 {
-        public DbConnection(string connectionString)
+    public DbConnection(string connectionString)
     {
         ConnectionString = connectionString;
     }
 
     private string ConnectionString { get; }
 
-    public Task<List<Dictionary<string, dynamic>>> Read(string table, IDictionary<string, dynamic>? conditions = null, List<string>? columns = null)
+    public Task<List<Dictionary<string, dynamic>>> Read(string table, IDictionary<string, dynamic> conditions = null, List<string> columns = null)
     {
         var result = new List<Dictionary<string, dynamic>>();
         var connection = new MySqlConnection(ConnectionString);
@@ -112,7 +115,36 @@ public class DbConnection
         }
         
         var queryString = $"UPDATE {table} SET {string.Join(", ", vals)} WHERE {string.Join(", ", cons)}";
-        var connection = new MySqlConnection();
+        var connection = new MySqlConnection(ConnectionString);
+        connection.Open();
+        var check = true;
+        try
+        {
+            new MySqlCommand(queryString, connection).ExecuteReader();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            check = false;
+        }
+        connection.Close();
+        return Task.FromResult(check);
+    }
+
+    public Task<bool> Delete(string table, IDictionary<string, dynamic> conditions)
+    {
+        var cons = new List<string>();
+        foreach (var entry in conditions)
+        {
+            if (entry.Value is string)
+            {
+                conditions[entry.Key] = $"'{entry.Value}'";
+            }
+            cons.Add($"{entry.Key} = {conditions[entry.Key]}");
+        }
+
+        var queryString = $"DELETE FROM {table} WHERE {string.Join(", ", cons)}";
+        var connection = new MySqlConnection(ConnectionString);
         connection.Open();
         var check = true;
         try

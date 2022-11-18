@@ -159,6 +159,10 @@ namespace tourmaline.Controllers
                 var token = tokenHandler.CreateToken(tokenDescriptor);
                 return Ok(tokenHandler.WriteToken(token));
             }
+            else
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, "User password is incorrect!");
+            }
         }
 
         return StatusCode(StatusCodes.Status406NotAcceptable, "User not found!");

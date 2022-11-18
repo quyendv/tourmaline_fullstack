@@ -1,4 +1,4 @@
-import { OnlyBodyLayout } from '../layouts/OnlyBody';
+import { OnlyBodyLayout } from '~/layouts';
 import DefaultLayout from '~/layouts/DefaultLayout';
 import Contact from '~/pages/Contact';
 import Login from '../pages/Login';
