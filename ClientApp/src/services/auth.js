@@ -1,4 +1,4 @@
-import axiosConfig from '~/utils/axiosConfig';
+import axiosConfig from '../utils/axiosConfig'
 
 export const apiLogin = (payload) =>
     new Promise(async (resolve, reject) => {

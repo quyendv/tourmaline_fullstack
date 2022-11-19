@@ -1,6 +1,8 @@
 import { Link, Outlet } from 'react-router-dom';
-import { LogoIcon } from '~/components/Icons';
-import { routesConfigPublic } from '~/Routes/routesConfig';
+// import { LogoIcon } from '/components/Icons';
+import { LogoIcon } from '../../components/Icons';
+// import { routesConfigPublic } from '~/Routes/routesConfig';
+import {routesConfigPublic} from '../../Routes/routesConfig'
 
 function OnlyBodyLayout() {
     return (

@@ -1,6 +1,6 @@
-import { OnlyBodyLayout } from '~/layouts';
-import DefaultLayout from '~/layouts/DefaultLayout';
-import Contact from '~/pages/Contact';
+import  OnlyBodyLayout  from '../layouts/OnlyBody';
+import DefaultLayout from '../layouts/DefaultLayout';
+import Contact from '../pages/Contact'
 import Login from '../pages/Login';
 import MainScreen from '../pages/MainScreen';
 import Player from '../pages/Player';

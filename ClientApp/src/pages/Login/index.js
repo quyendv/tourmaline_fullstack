@@ -2,8 +2,8 @@ import classNames from 'classnames/bind';
 import { useState } from 'react';
 import styles from './login.module.scss';
 import { useDispatch } from 'react-redux';
-import * as actions from '~/store/actions';
-import InputForm from '~/components/InputForm';
+// import * as actions from '~/store/actions';
+import * as actions from '../../store/actions'
 
 const cx = classNames.bind(styles);
 function Login() {
