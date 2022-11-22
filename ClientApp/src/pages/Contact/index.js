@@ -17,12 +17,14 @@ const cx = classNames.bind(styles);
 function Contact() {
 
     function sendEmail(e) {
-        e.preventDefault();    //This is important, i'm not sure why, but the email won't send without it
+        e.preventDefault();    
 
         emailjs.sendForm('service_ri6yvj6', 'template_indvrjj', e.target, 'eZafXlsFn3sqDHeHI')
             .then((result) => {
-                window.location.reload()  //This is if you still want the page to reload (since e.preventDefault() cancelled that behavior) 
+                //add 1 cai thong bao gui thanh cong quyen oi
+                window.location.reload()  
             }, (error) => {
+                //add thong bao gui that bai
                 console.log(error.text);
             });
     }
@@ -117,7 +119,7 @@ function Contact() {
                         <FontAwesomeIcon icon={faPaperPlane} />
                     </span>
                     <p>
-                        <label className="inline-block w-16 font-semibold">Email</label>: moonlight.sculptor@gmail.com
+                        <label className="inline-block w-16 font-semibold">Email</label>: moonlightsculptor.contact@gmail.com
                     </p>
                 </div>
                 <div className={cx('contact__item', 'group hover:shadow-lg')}>
