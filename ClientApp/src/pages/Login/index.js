@@ -1,19 +1,25 @@
 import classNames from 'classnames/bind';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './login.module.scss';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 // import * as actions from '~/store/actions';
 import * as actions from '../../store/actions'
-
+import { useNavigate } from 'react-router-dom';
+import { routesConfigPublic } from '../../Routes/routesConfig'
 const cx = classNames.bind(styles);
 function Login() {
     const [payload, setPayload] = useState({ username: '', password: '' });
     const dispatch = useDispatch();
+    const { isLoggedIn } = useSelector(state => state.auth)
+    const navigate = useNavigate()
     const handleLogin = (e) => {
         e.preventDefault();
         // console.log(payload)
         dispatch(actions.login(payload));
     };
+    useEffect(() => {
+        isLoggedIn && navigate(routesConfigPublic.homeRoute)
+    }, [isLoggedIn])
     return (
         <div className={cx('login-page')}>
             <div className={cx('login-form')}>
