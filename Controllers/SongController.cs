@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.IO;
+using System.Security.Claims;
+using tourmaline.Controllers;
 using tourmaline.Models;
 using tourmaline.Services;
 
@@ -16,8 +19,24 @@ public class SongController : ControllerBase
         _connection = connection;
     }
 
+    private bool CanCurrentUserModifySong(string songOwnerName)
+    {
+        var isAdminClaim = HttpContext.User.FindFirst(UserController.IsAdminClaimName);
+        if ((isAdminClaim != null) && bool.Parse(isAdminClaim.Value!)) {
+            return true;
+        }
+
+        if (songOwnerName == HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     [HttpGet]
-    [Route("api/[controller]/get")]
+    [AllowAnonymous]
+    [Route("api/[controller]/get/{id}")]
     public async Task<ActionResult<Song>> GetSongInfo(int id)
     {
         var result = await _connection.Read("song", new Dictionary<string, dynamic>() { { "id", id } });
@@ -42,19 +61,33 @@ public class SongController : ControllerBase
     }
 
     [HttpGet]
-    [Route("api/[controller]/getMedia")]
-    public Task<ActionResult> DownloadSong(string path)
+    [AllowAnonymous]
+    [Route("api/[controller]/getMedia/{id}")]
+    public async Task<ActionResult> DownloadSong(long id)
     {
-        var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-        var file = new FileStream($"{homeDir}/storage/{path}", FileMode.Open, FileAccess.Read, FileShare.None, 2048,
-            true);
+        var idConds = new Dictionary<string, dynamic>() { { "id", id } };
+        var songObjects = await _connection.Read("song", idConds);
+        var isSongExist = (songObjects.Count != 0);
 
-        return Task.FromResult<ActionResult>(File(file, "audio/mpeg"));
+        if (isSongExist)
+        {
+            string songPath = songObjects[0]["path"];
+
+            var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            var file = new FileStream($"{homeDir}/storage/{songPath}", FileMode.Open, FileAccess.Read, FileShare.None, 2048,
+                true);
+
+            return File(file, "audio/mpeg", enableRangeProcessing: true);
+        }
+        else
+        {
+            return StatusCode(StatusCodes.Status400BadRequest, "Song not found!");
+        }
     }
 
     [HttpPost("FileUpload")]
     [Route("api/[controller]/upload")]
-    public async Task<ActionResult> UploadSong(IFormFile file, string name, string username)
+    public async Task<ActionResult> UploadSong(IFormFile file, string name)
     {
         if (file.Length > 0)
         {
@@ -72,7 +105,7 @@ public class SongController : ControllerBase
             {
                 Id = id,
                 Name = name,
-                Uploader = username,
+                Uploader = HttpContext.User.Identity!.Name!,
                 UploadTime = DateTime.Now,
                 Path = fileName
             };
@@ -95,14 +128,21 @@ public class SongController : ControllerBase
     }
 
     [HttpPut]
-    [Route("api/[controller]/edit")]
+    [Route("api/[controller]/edit/{id}")]
     public async Task<ActionResult> EditSong(string id, IDictionary<string, dynamic> infos)
     {
         var idConds = new Dictionary<string, dynamic>() { { "id", Int64.Parse(id) } };
-        var isSongExist = (await _connection.Read("song", idConds)).Count !=
-                          0;
+        var songObjects = await _connection.Read("song", idConds);
+        var isSongExist = (songObjects.Count != 0);
+
         if (isSongExist)
         {
+            // Check song ownership
+            if (!CanCurrentUserModifySong(songObjects[0]["uploader"]))
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, "The current user does not have the required permission to delete the song!");
+            }
+
             var result = await _connection.Update("song", infos, idConds);
             if (result)
             {
@@ -120,18 +160,24 @@ public class SongController : ControllerBase
     }
 
     [HttpDelete]
-    [Route("api/[controller]/delete")]
+    [Route("api/[controller]/delete/{id}")]
     public async Task<ActionResult> DeleteSong(string id)
     {
         var idConditions = new Dictionary<string, dynamic>() { { "id", Int64.Parse(id) } };
-        var isSongExist = (await _connection.Read("song", idConditions)).Count !=
-                          0;
+        var songObjects = await _connection.Read("song", idConditions);
+        var isSongExist = (songObjects.Count != 0);
 
         if (!isSongExist)
         {
             return StatusCode(StatusCodes.Status400BadRequest, "Song not found to delete!");
         } else
         {
+            // Check song ownership
+            if (!CanCurrentUserModifySong(songObjects[0]["uploader"]))
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, "The current user does not have the required permission to delete the song!");
+            }
+
             var result = await _connection.Delete("song", idConditions);
             if (result)
             {

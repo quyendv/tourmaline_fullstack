@@ -20,7 +20,9 @@ namespace tourmaline.Controllers
     public class UserController : ControllerBase
     {
             private readonly DbConnection _connection;
-    private readonly IConfiguration _configuration;
+        private readonly IConfiguration _configuration;
+
+        public static readonly string IsAdminClaimName = "IsAdmin";
 
     public UserController(DbConnection connection, IConfiguration configuration)
     {
@@ -28,8 +30,9 @@ namespace tourmaline.Controllers
         _configuration = configuration;
     }
 
-    [Route("api/[controller]/getUser")]
+    [Route("api/[controller]/getUser/{username}")]
     [HttpGet]
+    [AllowAnonymous]
     public async Task<ActionResult<User>> GetUser(string username)
     {
         var result = await _connection.Read("user",
@@ -147,7 +150,8 @@ namespace tourmaline.Controllers
                         new Claim("Id", Guid.NewGuid().ToString()),
                         new Claim(JwtRegisteredClaimNames.Sub, loginModel.Username),
                         new Claim(JwtRegisteredClaimNames.Jti,
-                            Guid.NewGuid().ToString())
+                            Guid.NewGuid().ToString()),
+                        new Claim(IsAdminClaimName, user.IsAdmin.ToString())
                     }),
                     Expires = DateTime.UtcNow.AddMinutes(5),
                     Issuer = _configuration["Jwt:Issuer"],

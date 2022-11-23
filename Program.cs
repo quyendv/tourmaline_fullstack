@@ -21,7 +21,23 @@ services.AddCors(o => o.AddPolicy("AllowLocalDebug",
 				.SetIsOriginAllowed((host) => true)
 				.AllowCredentials();
 	}));
-services.AddSingleton(_ => new DbConnection(configuration["ConnectionStrings:DefaultConnection"]));
+
+#region Setup connection
+
+var connString = configuration["ConnectionStrings:DefaultConnection"];
+
+var connHostNameEnv = Environment.GetEnvironmentVariable("MYSQL_SERVICE_HOST");
+var connHostPortEnv = Environment.GetEnvironmentVariable("MYSQL_SERVICE_PORT");
+
+if ((connHostNameEnv != null) && (connHostPortEnv != null))
+{
+    connString = $"Server={connHostNameEnv};User ID=root;Password=qwertyuiop;Port={connHostPortEnv};Database=tourmaline";
+}
+
+services.AddSingleton(_ => new DbConnection(connString));
+
+#endregion
+
 services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer((o) =>
 {
     o.TokenValidationParameters = new TokenValidationParameters
@@ -49,7 +65,10 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-app.UseCors("AllowLocalDebug");
+if (!app.Environment.IsDevelopment())
+{
+    app.UseCors("AllowLocalDebug");
+}
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllerRoute(
