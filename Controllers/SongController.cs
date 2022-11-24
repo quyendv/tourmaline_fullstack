@@ -1,12 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.IO;
 using System.Security.Claims;
-using tourmaline.Controllers;
 using tourmaline.Models;
 using tourmaline.Services;
 
-namespace tourmaline_asp.net.Controllers;
+namespace tourmaline.Controllers;
 
 [ApiController]
 [Authorize]
@@ -63,7 +61,7 @@ public class SongController : ControllerBase
     [HttpGet]
     [AllowAnonymous]
     [Route("api/[controller]/getMedia/{id}")]
-    public async Task<ActionResult> DownloadSong(long id)
+    public async Task<ActionResult> GetMedia(long id)
     {
         var idConds = new Dictionary<string, dynamic>() { { "id", id } };
         var songObjects = await _connection.Read("song", idConds);
@@ -74,7 +72,7 @@ public class SongController : ControllerBase
             string songPath = songObjects[0]["path"];
 
             var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            var file = new FileStream($"{homeDir}/storage/{songPath}", FileMode.Open, FileAccess.Read, FileShare.None, 2048,
+            var file = new FileStream($"{homeDir}/storage/media/{songPath}", FileMode.Open, FileAccess.Read, FileShare.None, 2048,
                 true);
 
             return File(file, "audio/mpeg", enableRangeProcessing: true);
@@ -84,21 +82,52 @@ public class SongController : ControllerBase
             return StatusCode(StatusCodes.Status400BadRequest, "Song not found!");
         }
     }
+    
+    [HttpGet]
+    [AllowAnonymous]
+    [Route("api/[controller]/getMedia/{id}")]
+    public async Task<ActionResult> GetCover(long id)
+    {
+        var idConds = new Dictionary<string, dynamic>() { { "id", id } };
+        var songObjects = await _connection.Read("song", idConds);
+        var isSongExist = (songObjects.Count != 0);
+
+        if (isSongExist)
+        {
+            string coverPath = songObjects[0]["coverUrl"];
+
+            var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            var file = new FileStream($"{homeDir}/storage/cover/{coverPath}", FileMode.Open, FileAccess.Read, FileShare.None, 2048,
+                true);
+
+            return File(file, "image/jpeg", enableRangeProcessing: true);
+        }
+        else
+        {
+            return StatusCode(StatusCodes.Status400BadRequest, "Song not found!");
+        }
+    }
 
     [HttpPost("FileUpload")]
     [Route("api/[controller]/upload")]
-    public async Task<ActionResult> UploadSong(IFormFile file, string name)
+    public async Task<ActionResult> UploadSong(IFormFile media, IFormFile cover, string name)
     {
-        if (file.Length > 0)
+        if (media.Length > 0 && cover.Length > 0)
         {
             var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             Directory.CreateDirectory($"{homeDir}/storage/");
             var id = new Random().Next();
             var fileName = $"{id}.mp3";
-            var filePath = Path.Combine($"{homeDir}/storage/", fileName);
+            var filePath = Path.Combine($"{homeDir}/storage/media", fileName);
+            var imageName = $"{id}.jpg";
+            var imagePath = Path.Combine($"{homeDir}/storage/cover", fileName);
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
-                await file.CopyToAsync(stream);
+                await media.CopyToAsync(stream);
+            }
+            using (var stream = new FileStream(imagePath, FileMode.Create))
+            {
+                await cover.CopyToAsync(stream);
             }
 
             var song = new Song
@@ -107,7 +136,8 @@ public class SongController : ControllerBase
                 Name = name,
                 Uploader = HttpContext.User.Identity!.Name!,
                 UploadTime = DateTime.Now,
-                Path = fileName
+                Path = fileName,
+                CoverUrl = imageName,
             };
             await _connection.Add("song", new Dictionary<string, dynamic>
             {
