@@ -13,9 +13,9 @@ var configuration = builder.Configuration;
 services.AddControllersWithViews();
 services.Configure<FormOptions>(options => { options.MemoryBufferThreshold = int.MaxValue; });
 services.AddCors(o => o.AddPolicy("AllowLocalDebug",
-	builder =>
+	b =>
 	{
-		builder.WithOrigins("https://localhost:3000")
+		b.WithOrigins("https://localhost:3000")
 				.AllowAnyMethod()
 				.AllowAnyHeader()
 				.SetIsOriginAllowed((host) => true)
