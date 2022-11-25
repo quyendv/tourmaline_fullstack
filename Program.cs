@@ -15,7 +15,7 @@ services.Configure<FormOptions>(options => { options.MemoryBufferThreshold = int
 services.AddCors(o => o.AddPolicy("AllowLocalDebug",
 	b =>
 	{
-		b.WithOrigins("https://localhost:3000")
+		b.WithOrigins("https://localhost:3000", "http://w42g13.int3306.freeddns.org")
 				.AllowAnyMethod()
 				.AllowAnyHeader()
 				.SetIsOriginAllowed((host) => true)
@@ -31,7 +31,7 @@ var connHostPortEnv = Environment.GetEnvironmentVariable("MYSQL_SERVICE_PORT");
 
 if ((connHostNameEnv != null) && (connHostPortEnv != null))
 {
-    connString = $"Server={connHostNameEnv};User ID=root;Password=qwertyuiop;Port={connHostPortEnv};Database=tourmaline";
+    connString = $"Server={connHostNameEnv};User ID=root;Password=qwertyuiop;Port={connHostPortEnv};Database=tourmaline;TlsCipherSuites=TLS_DHE_RSA_WITH_AES_256_GCM_SHA384";
 }
 
 services.AddSingleton(_ => new DbConnection(connString));
@@ -61,14 +61,14 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+else
+{
+    app.UseHttpsRedirection();
+}
 
-app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-if (!app.Environment.IsDevelopment())
-{
-    app.UseCors("AllowLocalDebug");
-}
+app.UseCors("AllowLocalDebug");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllerRoute(
