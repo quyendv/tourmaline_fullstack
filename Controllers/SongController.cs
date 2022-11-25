@@ -85,7 +85,7 @@ public class SongController : ControllerBase
     
     [HttpGet]
     [AllowAnonymous]
-    [Route("api/[controller]/getMedia/{id}")]
+    [Route("api/[controller]/getCover/{id}")]
     public async Task<ActionResult> GetCover(long id)
     {
         var idConds = new Dictionary<string, dynamic>() { { "id", id } };
