@@ -13,7 +13,7 @@ function TableItem({data}) {
     //return <tr className={cx('table-element')}>{rowItems}</tr>
     return <tr className={cx('row-element')}>
         <td className={cx('key-col')}>{data[0]}</td>
-        <td className={cx('value-col')}><input type='text' defaultValue={data[1]} onChange={(event) => {
+        <td className={cx('value-col')}><input className={cx('input')} type='text' defaultValue={data[1]} onChange={(event) => {
             console.log(event.target.value);
             let newUserInfo = userInfo[0];
             newUserInfo[data[0]] = event.target.value;
