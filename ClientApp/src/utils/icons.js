@@ -1,0 +1,12 @@
+import {CiShuffle, CiRepeat} from 'react-icons/ci'
+import {BsFillPlayFill, BsPauseFill} from 'react-icons/bs'
+import {MdSkipPrevious, MdSkipNext} from 'react-icons/md'
+
+export const icons = {
+    CiShuffle,
+    BsFillPlayFill,
+    BsPauseFill,
+    MdSkipPrevious,
+    MdSkipNext,
+    CiRepeat
+}
