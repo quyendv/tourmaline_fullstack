@@ -90,7 +90,9 @@ function DropFile({ onFileChange }) {
 
     return (
         <div className={cx('wrapper')}>
+            {/* Drop & Info */}
             <div className={cx('upload-area')}>
+                {/* Drop */}
                 <div className={cx('left-part')}>
                     <div
                         className={cx('drop-area')}
@@ -112,8 +114,9 @@ function DropFile({ onFileChange }) {
                     {file && file.type && <FileItem file={file} />}
                 </div>
 
+                {/* Info */}
                 <div className={cx('song-details')} ref={songDetailsRef}>
-                    <h3>The song's information</h3>
+                    <h3 className="text-2xl font-semibold">The song's information</h3>
                     <button className={cx('add')} onClick={handleAddToPreview}>
                         Add
                     </button>
@@ -169,9 +172,10 @@ function DropFile({ onFileChange }) {
                 </div>
             </div>
 
+            {/* Preview */}
             {fileList.length > 0 && (
                 <div className={cx('preview')}>
-                    <h3>Ready to upload</h3>
+                    <h3 className="text-2xl font-semibold">Ready to upload</h3>
                     <div className={cx('preview-container')}>
                         <div className={cx('file-list')}>
                             {fileList.map((file, index) => (

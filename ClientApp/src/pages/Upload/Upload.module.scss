@@ -18,8 +18,7 @@ $background-wrapper: #d9dce4;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     background-color: #fff;
 
-    h1 {
-        padding: 20px;
-        text-align: center;
+    .title {
+        @apply p-5 text-center text-3xl font-bold;
     }
 }
