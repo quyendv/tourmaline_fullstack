@@ -4,25 +4,24 @@ import { useSelector } from 'react-redux';
 import * as apis from '../../services/music';
 import { icons } from '../../utils/icons';
 
-const { BsFillPlayFill, CiShuffle, BsPauseFill, MdSkipNext, MdSkipPrevious, CiRepeat } = icons;
-function Player() {
+const { BsFillPlayFill, CiShuffle, BsPauseFill, MdSkipNext, MdSkipPrevious, CiRepeat, BsMusicNoteList } = icons;
+function Player({setIsShowSidebar}) {
     const { curSongId,isPlaying } = useSelector((state) => state.music);
 
 
     const [volume, setVolume] = useState(100);
     const [songInfo, setSongInfo] = useState(null);
+    const [audio, setAudio] = useState(new Audio())
 
-    const audio = new Audio()
     
-    //todos
-     useEffect(() => {
-         const fetchSong = async() => {
-             const response = await apis.getSong(1)
-             console.log(response)
-         }
-         fetchSong()
-     },[])
-
+    // TODOS
+/*    useEffect(() => {
+        const fetchSong = async() => {
+            const response = await apis.getSong(1)
+        }
+        fetchSong()
+    },[])*/
+    
     return (
         <div className="flex h-full text-white">
             {/* //Songdetai */}
@@ -50,8 +49,9 @@ function Player() {
                 <div> Progress bar</div>
             </div>
 
-            <div className="flex w-[30%] items-center justify-end border border-white">
+            <div className="flex w-[30%] items-center justify-end border border-white gap-2 p-2">
                 <input
+                    className='cursor-pointer'
                     type="range"
                     min={0}
                     max={100}
@@ -59,6 +59,7 @@ function Player() {
                     value={volume}
                     onChange={(e) => setVolume(e.target.value)}
                 />
+                <span className='cursor-pointer' onClick={() => setIsShowSidebar(prev => !prev)}><BsMusicNoteList/></span>
             </div>
         </div>
     );

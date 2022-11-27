@@ -1,5 +1,5 @@
-import {CiShuffle, CiRepeat} from 'react-icons/ci'
-import {BsFillPlayFill, BsPauseFill} from 'react-icons/bs'
+import { CiShuffle, CiRepeat } from 'react-icons/ci'
+import { BsFillPlayFill, BsPauseFill, BsMusicNoteList } from 'react-icons/bs'
 import {MdSkipPrevious, MdSkipNext} from 'react-icons/md'
 
 export const icons = {
@@ -8,5 +8,6 @@ export const icons = {
     BsPauseFill,
     MdSkipPrevious,
     MdSkipNext,
-    CiRepeat
+    CiRepeat,
+    BsMusicNoteList
 }

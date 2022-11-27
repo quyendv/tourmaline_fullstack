@@ -2,7 +2,7 @@
 
 function SidebarRight() {
     return (
-        <div className="w-[243px] h-full bg-main-100">
+        <div className="h-full w-full bg-main-100">
             SidebarRight
         </div>
     )
