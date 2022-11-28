@@ -28,8 +28,8 @@ public class SongController : ControllerBase
     }
 
     [HttpGet]
-    [AllowAnonymous]
-    [Route("api/[controller]/get/{id}")]
+    [Authorize]
+    [Route("api/[controller]/get")]
     public async Task<ActionResult<Song>> GetSongInfo(int id)
     {
         var result = await _connection.Read("song", new Dictionary<string, dynamic>() { { "id", id } });
@@ -54,6 +54,7 @@ public class SongController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize]
     [Route("api/[controller]/getMedia")]
     public async Task<ActionResult> GetMedia(long id)
     {
@@ -85,6 +86,7 @@ public class SongController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize]
     [Route("api/[controller]/getCover")]
     public async Task<ActionResult> GetCover(long id)
     {
@@ -110,6 +112,7 @@ public class SongController : ControllerBase
     }
 
     [HttpPost("FileUpload")]
+    [Authorize]
     [Route("api/[controller]/upload")]
     public async Task<ActionResult> UploadSong([FromForm] IFormFile media, [FromForm] IFormFile cover,
         [FromForm] string name)
@@ -162,6 +165,7 @@ public class SongController : ControllerBase
     }
 
     [HttpPut]
+    [Authorize]
     [Route("api/[controller]/edit")]
     public async Task<ActionResult> EditSong(string id, IDictionary<string, dynamic> infos)
     {
@@ -189,6 +193,7 @@ public class SongController : ControllerBase
     }
 
     [HttpDelete]
+    [Authorize]
     [Route("api/[controller]/delete")]
     public async Task<ActionResult> DeleteSong(string id)
     {
