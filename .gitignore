@@ -232,3 +232,5 @@ _Pvt_Extensions
 .fake/
 
 /ClientApp/.env.development.local
+/.idea/.idea.tourmaline.dir/.idea/dataSources.xml
+/.idea/.idea.tourmaline.dir/.idea/sqldialects.xml
