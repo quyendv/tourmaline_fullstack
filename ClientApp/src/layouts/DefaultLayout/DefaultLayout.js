@@ -6,25 +6,31 @@ import Sidebar from '../../components/Sidebar';
 import { Outlet } from 'react-router-dom';
 import Player from '../../components/Player';
 import SidebarRight from '../../components/SidebarRight';
+import { useState } from 'react';
 const cx = classNames.bind(styles);
+
 function DefaultLayout() {
+    const [isShowSidebar, setIsShowSidebar] = useState(true);
+
     return (
-        <div className="relative flex flex-col">
+        <div className="relative flex flex-col bg-[#000000]">
             <div className="flex w-full">
-                <div>
+                <div className='w-[243px] flex-none'>
                     <Sidebar />
                 </div>
-                <div className="flex-1 bg-[#000000]">
+                <div className="flex-1 ">
                     <Header />
                     <Outlet />
                 </div>
-                <div className='1280:flex hidden animate-slide-left'>
-                    <SidebarRight />
-                </div>
+                {isShowSidebar && (
+                    <div className={`w-[270px] flex-none hidden  1280:flex ${isShowSidebar ? 'animate-slide-left' : 'animate-slide-right'}`}>
+                        <SidebarRight />
+                    </div>
+                )}
             </div>
 
             <div className="absolute bottom-5 h-[70px] w-full border border-red-500">
-                <Player />
+                <Player setIsShowSidebar={setIsShowSidebar} />
             </div>
         </div>
     );

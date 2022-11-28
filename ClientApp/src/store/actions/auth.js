@@ -17,3 +17,7 @@ export const login = (payload) => async (dispatch) => {
 
     }
 };
+
+export const logout = () => ({
+    type: actionTypes.LOGOUT
+})
