@@ -59,7 +59,7 @@ public class SongController : ControllerBase
     }
 
     [HttpGet]
-    [Route("api/[controller]/getMedia/{id}")]
+    [Route("api/[controller]/getMedia")]
     public async Task<ActionResult> GetMedia(long id)
     {
         var idConds = new Dictionary<string, dynamic>() { { "id", id } };
@@ -77,7 +77,8 @@ public class SongController : ControllerBase
             await _connection.Add("recents", new Dictionary<string, dynamic>()
             {
                 {"username", HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value},
-                {"song", id}
+                {"song", id},
+                {"added_date", DateTime.Now.ToString("yyyy-MM-dd H:mm:ss")}
             });
             return File(file, "audio/mpeg", enableRangeProcessing: true);
         }
@@ -113,17 +114,18 @@ public class SongController : ControllerBase
 
     [HttpPost("FileUpload")]
     [Route("api/[controller]/upload")]
-    public async Task<ActionResult> UploadSong(IFormFile media, IFormFile cover, string name)
+    public async Task<ActionResult> UploadSong([FromForm] IFormFile media, [FromForm] IFormFile cover, [FromForm] string name)
     {
         if (media.Length > 0 && cover.Length > 0)
         {
             var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            Directory.CreateDirectory($"{homeDir}/storage/");
+            Directory.CreateDirectory($"{homeDir}/storage/media");
+            Directory.CreateDirectory($"{homeDir}/storage/cover");
             var id = new Random().Next();
             var fileName = $"{id}.mp3";
             var filePath = Path.Combine($"{homeDir}/storage/media", fileName);
             var imageName = $"{id}.jpg";
-            var imagePath = Path.Combine($"{homeDir}/storage/cover", fileName);
+            var imagePath = Path.Combine($"{homeDir}/storage/cover", imageName);
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 await media.CopyToAsync(stream);
@@ -137,7 +139,7 @@ public class SongController : ControllerBase
             {
                 Id = id,
                 Name = name,
-                Uploader = HttpContext.User.Identity!.Name!,
+                Uploader = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value,
                 UploadTime = DateTime.Now,
                 Path = fileName,
                 CoverUrl = imageName,
