@@ -87,6 +87,7 @@ public class UserController : ControllerBase
 
     [HttpPost]
     [Route("api/[controller]/editProfile")]
+    [Authorize]
     public async Task<ActionResult> EditProfile([FromBody] User user)
     {
         var result = await _connection.Read("user", new Dictionary<string, dynamic>() { { "username", user.Username } });
