@@ -1,28 +1,23 @@
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using tourmaline.Models;
 using tourmaline.Services;
 
-namespace tourmaline.Controllers
-{
-    [Authorize]
-    [ApiController]
-    public class UserController : ControllerBase
-    {
-            private readonly DbConnection _connection;
-        private readonly IConfiguration _configuration;
+namespace tourmaline.Controllers;
 
-        public static readonly string IsAdminClaimName = "IsAdmin";
+[Authorize]
+[ApiController]
+public class UserController : ControllerBase
+{
+    private readonly DbConnection _connection;
+    private readonly IConfiguration _configuration;
+
+    public static readonly string IsAdminClaimName = "IsAdmin";
 
     public UserController(DbConnection connection, IConfiguration configuration)
     {
@@ -37,7 +32,7 @@ namespace tourmaline.Controllers
     {
         var result = await _connection.Read("user",
             new Dictionary<string, dynamic>() { { "username", username } });
-        User user = null;
+        User? user = null;
         if (result.Count != 0)
         {
             user = new User(result[0]["username"], result[0]["isAdmin"] == 1);
@@ -60,20 +55,14 @@ namespace tourmaline.Controllers
     public async Task<ActionResult> AddNewUser()
     {
         var info = await Request.ReadFromJsonAsync<LoginModel>();
-        if (info == null)
-        {
-            return StatusCode(StatusCodes.Status406NotAcceptable, "Incorrect request body!");
-        }
-        
+        if (info == null) return StatusCode(StatusCodes.Status406NotAcceptable, "Incorrect request body!");
+
         var isUsernameExist = (await _connection.Read(
                 "user",
                 new Dictionary<string, dynamic>() { { "username", info.Username } },
                 new List<string>() { "username" })
             ).Count != 0;
-        if (isUsernameExist)
-        {
-            return StatusCode(StatusCodes.Status406NotAcceptable, "User is already exist!");
-        }
+        if (isUsernameExist) return StatusCode(StatusCodes.Status406NotAcceptable, "User is already exist!");
 
         var user = new User(info.Username);
         var hasher = new PasswordHasher<User>();
@@ -91,25 +80,23 @@ namespace tourmaline.Controllers
             { "email", user.Email }
         });
         if (result)
-        {
             return StatusCode(StatusCodes.Status201Created, user);
-        }
         else
-        {
             return StatusCode(StatusCodes.Status400BadRequest, "Cannot create user!");
-        }
     }
 
     [HttpPost]
     [Route("api/[controller]/editProfile")]
-    public Task<ActionResult> EditProfile([FromBody] User user)
+    [Authorize]
+    public async Task<ActionResult> EditProfile([FromBody] User user)
     {
-        if (user.Username == null)
+        var result = await _connection.Read("user", new Dictionary<string, dynamic>() { { "username", user.Username } });
+        if (result.Count == 0)
         {
-            return Task.FromResult<ActionResult>(StatusCode(StatusCodes.Status400BadRequest));
+            return StatusCode(StatusCodes.Status400BadRequest);
         }
-
-        return Task.FromResult<ActionResult>(StatusCode(StatusCodes.Status201Created));
+        // TODO: add edit profile
+        return StatusCode(StatusCodes.Status201Created);
     }
 
     [HttpPost]
@@ -118,10 +105,7 @@ namespace tourmaline.Controllers
     public async Task<ActionResult> Login()
     {
         var loginModel = await Request.ReadFromJsonAsync<LoginModel>();
-        if (loginModel == null)
-        {
-            return StatusCode(StatusCodes.Status406NotAcceptable, "Incorrect request body!");
-        }
+        if (loginModel == null) return StatusCode(StatusCodes.Status406NotAcceptable, "Incorrect request body!");
 
         var result = await _connection.Read("user",
             new Dictionary<string, dynamic>() { { "username", loginModel.Username } });
@@ -138,9 +122,11 @@ namespace tourmaline.Controllers
             user.IsAdmin = result.First()["isAdmin"] == 1;
 
             var hasher = new PasswordHasher<User>();
-            PasswordVerificationResult verificationResult = hasher.VerifyHashedPassword(user, result[0]["password"], loginModel.Password);
+            PasswordVerificationResult verificationResult =
+                hasher.VerifyHashedPassword(user, result[0]["password"], loginModel.Password);
 
-            if (verificationResult == PasswordVerificationResult.Success || verificationResult == PasswordVerificationResult.SuccessRehashNeeded)
+            if (verificationResult == PasswordVerificationResult.Success ||
+                verificationResult == PasswordVerificationResult.SuccessRehashNeeded)
             {
                 var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
                 var tokenDescriptor = new SecurityTokenDescriptor
@@ -170,6 +156,5 @@ namespace tourmaline.Controllers
         }
 
         return StatusCode(StatusCodes.Status406NotAcceptable, "User not found!");
-    }
     }
 }
