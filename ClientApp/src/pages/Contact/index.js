@@ -8,6 +8,7 @@ import {
 import { faEarthAfrica, faLocationDot, faPaperPlane, faPhone } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames/bind';
+import { toast } from 'react-toastify';
 import styles from './Contact.module.scss';
 
 import emailjs from 'emailjs-com';
@@ -15,23 +16,50 @@ import emailjs from 'emailjs-com';
 const cx = classNames.bind(styles);
 
 function Contact() {
+    async function sendEmail(e) {
+        e.preventDefault();
 
-    function sendEmail(e) {
-        e.preventDefault();    
+        const toastOptions = {
+            position: 'top-right',
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'light',
+        };
 
-        emailjs.sendForm('service_ri6yvj6', 'template_indvrjj', e.target, 'eZafXlsFn3sqDHeHI')
-            .then((result) => {
+        const toastId = toast.loading('Please wait...');
+        emailjs.sendForm('service_ri6yvj6', 'template_indvrjj', e.target, 'eZafXlsFn3sqDHeHI').then(
+            (result) => {
                 //add 1 cai thong bao gui thanh cong quyen oi
-                window.location.reload()  
-            }, (error) => {
+                toast.update(toastId, {
+                    render: 'Send message successfully!',
+                    type: 'success',
+                    isLoading: false,
+                    ...toastOptions,
+                    onClose: () => {
+                        window.location.reload();
+                    },
+                });
+            },
+            (error) => {
                 //add thong bao gui that bai
+                toast.update(toastId, {
+                    render: 'Send message failed!',
+                    type: 'error',
+                    isLoading: false,
+                    ...toastOptions,
+                });
                 console.log(error.text);
-            });
+            },
+        );
     }
     return (
-        <div className="container mx-auto grid h-[610px] w-[920px] grid-cols-2 justify-center shadow-2xl">
+        <div className="mx-auto grid max-w-[500px] grid-cols-1 justify-center shadow-2xl md:container md:grid-cols-2 lg:max-h-[610px] lg:max-w-[920px]">
             {/* Send message */}
-            <div className="bg-gradient-to-tr from-violet-500 to-fuchsia-500 p-12" >
+            <div className="bg-gradient-to-tr from-violet-500 to-fuchsia-500 p-10 lg:p-12">
                 <h1 className="mb-6 text-3xl text-white">Send us a message</h1>
                 <form action="" onSubmit={sendEmail}>
                     <div className={cx('form-group')}>
@@ -94,58 +122,61 @@ function Contact() {
             </div>
 
             {/* Contact Info */}
-            <div className="p-12">
+            <div className="p-10 lg:p-12">
                 {/* General info */}
                 <h1 className="mb-2 text-3xl font-semibold">Contact us</h1>
                 <p className="mb-6 text-lg text-pink-500">We're open for any suggestion!</p>
-                <div className={cx('contact__item', 'group hover:shadow-lg')}>
-                    <span className={cx('contact__item__icon', 'group-hover:bg-green-400 group-hover:text-white')}>
+                <div className={cx('contact-info__item', 'group hover:shadow-lg')}>
+                    <span className={cx('contact-info__item__icon', 'group-hover:bg-green-400 group-hover:text-white')}>
                         <FontAwesomeIcon icon={faLocationDot} />
                     </span>
                     <p>
-                        <label className="inline-block w-16 font-semibold">Address</label>: Cau Giay, Hanoi, Vietnam
+                        <label className="inline-block w-fit font-semibold  lg:w-16">Address</label>: Cau Giay, Hanoi,
+                        Vietnam
                     </p>
                 </div>
-                <div className={cx('contact__item', 'group hover:shadow-lg')}>
-                    <span className={cx('contact__item__icon', 'group-hover:bg-green-400 group-hover:text-white')}>
+                <div className={cx('contact-info__item', 'group hover:shadow-lg')}>
+                    <span className={cx('contact-info__item__icon', 'group-hover:bg-green-400 group-hover:text-white')}>
                         <FontAwesomeIcon icon={faPhone} />
                     </span>
                     <p>
-                        <label className="inline-block w-16 font-semibold">Phone</label>: +84 xxx xxx xxx
+                        <label className="inline-block w-fit font-semibold  lg:w-16">Phone</label>: +84 xxx xxx xxx
                     </p>
                 </div>
-                <div className={cx('contact__item', 'group hover:shadow-lg')}>
-                    <span className={cx('contact__item__icon', 'group-hover:bg-green-400 group-hover:text-white')}>
+                <div className={cx('contact-info__item', 'group hover:shadow-lg')}>
+                    <span className={cx('contact-info__item__icon', 'group-hover:bg-green-400 group-hover:text-white')}>
                         <FontAwesomeIcon icon={faPaperPlane} />
                     </span>
                     <p>
-                        <label className="inline-block w-16 font-semibold">Email</label>: moonlightsculptor.contact@gmail.com
+                        <label className="inline-block w-fit font-semibold  lg:w-16">Email</label>:
+                        moonlightsculptor.contact@gmail.com
                     </p>
                 </div>
-                <div className={cx('contact__item', 'group hover:shadow-lg')}>
-                    <span className={cx('contact__item__icon', 'group-hover:bg-green-400 group-hover:text-white')}>
+                <div className={cx('contact-info__item', 'group hover:shadow-lg')}>
+                    <span className={cx('contact-info__item__icon', 'group-hover:bg-green-400 group-hover:text-white')}>
                         <FontAwesomeIcon icon={faEarthAfrica} />
                     </span>
                     <p>
-                        <label className="inline-block w-16 font-semibold">Website</label>: moonlightsculptor.com
+                        <label className="inline-block w-fit font-semibold  lg:w-16">Website</label>:
+                        moonlightsculptor.com
                     </p>
                 </div>
 
                 {/* Social */}
                 <div className="mt-8">
-                    <i className={cx('contact__social__icon')}>
+                    <i className={cx('contact-info__social-icon')}>
                         <FontAwesomeIcon icon={faFacebookSquare} />
                     </i>
-                    <i className={cx('contact__social__icon')}>
+                    <i className={cx('contact-info__social-icon')}>
                         <FontAwesomeIcon icon={faGooglePlusSquare} />
                     </i>
-                    <i className={cx('contact__social__icon')}>
+                    <i className={cx('contact-info__social-icon')}>
                         <FontAwesomeIcon icon={faGithubSquare} />
                     </i>
-                    <i className={cx('contact__social__icon')}>
+                    <i className={cx('contact-info__social-icon')}>
                         <FontAwesomeIcon icon={faInstagramSquare} />
                     </i>
-                    <i className={cx('contact__social__icon')}>
+                    <i className={cx('contact-info__social-icon')}>
                         <FontAwesomeIcon icon={faLinkedin} />
                     </i>
                 </div>

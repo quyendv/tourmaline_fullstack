@@ -1,6 +1,5 @@
 export const routesConfigPublic = {
     homeRoute: '/',
-    profileRoute: 'profile',
     playerRoute: 'player',
     libraryRoute: 'library',
     albumRoute: 'album',
@@ -11,6 +10,7 @@ export const routesConfigPublic = {
 export const LOGIN = '/login';
 export const routesConfigPrivate = {
     system: '/system/',
+    profileRoute: 'profile',
     contact: 'contact',
     uploadRoute: 'upload',
     STAR: '*',
