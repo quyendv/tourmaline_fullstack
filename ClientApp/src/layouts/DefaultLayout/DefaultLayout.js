@@ -11,6 +11,7 @@ const cx = classNames.bind(styles);
 
 function DefaultLayout() {
     const [isShowSidebar, setIsShowSidebar] = useState(true);
+
     return (
         <div className="relative flex flex-col bg-[#000000]">
             <div className="flex w-full">
@@ -22,7 +23,7 @@ function DefaultLayout() {
                     <Outlet />
                 </div>
                 {isShowSidebar && (
-                    <div className="w-[243px] flex-none hidden animate-slide-left 1280:flex">
+                    <div className={`w-[270px] flex-none hidden  1280:flex ${isShowSidebar ? 'animate-slide-left' : 'animate-slide-right'}`}>
                         <SidebarRight />
                     </div>
                 )}
