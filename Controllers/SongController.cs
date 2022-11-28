@@ -20,7 +20,7 @@ public class SongController : ControllerBase
     private bool CanCurrentUserModifySong(string songOwnerName)
     {
         var isAdminClaim = HttpContext.User.FindFirst(UserController.IsAdminClaimName);
-        if ((isAdminClaim != null) && bool.Parse(isAdminClaim.Value!)) {
+        if ((isAdminClaim != null) && bool.Parse(isAdminClaim.Value)) {
             return true;
         }
 
@@ -59,7 +59,6 @@ public class SongController : ControllerBase
     }
 
     [HttpGet]
-    [AllowAnonymous]
     [Route("api/[controller]/getMedia/{id}")]
     public async Task<ActionResult> GetMedia(long id)
     {
@@ -74,7 +73,12 @@ public class SongController : ControllerBase
             var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             var file = new FileStream($"{homeDir}/storage/media/{songPath}", FileMode.Open, FileAccess.Read, FileShare.None, 2048,
                 true);
-
+            
+            await _connection.Add("recents", new Dictionary<string, dynamic>()
+            {
+                {"username", HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value},
+                {"song", id}
+            });
             return File(file, "audio/mpeg", enableRangeProcessing: true);
         }
         else
@@ -84,7 +88,6 @@ public class SongController : ControllerBase
     }
     
     [HttpGet]
-    [AllowAnonymous]
     [Route("api/[controller]/getCover/{id}")]
     public async Task<ActionResult> GetCover(long id)
     {
