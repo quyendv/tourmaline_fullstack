@@ -6,7 +6,7 @@ using tourmaline.Services;
 
 namespace tourmaline.Controllers;
 
-[Route("api/[controller]")]
+[Authorize]
 [ApiController]
 public class RecentController : ControllerBase
 {
@@ -18,7 +18,6 @@ public class RecentController : ControllerBase
     private DbConnection _database;
 
     [Route("api/[controller]/recents")]
-    [Authorize]
     public async Task<ActionResult<Recents>> GetRecentSongs()
     {
         var username = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
