@@ -127,6 +127,35 @@ LOCK TABLES `playlistsongs` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `recents`
+--
+
+DROP TABLE IF EXISTS `recents`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `recents` (
+  `username` varchar(45) NOT NULL,
+  `song` int NOT NULL,
+  `added_date` datetime NOT NULL,
+  PRIMARY KEY (`username`,`song`),
+  UNIQUE KEY `username_UNIQUE` (`username`),
+  KEY `fk_recents_song_idx` (`song`),
+  CONSTRAINT `fk_recents_song` FOREIGN KEY (`song`) REFERENCES `song` (`id`),
+  CONSTRAINT `fk_recents_username` FOREIGN KEY (`username`) REFERENCES `user` (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `recents`
+--
+
+LOCK TABLES `recents` WRITE;
+/*!40000 ALTER TABLE `recents` DISABLE KEYS */;
+INSERT INTO `recents` VALUES ('anhquan7826',1339683217,'2022-11-28 22:04:21');
+/*!40000 ALTER TABLE `recents` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `song`
 --
 
@@ -146,7 +175,7 @@ CREATE TABLE `song` (
   PRIMARY KEY (`id`),
   KEY `FK_USER_idx` (`uploader`),
   CONSTRAINT `FK_SONG_USER` FOREIGN KEY (`uploader`) REFERENCES `user` (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1339683218 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -155,6 +184,7 @@ CREATE TABLE `song` (
 
 LOCK TABLES `song` WRITE;
 /*!40000 ALTER TABLE `song` DISABLE KEYS */;
+INSERT INTO `song` VALUES (1339683217,'2022-11-28 21:58:58','anhquan7826','serene','1339683217.jpg','','','','1339683217.mp3');
 /*!40000 ALTER TABLE `song` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -198,4 +228,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-11-18 11:27:11
+-- Dump completed on 2022-11-28 22:33:17
