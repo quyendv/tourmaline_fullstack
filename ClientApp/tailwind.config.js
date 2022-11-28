@@ -5,6 +5,7 @@ module.exports = {
         extend: {
             colors: {
                 'main-100': '#1e1e1e',
+                'activecolor':'#009cf4',
             },
             screens: {
                 1280: '1280px',
@@ -20,9 +21,20 @@ module.exports = {
                         transform: 'translateX(0);',
                     },
                 },
+                'slide-right': {
+                    '0%': {
+                        '-webkit-transform': 'translateX(0px);',
+                        transform: 'translateX(0px);',
+                    },
+                    '100%': {
+                        '-webkit-transform': 'translateX(100px);',
+                        transform: 'translateX(100px);',
+                    },
+                }
             },
             animation: {
-                'slide-left': 'slide-left 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;'
+                'slide-left': 'slide-left 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;',
+                'slide-right': 'slide-right 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;'
             }
         },
     },
