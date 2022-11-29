@@ -8,6 +8,7 @@ namespace tourmaline.Controllers;
 
 [Authorize]
 [ApiController]
+[Route("api/[controller]")]
 public class PlaylistController : ControllerBase
 {
     private readonly DbConnection _database;
@@ -17,7 +18,7 @@ public class PlaylistController : ControllerBase
         _database = database;
     }
 
-    [Route("api/[controller]/get")]
+    [Route("get")]
     [HttpGet]
     public async Task<ActionResult<Playlist>> GetPlaylist(int id)
     {
@@ -31,16 +32,16 @@ public class PlaylistController : ControllerBase
         {
             Id = result.First()["id"],
             UserName = result.First()["user"],
-            Name = result.First()["name"]
+            Name = result.First()["name"],
+            Cover = result.First()["cover_url"]
         };
         var songs = await _database.Read("playlistsongs", new Dictionary<string, dynamic>()
         {
             { "playlistId", playlist.Id }
         }, new List<string>() { "songId" });
 
-        foreach (var s in songs)
+        foreach (var songId in songs.Select(s => s["songId"]))
         {
-            var songId = s["songId"];
             var songQuery = (await _database.Read("song", new Dictionary<string, dynamic>()
             {
                 { "id", songId }
@@ -62,26 +63,42 @@ public class PlaylistController : ControllerBase
         return Ok(playlist);
     }
 
-    [Route("api/[controller]/create")]
+    [Route("create")]
     [HttpPost]
-    public async Task<ActionResult<Playlist>> CreatePlaylist(string name)
+    public async Task<ActionResult<Playlist>> CreatePlaylist([FromForm] string name, [FromForm] IFormFile? cover)
     {
         var playlist = new Playlist
         {
             Id = new Random().Next(),
             Name = name,
-            UserName = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value
+            UserName = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value,
         };
+
+        if (cover != null)
+        {
+            var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            Directory.CreateDirectory($"{homeDir}/storage/cover");
+            var fileName = $"{playlist.Id}.jpg";
+            var filePath = Path.Combine($"{homeDir}/storage/cover", fileName);
+            await using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await cover.CopyToAsync(stream);
+            }
+
+            playlist.Cover = fileName;
+        }
+
         await _database.Add("playlist", new Dictionary<string, dynamic>()
         {
             { "id", playlist.Id },
             { "name", playlist.Name },
-            { "user", playlist.UserName }
+            { "user", playlist.UserName },
+            { "cover_url", playlist.Cover }
         });
         return Ok(playlist);
     }
 
-    [Route("api/[controller]/delete")]
+    [Route("delete")]
     [HttpDelete]
     public async Task<ActionResult> DeletePlaylist(int id)
     {
@@ -99,7 +116,7 @@ public class PlaylistController : ControllerBase
         return Ok();
     }
 
-    [Route("api/[controller]/add")]
+    [Route("add")]
     [HttpPut]
     public async Task<ActionResult> AddToPlaylist(int songId, int playlistId)
     {
@@ -117,7 +134,7 @@ public class PlaylistController : ControllerBase
         return Ok();
     }
 
-    [Route("api/[controller]/remove")]
+    [Route("remove")]
     [HttpDelete]
     public async Task<ActionResult> RemoveFromPlaylist(int songId, int playlistId)
     {

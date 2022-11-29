@@ -8,6 +8,7 @@ namespace tourmaline.Controllers;
 
 [ApiController]
 [Authorize]
+[Route("api/[controller]")]
 public class SongController : ControllerBase
 {
     private readonly DbConnection _connection;
@@ -22,38 +23,32 @@ public class SongController : ControllerBase
         var isAdminClaim = HttpContext.User.FindFirst(UserController.IsAdminClaimName);
         if (isAdminClaim != null && bool.Parse(isAdminClaim.Value)) return true;
 
-        if (songOwnerName == HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!) return true;
-
-        return false;
+        return songOwnerName == HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
     }
 
     [HttpGet]
-    [Route("api/[controller]/get")]
+    [Route("get")]
     public async Task<ActionResult<Song>> GetSongInfo(int id)
     {
         var result = await _connection.Read("song", new Dictionary<string, dynamic>() { { "id", id } });
-        if (result.Count != 0)
+        if (result.Count == 0) return StatusCode(StatusCodes.Status404NotFound, "Song not found!");
+        var song = new Song
         {
-            var song = new Song
-            {
-                Id = result.First()["id"],
-                Album = result.First()["album"],
-                CoverUrl = result.First()["coverUrl"],
-                Description = result.First()["description"],
-                Lyrics = result.First()["lyrics"],
-                Name = result.First()["name"],
-                Path = result.First()["path"],
-                Uploader = result.First()["uploader"],
-                UploadTime = result.First()["uploadTime"]
-            };
-            return Ok(song);
-        }
-
-        return StatusCode(StatusCodes.Status404NotFound, "Song not found!");
+            Id = result.First()["id"],
+            Album = result.First()["album"],
+            CoverUrl = result.First()["coverUrl"],
+            Description = result.First()["description"],
+            Lyrics = result.First()["lyrics"],
+            Name = result.First()["name"],
+            Path = result.First()["path"],
+            Uploader = result.First()["uploader"],
+            UploadTime = result.First()["uploadTime"]
+        };
+        return Ok(song);
     }
 
     [HttpGet]
-    [Route("api/[controller]/getMedia")]
+    [Route("getMedia")]
     public async Task<ActionResult> GetMedia(long id)
     {
         var idConds = new Dictionary<string, dynamic>() { { "id", id } };
@@ -84,7 +79,7 @@ public class SongController : ControllerBase
     }
 
     [HttpGet]
-    [Route("api/[controller]/getCover")]
+    [Route("getCover")]
     public async Task<ActionResult> GetCover(long id)
     {
         var idConds = new Dictionary<string, dynamic>() { { "id", id } };
@@ -109,7 +104,7 @@ public class SongController : ControllerBase
     }
 
     [HttpPost("FileUpload")]
-    [Route("api/[controller]/upload")]
+    [Route("upload")]
     public async Task<ActionResult> UploadSong([FromForm] IFormFile media, [FromForm] IFormFile cover,
         [FromForm] string name)
     {
@@ -123,12 +118,12 @@ public class SongController : ControllerBase
             var filePath = Path.Combine($"{homeDir}/storage/media", fileName);
             var imageName = $"{id}.jpg";
             var imagePath = Path.Combine($"{homeDir}/storage/cover", imageName);
-            using (var stream = new FileStream(filePath, FileMode.Create))
+            await using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 await media.CopyToAsync(stream);
             }
 
-            using (var stream = new FileStream(imagePath, FileMode.Create))
+            await using (var stream = new FileStream(imagePath, FileMode.Create))
             {
                 await cover.CopyToAsync(stream);
             }
@@ -161,7 +156,7 @@ public class SongController : ControllerBase
     }
 
     [HttpPut]
-    [Route("api/[controller]/edit")]
+    [Route("edit")]
     public async Task<ActionResult> EditSong(string id, IDictionary<string, dynamic> infos)
     {
         var idConds = new Dictionary<string, dynamic>() { { "id", long.Parse(id) } };
@@ -176,10 +171,7 @@ public class SongController : ControllerBase
                     "The current user does not have the required permission to delete the song!");
 
             var result = await _connection.Update("song", infos, idConds);
-            if (result)
-                return Ok();
-            else
-                return StatusCode(StatusCodes.Status500InternalServerError);
+            return result ? Ok() : StatusCode(StatusCodes.Status500InternalServerError);
         }
         else
         {
@@ -188,7 +180,7 @@ public class SongController : ControllerBase
     }
 
     [HttpDelete]
-    [Route("api/[controller]/delete")]
+    [Route("delete")]
     public async Task<ActionResult> DeleteSong(string id)
     {
         var idConditions = new Dictionary<string, dynamic>() { { "id", long.Parse(id) } };
@@ -210,10 +202,7 @@ public class SongController : ControllerBase
             var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             System.IO.File.Delete($"{homeDir}/storage/media/{id}.mp3");
             System.IO.File.Delete($"{homeDir}/storage/cover/{id}.jpg");
-            if (result)
-                return Ok();
-            else
-                return StatusCode(StatusCodes.Status500InternalServerError);
+            return result ? Ok() : StatusCode(StatusCodes.Status500InternalServerError);
         }
     }
 }

@@ -13,14 +13,14 @@ var configuration = builder.Configuration;
 services.AddControllersWithViews();
 services.Configure<FormOptions>(options => { options.MemoryBufferThreshold = int.MaxValue; });
 services.AddCors(o => o.AddPolicy("AllowLocalDebug",
-	b =>
-	{
-		b.WithOrigins("https://localhost:3000", "http://w42g13.int3306.freeddns.org")
-				.AllowAnyMethod()
-				.AllowAnyHeader()
-				.SetIsOriginAllowed((host) => true)
-				.AllowCredentials();
-	}));
+    b =>
+    {
+        b.WithOrigins("https://localhost:3000", "http://w42g13.int3306.freeddns.org")
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .SetIsOriginAllowed((host) => true)
+            .AllowCredentials();
+    }));
 
 #region Setup connection
 
@@ -31,7 +31,8 @@ var connHostPortEnv = Environment.GetEnvironmentVariable("MYSQL_SERVICE_PORT");
 
 if ((connHostNameEnv != null) && (connHostPortEnv != null))
 {
-    connString = $"Server={connHostNameEnv};User ID=root;Password=qwertyuiop;Port={connHostPortEnv};Database=tourmaline;TlsCipherSuites=TLS_DHE_RSA_WITH_AES_256_GCM_SHA384";
+    connString =
+        $"Server={connHostNameEnv};User ID=root;Password=qwertyuiop;Port={connHostPortEnv};Database=tourmaline;TlsCipherSuites=TLS_DHE_RSA_WITH_AES_256_GCM_SHA384";
 }
 
 services.AddSingleton(_ => new DbConnection(connString));

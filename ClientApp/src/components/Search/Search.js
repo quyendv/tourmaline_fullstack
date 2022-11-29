@@ -1,8 +1,9 @@
 import classNames from 'classnames/bind';
-import { useState } from 'react';
+import {useState} from 'react';
 import styles from './Search.module.scss';
 
-import { SearchIcon } from '../Icons';
+import {SearchIcon} from '../Icons';
+
 const cx = classNames.bind(styles);
 
 function Search() {
@@ -15,7 +16,7 @@ function Search() {
         <div className={cx('wrapper')}>
             <div className={cx('search')}>
                 <button className={cx('search-btn')}>
-                    <SearchIcon />
+                    <SearchIcon/>
                 </button>
                 <input
                     value={searchValue}

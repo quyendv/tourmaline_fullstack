@@ -1,7 +1,7 @@
 export const routesConfigPublic = {
     homeRoute: '/',
     playerRoute: 'player',
-    
+
     libraryRoute: 'library',
     albumRoute: 'album',
     favoritesRoute: 'favorites',

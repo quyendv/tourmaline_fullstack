@@ -1,6 +1,6 @@
 // import { apiLogin } from '~/services/auth';
-import { apiLogin, apiRegister } from "../../services/auth";
-import { actionTypes } from '../actions/actionTypes'
+import {apiLogin, apiRegister} from "../../services/auth";
+import {actionTypes} from '../actions/actionTypes'
 
 export const login = (payload) => async (dispatch) => {
     try {
@@ -14,7 +14,7 @@ export const login = (payload) => async (dispatch) => {
         }
     } catch (err) {
         dispatch({
-            type:actionTypes.LOGIN_FAIL,
+            type: actionTypes.LOGIN_FAIL,
             data: null
         })
 

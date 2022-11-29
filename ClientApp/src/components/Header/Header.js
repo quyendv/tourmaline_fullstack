@@ -1,26 +1,29 @@
 import classNames from 'classnames/bind';
 import styles from './Header.module.scss';
-import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import {Link} from 'react-router-dom';
+import {useSelector} from 'react-redux';
+import {useNavigate} from 'react-router-dom';
 import {icons} from '../../utils/icons'
 
 import Search from '../Search';
+
 const cx = classNames.bind(styles);
 const {AiOutlineCloudUpload} = icons
+
 function Header() {
     const navigate = useNavigate()
-    const { isLoggedIn } = useSelector((state) => state.auth);
+    const {isLoggedIn} = useSelector((state) => state.auth);
     return (
         <div className={cx('wrapper')}>
             <div className={cx('search')}>
-                <Search />
+                <Search/>
             </div>
 
             <div className={cx('user')}>
                 {isLoggedIn ? (
                     <div className='flex items-center gap-4'>
-                        <span title='upload' className='cursor-pointer' onClick={() => navigate('/system/upload')}><AiOutlineCloudUpload size={30}/></span>
+                        <span title='upload' className='cursor-pointer'
+                              onClick={() => navigate('/system/upload')}><AiOutlineCloudUpload size={30}/></span>
                         <Link to={'/profile'} className='cursor-pointer'>
                             <img
                                 alt="User Avatar"

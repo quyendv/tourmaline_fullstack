@@ -6,6 +6,6 @@ public class Recents
     {
         RecentSongs = recentSongs ?? new List<Song>();
     }
-    
+
     public List<Song> RecentSongs;
 }

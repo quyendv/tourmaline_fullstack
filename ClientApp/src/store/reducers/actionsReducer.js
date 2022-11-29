@@ -1,20 +1,20 @@
-const { actionTypes } = require("../actions/actionTypes")
+const {actionTypes} = require("../actions/actionTypes")
 
 const initState = {
-    setIsOpenModal: function() {
+    setIsOpenModal: function () {
         return 0
     }
 }
 
 const actionsReducer = (state = initState, action) => {
-    switch(action.type) {
+    switch (action.type) {
         case actionTypes.SET_IS_OPEN_MODAL:
             return {
                 ...state,
                 setIsOpenModal: action.setIsOpenModal
             }
-        default: 
-        return state
+        default:
+            return state
     }
 }
 

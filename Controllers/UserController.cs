@@ -12,6 +12,7 @@ namespace tourmaline.Controllers;
 
 [Authorize]
 [ApiController]
+[Route("api/[controller]")]
 public class UserController : ControllerBase
 {
     private readonly DbConnection _connection;
@@ -25,7 +26,7 @@ public class UserController : ControllerBase
         _configuration = configuration;
     }
 
-    [Route("api/[controller]/getUser/{username}")]
+    [Route("getUser/{username}")]
     [HttpGet]
     [AllowAnonymous]
     public async Task<ActionResult<User>> GetUser(string username)
@@ -50,7 +51,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost]
-    [Route("api/[controller]/signup")]
+    [Route("signup")]
     [AllowAnonymous]
     public async Task<ActionResult> AddNewUser()
     {
@@ -86,20 +87,22 @@ public class UserController : ControllerBase
     }
 
     [HttpPost]
-    [Route("api/[controller]/editProfile")]
+    [Route("editProfile")]
     public async Task<ActionResult> EditProfile([FromBody] User user)
     {
-        var result = await _connection.Read("user", new Dictionary<string, dynamic>() { { "username", user.Username } });
+        var result =
+            await _connection.Read("user", new Dictionary<string, dynamic>() { { "username", user.Username } });
         if (result.Count == 0)
         {
             return StatusCode(StatusCodes.Status400BadRequest);
         }
+
         // TODO: add edit profile
         return StatusCode(StatusCodes.Status201Created);
     }
 
     [HttpPost]
-    [Route("api/[controller]/login")]
+    [Route("login")]
     [AllowAnonymous]
     public async Task<ActionResult> Login()
     {
