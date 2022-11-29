@@ -37,6 +37,7 @@ public class DbConnection
 
             var queryString =
                 $"SELECT {(columns.Count == 0 ? "*" : string.Join(", ", columns))} FROM {table} {(conditions != null ? $"WHERE {string.Join(", ", cons)}" : "")} {(sortBy == null ? "" : $"SORT BY {sortBy}")}";
+            Console.WriteLine($"Query: {queryString}");
             var reader = new MySqlCommand(queryString, connection).ExecuteReader();
             if (reader.HasRows)
                 while (reader.Read())
@@ -64,6 +65,7 @@ public class DbConnection
                 values[entry.Key] = $"'{entry.Value}'";
         var queryString =
             $"INSERT INTO {table} ({string.Join(", ", values.Keys)}) VALUES ({string.Join(", ", values.Values)})";
+        Console.WriteLine($"Query: {queryString}");
         try
         {
             new MySqlCommand(queryString, connection).ExecuteReader();
@@ -95,6 +97,7 @@ public class DbConnection
         }
 
         var queryString = $"UPDATE {table} SET {string.Join(", ", vals)} WHERE {string.Join(", ", cons)}";
+        Console.WriteLine($"Query: {queryString}");
         var connection = new MySqlConnection(ConnectionString);
         connection.Open();
         var check = true;
@@ -121,7 +124,8 @@ public class DbConnection
             cons.Add($"{entry.Key} = {conditions[entry.Key]}");
         }
 
-        var queryString = $"DELETE FROM {table} WHERE {string.Join(", ", cons)}";
+        var queryString = $"DELETE FROM {table} WHERE {string.Join(" AND ", cons)}";
+        Console.WriteLine($"Query: {queryString}");
         var connection = new MySqlConnection(ConnectionString);
         connection.Open();
         var check = true;
