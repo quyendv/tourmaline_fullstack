@@ -6,9 +6,14 @@ const actionTypes = {
     LOGOUT: 'LOGOUT',
     REGISTER_SUCCESS:'REGISTER_SUCCESS',
     REGISTER_FAIL:'REGISTER_FAILED',
+    
 
     //music
     SET_CUR_SONG_ID:'SET_CUR_SONG_ID',
-    PLAY:'PLAY'
+    PLAY:'PLAY',
+
+
+    //
+    SET_IS_OPEN_MODAL:'SET_IS_OPEN_MODAL'
 };
 export { actionTypes };
