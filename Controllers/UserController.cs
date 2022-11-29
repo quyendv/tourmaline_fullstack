@@ -15,12 +15,12 @@ namespace tourmaline.Controllers;
 [Route("api/[controller]")]
 public class UserController : ControllerBase
 {
-    private readonly DbConnection _connection;
+    private readonly Database _connection;
     private readonly IConfiguration _configuration;
 
     public static readonly string IsAdminClaimName = "IsAdmin";
 
-    public UserController(DbConnection connection, IConfiguration configuration)
+    public UserController(Database connection, IConfiguration configuration)
     {
         _connection = connection;
         _configuration = configuration;

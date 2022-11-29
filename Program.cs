@@ -35,7 +35,7 @@ if ((connHostNameEnv != null) && (connHostPortEnv != null))
         $"Server={connHostNameEnv};User ID=root;Password=qwertyuiop;Port={connHostPortEnv};Database=tourmaline;TlsCipherSuites=TLS_DHE_RSA_WITH_AES_256_GCM_SHA384";
 }
 
-services.AddSingleton(_ => new DbConnection(connString));
+services.AddSingleton(_ => new Database(connString));
 
 #endregion
 
