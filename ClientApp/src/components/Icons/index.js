@@ -1,4 +1,4 @@
-export const SearchIcon = ({ width = '24px', height = '24px', className }) => {
+export const SearchIcon = ({width = '24px', height = '24px', className}) => {
     return (
         <svg
             className={className}
@@ -16,7 +16,7 @@ export const SearchIcon = ({ width = '24px', height = '24px', className }) => {
         </svg>
     );
 };
-export const LogoutIcon = ({ width = '31px', height = '32px', className }) => {
+export const LogoutIcon = ({width = '31px', height = '32px', className}) => {
     return (
         <svg
             className={className}
@@ -34,7 +34,7 @@ export const LogoutIcon = ({ width = '31px', height = '32px', className }) => {
         </svg>
     );
 };
-export const SettingIcon = ({ width = '34px', height = '34px', className }) => {
+export const SettingIcon = ({width = '34px', height = '34px', className}) => {
     return (
         <svg
             className={className}
@@ -61,7 +61,7 @@ export const SettingIcon = ({ width = '34px', height = '34px', className }) => {
         </svg>
     );
 };
-export const FavoritesIcon = ({ width = '28px', height = '26px', className }) => {
+export const FavoritesIcon = ({width = '28px', height = '26px', className}) => {
     return (
         <svg
             className={className}
@@ -81,7 +81,7 @@ export const FavoritesIcon = ({ width = '28px', height = '26px', className }) =>
         </svg>
     );
 };
-export const AlbumIcon = ({ width = '24px', height = '26px', className }) => {
+export const AlbumIcon = ({width = '24px', height = '26px', className}) => {
     return (
         <svg
             className={className}
@@ -98,7 +98,7 @@ export const AlbumIcon = ({ width = '24px', height = '26px', className }) => {
         </svg>
     );
 };
-export const LibraryIcon = ({ width = '28px', height = '24px', className }) => {
+export const LibraryIcon = ({width = '28px', height = '24px', className}) => {
     return (
         <svg
             className={className}
@@ -118,7 +118,7 @@ export const LibraryIcon = ({ width = '28px', height = '24px', className }) => {
     );
 };
 
-export const HomeIcon = ({ width = '26px', height = '30px', className }) => {
+export const HomeIcon = ({width = '26px', height = '30px', className}) => {
     return (
         <svg
             className={className}
@@ -139,7 +139,7 @@ export const HomeIcon = ({ width = '26px', height = '30px', className }) => {
     );
 };
 
-export const LogoIcon = ({ width = '54px', height = '42px', className }) => {
+export const LogoIcon = ({width = '54px', height = '42px', className}) => {
     return (
         <svg
             className={className}

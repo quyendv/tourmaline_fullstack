@@ -1,16 +1,18 @@
 import classNames from 'classnames/bind';
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 import styles from './login.module.scss';
-import { useDispatch, useSelector } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 // import * as actions from '~/store/actions';
 import * as actions from '../../store/actions'
-import { Link, useNavigate } from 'react-router-dom';
-import { routesConfigPublic } from '../../Routes/routesConfig'
+import {Link, useNavigate} from 'react-router-dom';
+import {routesConfigPublic} from '../../Routes/routesConfig'
+
 const cx = classNames.bind(styles);
+
 function Login() {
-    const [payload, setPayload] = useState({ username: '', password: '' });
+    const [payload, setPayload] = useState({username: '', password: ''});
     const dispatch = useDispatch();
-    const { isLoggedIn } = useSelector(state => state.auth)
+    const {isLoggedIn} = useSelector(state => state.auth)
     const navigate = useNavigate()
     const handleLogin = (e) => {
         e.preventDefault();
@@ -30,7 +32,7 @@ function Login() {
                             type="text"
                             className={cx('login-input')}
                             value={payload.username}
-                            onChange={(e) => setPayload((prev) => ({ ...prev, ['username']: e.target.value }))}
+                            onChange={(e) => setPayload((prev) => ({...prev, ['username']: e.target.value}))}
                         />
                         <label>Username</label>
                     </div>
@@ -41,7 +43,7 @@ function Login() {
                             type="password"
                             className={cx('login-input')}
                             value={payload.password}
-                            onChange={(e) => setPayload((prev) => ({ ...prev, ['password']: e.target.value }))}
+                            onChange={(e) => setPayload((prev) => ({...prev, ['password']: e.target.value}))}
                         />
                         <label>Password</label>
                     </div>
@@ -59,4 +61,5 @@ function Login() {
         </div>
     );
 }
+
 export default Login;

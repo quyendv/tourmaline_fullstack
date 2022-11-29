@@ -1,7 +1,7 @@
-import { faCameraRetro } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {faCameraRetro} from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import classNames from 'classnames/bind';
-import { createContext, useEffect, useRef, useState } from 'react';
+import {createContext, useEffect, useRef, useState} from 'react';
 import styles from './Profile.module.scss';
 
 const cx = classNames.bind(styles);
@@ -67,7 +67,7 @@ function Profile() {
             {/* Avatar + About */}
             <div className={cx('profile-item1')}>
                 <div className={cx('profile__avatar', 'mb-4')}>
-                    <img src={userInfo.avatar} alt="" className="mx-auto h-[90px] w-[90px] rounded-full object-cover" />
+                    <img src={userInfo.avatar} alt="" className="mx-auto h-[90px] w-[90px] rounded-full object-cover"/>
                 </div>
 
                 <div className={cx('profile__name', 'flex flex-col items-center justify-center')}>
@@ -82,10 +82,10 @@ function Profile() {
                             'mx-auto flex items-center justify-center gap-2 rounded-lg bg-blue-400 p-2',
                         )}
                     >
-                        <FontAwesomeIcon icon={faCameraRetro} />
+                        <FontAwesomeIcon icon={faCameraRetro}/>
                         <span>Change Photos</span>
                     </div>
-                    <input type="file" className="absolute inset-0 cursor-pointer opacity-0" />
+                    <input type="file" className="absolute inset-0 cursor-pointer opacity-0"/>
                 </div>
 
                 {/* {userInfo.createTime && (
@@ -244,5 +244,5 @@ function Profile() {
     );
 }
 
-export { Profile, UserContext };
+export {Profile, UserContext};
 export default Profile;

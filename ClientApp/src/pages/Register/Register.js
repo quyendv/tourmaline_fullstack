@@ -1,11 +1,12 @@
 import styles from './Register.module.scss';
 import classNames from 'classnames/bind';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import {useState} from 'react';
+import {Link} from 'react-router-dom';
 
 const cx = classNames.bind(styles);
+
 function Register() {
-    const [payload, setPayload] = useState({ username: '', name: '', email: '', password: '', gender: '0' });
+    const [payload, setPayload] = useState({username: '', name: '', email: '', password: '', gender: '0'});
     const handleRegister = (e) => {
         e.preventDefault();
         console.log(payload);
@@ -20,7 +21,7 @@ function Register() {
                             type="text"
                             className={cx('login-input')}
                             value={payload.username}
-                            onChange={(e) => setPayload((prev) => ({ ...prev, ['username']: e.target.value }))}
+                            onChange={(e) => setPayload((prev) => ({...prev, ['username']: e.target.value}))}
                         />
                         <label>Username</label>
                     </div>
@@ -30,7 +31,7 @@ function Register() {
                             type="text"
                             className={cx('login-input')}
                             value={payload.name}
-                            onChange={(e) => setPayload((prev) => ({ ...prev, ['name']: e.target.value }))}
+                            onChange={(e) => setPayload((prev) => ({...prev, ['name']: e.target.value}))}
                         />
                         <label>Name</label>
                     </div>
@@ -40,7 +41,7 @@ function Register() {
                             type="password"
                             className={cx('login-input')}
                             value={payload.password}
-                            onChange={(e) => setPayload((prev) => ({ ...prev, ['password']: e.target.value }))}
+                            onChange={(e) => setPayload((prev) => ({...prev, ['password']: e.target.value}))}
                         />
                         <label>Password</label>
                     </div>
@@ -49,7 +50,7 @@ function Register() {
                             type="text"
                             className={cx('login-input')}
                             value={payload.email}
-                            onChange={(e) => setPayload((prev) => ({ ...prev, ['email']: e.target.value }))}
+                            onChange={(e) => setPayload((prev) => ({...prev, ['email']: e.target.value}))}
                         />
                         <label>Email</label>
                     </div>
@@ -60,7 +61,7 @@ function Register() {
                                 value="1"
                                 className={cx('radio')}
                                 checked={payload.gender == '1'}
-                                onChange={(e) => setPayload((prev) => ({ ...prev, ['gender']: e.target.value }))}
+                                onChange={(e) => setPayload((prev) => ({...prev, ['gender']: e.target.value}))}
                             />
                             <label>Male</label>
                         </div>
@@ -70,7 +71,7 @@ function Register() {
                                 value="0"
                                 className={cx('radio')}
                                 checked={payload.gender == '0'}
-                                onChange={(e) => setPayload((prev) => ({ ...prev, ['gender']: e.target.value }))}
+                                onChange={(e) => setPayload((prev) => ({...prev, ['gender']: e.target.value}))}
                             />
                             <label>Female</label>
                         </div>

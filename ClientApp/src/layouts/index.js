@@ -1,2 +1,2 @@
-export { default as DefaultLayout } from './DefaultLayout';
-export { default as OnlyBodyLayout } from './OnlyBody';
+export {default as DefaultLayout} from './DefaultLayout';
+export {default as OnlyBodyLayout} from './OnlyBody';

@@ -1,11 +1,11 @@
-import { useEffect, useRef, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import {useEffect, useRef, useState} from 'react';
+import {useSelector, useDispatch} from 'react-redux';
 import moment from 'moment';
 
 import * as apis from '../../services/music';
-import { icons } from '../../utils/icons';
+import {icons} from '../../utils/icons';
 import * as actions from '../../store/actions';
-import { clear } from '@testing-library/user-event/dist/clear';
+import {clear} from '@testing-library/user-event/dist/clear';
 
 const {
     BsFillPlayFill,
@@ -19,8 +19,9 @@ const {
     SlVolume2,
     SlVolumeOff,
 } = icons;
-function Player({ setIsShowSidebar }) {
-    const { curSongId, isPlaying } = useSelector((state) => state.music);
+
+function Player({setIsShowSidebar}) {
+    const {curSongId, isPlaying} = useSelector((state) => state.music);
 
     const [volume, setVolume] = useState(100);
     const [songInfo, setSongInfo] = useState(null);
@@ -39,7 +40,7 @@ function Player({ setIsShowSidebar }) {
     },[])*/
     useEffect(() => {
         setAudio(new Audio('https://localhost:5000/api/song/getMedia/1'));
-        
+
     }, []);
     console.log(audio.duration)
     var intervalId;
@@ -87,23 +88,23 @@ function Player({ setIsShowSidebar }) {
                 {/* //Main Player */}
                 <div className="flex items-center justify-center gap-8">
                     <span className="cursor-pointer">
-                        <CiShuffle size={24} />
+                        <CiShuffle size={24}/>
                     </span>
                     <span className="cursor-pointer">
-                        <MdSkipPrevious size={24} />
+                        <MdSkipPrevious size={24}/>
                     </span>
                     <span onClick={handleToggleMusic} className="cursor-pointer rounded-full border border-white p-1">
                         {!isPlaying ? (
-                            <BsFillPlayFill size={24} className="mr-[-1px]" />
+                            <BsFillPlayFill size={24} className="mr-[-1px]"/>
                         ) : (
-                            <BsPauseFill size={24} className="mr-[-1px]" />
+                            <BsPauseFill size={24} className="mr-[-1px]"/>
                         )}
                     </span>
                     <span className="cursor-pointer">
-                        <MdSkipNext size={24} />
+                        <MdSkipNext size={24}/>
                     </span>
                     <span className="cursor-pointer">
-                        <CiRepeat size={24} />
+                        <CiRepeat size={24}/>
                     </span>
                 </div>
                 <div className="flex w-full items-center justify-center gap-2 text-sm">
@@ -124,12 +125,12 @@ function Player({ setIsShowSidebar }) {
 
             <div className="flex w-[30%] items-center justify-end gap-2 border border-white p-2">
                 <span className='cursor-pointer' onClick={() => setVolume(prev => {
-                    if(prev == 0) {
+                    if (prev == 0) {
                         setVolume(100)
                     } else {
                         setVolume(0)
                     }
-                })}> {volume > 70 ? <SlVolume2 /> : volume == 0 ? <SlVolumeOff /> : <SlVolume1 />} </span>
+                })}> {volume > 70 ? <SlVolume2/> : volume == 0 ? <SlVolumeOff/> : <SlVolume1/>} </span>
                 <input
                     className="cursor-pointer"
                     type="range"
@@ -140,7 +141,7 @@ function Player({ setIsShowSidebar }) {
                     onChange={(e) => setVolume(e.target.value)}
                 />
                 <span className="cursor-pointer" onClick={() => setIsShowSidebar((prev) => !prev)}>
-                    <BsMusicNoteList />
+                    <BsMusicNoteList/>
                 </span>
             </div>
         </div>

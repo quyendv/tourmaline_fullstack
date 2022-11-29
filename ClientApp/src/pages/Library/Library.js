@@ -1,8 +1,9 @@
-import { useSelector } from 'react-redux'
+import {useSelector} from 'react-redux'
 import {icons} from '../../utils/icons'
 
 
-const {BsFillPlayFill,AiOutlinePlusCircle} = icons
+const {BsFillPlayFill, AiOutlinePlusCircle} = icons
+
 function Library() {
     const {setIsOpenModal} = useSelector(state => state.actions)
     return (
@@ -13,7 +14,8 @@ function Library() {
             </div>
             <div className='flex items-center px-6 mt-8 gap-4'>
                 <h3 className='text-xl font-semibold'>Playlist</h3>
-                <span onClick={() => setIsOpenModal(prev => !prev)} className='cursor-pointer'><AiOutlinePlusCircle size={20}/></span>
+                <span onClick={() => setIsOpenModal(prev => !prev)} className='cursor-pointer'><AiOutlinePlusCircle
+                    size={20}/></span>
             </div>
         </div>
     )

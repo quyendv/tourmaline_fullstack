@@ -1,14 +1,14 @@
-import { faCircleDown, faTrashCan } from '@fortawesome/free-regular-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {faCircleDown, faTrashCan} from '@fortawesome/free-regular-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import classNames from 'classnames/bind';
-import { memo, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import {memo, useEffect, useRef} from 'react';
+import {Link} from 'react-router-dom';
 import uploadImages from '../../assets/images';
 import styles from './DropFile.module.scss';
 
 const cx = classNames.bind(styles);
 
-function FileItem({ file, handleRemove }) {
+function FileItem({file, handleRemove}) {
     const downloadBtnRef = useRef();
     const hrefRef = useRef();
 
@@ -50,24 +50,24 @@ function FileItem({ file, handleRemove }) {
 
     return (
         <div className={cx('drop-file-item')}>
-            <img src={uploadImages[file.type.split('/')[1]] || uploadImages.default} alt="" />
+            <img src={uploadImages[file.type.split('/')[1]] || uploadImages.default} alt=""/>
             <div className={cx('drop-file-item-info')}>
                 <p>{file.name}</p>
                 <p>{file.size}B</p>
             </div>
 
             {/* only use to download, auto hidden */}
-            <Link to="" ref={downloadBtnRef} target="_blank" download="file.mp3" />
+            <Link to="" ref={downloadBtnRef} target="_blank" download="file.mp3"/>
 
             {/* show closeBtn and downloadBtn if handleRemove callback is passed in | or set default handleRemove = () => {} */}
             {/* Tạm chỉ xử lý remove + download khỏi preview khi truyền hàm close -> fix sau */}
             {handleRemove && (
                 <>
                     <span className={cx('down-drop-file-item')} onClick={() => handleDownload(file)}>
-                        <FontAwesomeIcon icon={faCircleDown} />
+                        <FontAwesomeIcon icon={faCircleDown}/>
                     </span>
                     <span className={cx('del-drop-file-item')} onClick={handleRemove}>
-                        <FontAwesomeIcon icon={faTrashCan} />
+                        <FontAwesomeIcon icon={faTrashCan}/>
                     </span>
                 </>
             )}

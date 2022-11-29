@@ -1,5 +1,3 @@
-
-
 function Album() {
     return (
         <div>

@@ -5,10 +5,10 @@ import {
     faInstagramSquare,
     faLinkedin,
 } from '@fortawesome/free-brands-svg-icons';
-import { faEarthAfrica, faLocationDot, faPaperPlane, faPhone } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {faEarthAfrica, faLocationDot, faPaperPlane, faPhone} from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import classNames from 'classnames/bind';
-import { toast } from 'react-toastify';
+import {toast} from 'react-toastify';
 import styles from './Contact.module.scss';
 
 import emailjs from 'emailjs-com';
@@ -56,8 +56,10 @@ function Contact() {
             },
         );
     }
+
     return (
-        <div className="mx-auto grid max-w-[500px] grid-cols-1 justify-center shadow-2xl md:container md:grid-cols-2 lg:max-h-[610px] lg:max-w-[920px]">
+        <div
+            className="mx-auto grid max-w-[500px] grid-cols-1 justify-center shadow-2xl md:container md:grid-cols-2 lg:max-h-[610px] lg:max-w-[920px]">
             {/* Send message */}
             <div className="bg-gradient-to-tr from-violet-500 to-fuchsia-500 p-10 lg:p-12">
                 <h1 className="mb-6 text-3xl text-white">Send us a message</h1>
@@ -128,7 +130,7 @@ function Contact() {
                 <p className="mb-6 text-lg text-pink-500">We're open for any suggestion!</p>
                 <div className={cx('contact-info__item', 'group hover:shadow-lg')}>
                     <span className={cx('contact-info__item__icon', 'group-hover:bg-green-400 group-hover:text-white')}>
-                        <FontAwesomeIcon icon={faLocationDot} />
+                        <FontAwesomeIcon icon={faLocationDot}/>
                     </span>
                     <p>
                         <label className="inline-block w-fit font-semibold  lg:w-16">Address</label>: Cau Giay, Hanoi,
@@ -137,7 +139,7 @@ function Contact() {
                 </div>
                 <div className={cx('contact-info__item', 'group hover:shadow-lg')}>
                     <span className={cx('contact-info__item__icon', 'group-hover:bg-green-400 group-hover:text-white')}>
-                        <FontAwesomeIcon icon={faPhone} />
+                        <FontAwesomeIcon icon={faPhone}/>
                     </span>
                     <p>
                         <label className="inline-block w-fit font-semibold  lg:w-16">Phone</label>: +84 xxx xxx xxx
@@ -145,7 +147,7 @@ function Contact() {
                 </div>
                 <div className={cx('contact-info__item', 'group hover:shadow-lg')}>
                     <span className={cx('contact-info__item__icon', 'group-hover:bg-green-400 group-hover:text-white')}>
-                        <FontAwesomeIcon icon={faPaperPlane} />
+                        <FontAwesomeIcon icon={faPaperPlane}/>
                     </span>
                     <p>
                         <label className="inline-block w-fit font-semibold  lg:w-16">Email</label>:
@@ -154,7 +156,7 @@ function Contact() {
                 </div>
                 <div className={cx('contact-info__item', 'group hover:shadow-lg')}>
                     <span className={cx('contact-info__item__icon', 'group-hover:bg-green-400 group-hover:text-white')}>
-                        <FontAwesomeIcon icon={faEarthAfrica} />
+                        <FontAwesomeIcon icon={faEarthAfrica}/>
                     </span>
                     <p>
                         <label className="inline-block w-fit font-semibold  lg:w-16">Website</label>:
@@ -165,19 +167,19 @@ function Contact() {
                 {/* Social */}
                 <div className="mt-8">
                     <i className={cx('contact-info__social-icon')}>
-                        <FontAwesomeIcon icon={faFacebookSquare} />
+                        <FontAwesomeIcon icon={faFacebookSquare}/>
                     </i>
                     <i className={cx('contact-info__social-icon')}>
-                        <FontAwesomeIcon icon={faGooglePlusSquare} />
+                        <FontAwesomeIcon icon={faGooglePlusSquare}/>
                     </i>
                     <i className={cx('contact-info__social-icon')}>
-                        <FontAwesomeIcon icon={faGithubSquare} />
+                        <FontAwesomeIcon icon={faGithubSquare}/>
                     </i>
                     <i className={cx('contact-info__social-icon')}>
-                        <FontAwesomeIcon icon={faInstagramSquare} />
+                        <FontAwesomeIcon icon={faInstagramSquare}/>
                     </i>
                     <i className={cx('contact-info__social-icon')}>
-                        <FontAwesomeIcon icon={faLinkedin} />
+                        <FontAwesomeIcon icon={faLinkedin}/>
                     </i>
                 </div>
             </div>

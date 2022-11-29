@@ -1,12 +1,12 @@
 import classNames from 'classnames/bind';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import uploadImages from '../../assets/images';
 import styles from './DropFile.module.scss';
 import FileItem from './FileItem';
 
 const cx = classNames.bind(styles);
 
-function DropFile({ onFileChange }) {
+function DropFile({onFileChange}) {
     const [file, setFile] = useState(); // inputFile: audio, includes song's info when click addBtn
     const [fileList, setFileList] = useState([]); // List Audio File with each file contains song's info
     const [songName, setSongName] = useState('');
@@ -101,7 +101,7 @@ function DropFile({ onFileChange }) {
                         onDragLeave={handleDragLeave}
                         onDrop={handleDrop}
                     >
-                        <img src={uploadImages.cloudUpload} alt="" />
+                        <img src={uploadImages.cloudUpload} alt=""/>
                         <p>Drag & Drop or Choose your files here</p>
                         <input
                             type="file"
@@ -111,7 +111,7 @@ function DropFile({ onFileChange }) {
                         />
                     </div>
                     {/* ShortPreview: check file.type, some file extensions are not recognized: sql, ... -> handle after */}
-                    {file && file.type && <FileItem file={file} />}
+                    {file && file.type && <FileItem file={file}/>}
                 </div>
 
                 {/* Info */}

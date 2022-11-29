@@ -1,7 +1,7 @@
-import { combineReducers } from 'redux';
+import {combineReducers} from 'redux';
 import storage from 'redux-persist/lib/storage';
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
-import { persistReducer } from 'redux-persist';
+import {persistReducer} from 'redux-persist';
 import authReducer from './authReducer';
 import musicReducer from './musicReducer';
 import actionsReducer from './actionsReducer';
@@ -18,8 +18,8 @@ const authConfig = {
 };
 const musicConfig = {
     ...commonConfig,
-    key:'music',
-    whitelist:['curSongId']
+    key: 'music',
+    whitelist: ['curSongId']
 }
 const rootReducer = combineReducers({
     auth: persistReducer(authConfig, authReducer),

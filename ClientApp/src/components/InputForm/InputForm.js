@@ -1,4 +1,4 @@
-function InputForm({ text }) {
+function InputForm({text}) {
     return (
         <div className="relative">
             <label className="pointer-events-none absolute top-0 left-0">{text}</label>
