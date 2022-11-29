@@ -1,7 +1,6 @@
 export const routesConfigPublic = {
     homeRoute: '/',
     playerRoute: 'player',
-
     libraryRoute: 'library',
     albumRoute: 'album',
     favoritesRoute: 'favorites',
@@ -9,7 +8,7 @@ export const routesConfigPublic = {
     STAR: '*',
 };
 export const LOGIN = '/login';
-export const REGISTER = '/register'
+export const REGISTER = '/register';
 export const routesConfigPrivate = {
     system: '/system/',
     profileRoute: 'profile',
