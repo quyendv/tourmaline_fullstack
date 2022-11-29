@@ -7,10 +7,7 @@ import Player from '../pages/Player';
 import Upload from '../pages/Upload';
 import { routesConfigPrivate, routesConfigPublic } from './routesConfig';
 export const publicRoutes = [
-    {
-        path: routesConfigPublic.loginRoute,
-        page: Login,
-    },
+
     {
         path: routesConfigPublic.playerRoute,
         page: Player,

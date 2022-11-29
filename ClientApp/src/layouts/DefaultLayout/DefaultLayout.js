@@ -10,10 +10,10 @@ import { useState } from 'react';
 const cx = classNames.bind(styles);
 
 function DefaultLayout() {
-    const [isShowSidebar, setIsShowSidebar] = useState(true);
+    const [isShowSidebar, setIsShowSidebar] = useState(false);
 
     return (
-        <div className="relative flex flex-col bg-[#000000]">
+        <div className="relative flex flex-col bg-gradient-to-r from-[#18162c] to-[#16135e] overflow-x-hidden">
             <div className="flex w-full">
                 <div className='w-[243px] flex-none'>
                     <Sidebar />
@@ -22,14 +22,12 @@ function DefaultLayout() {
                     <Header />
                     <Outlet />
                 </div>
-                {isShowSidebar && (
-                    <div className={`w-[270px] flex-none hidden  1280:flex ${isShowSidebar ? 'animate-slide-left' : 'animate-slide-right'}`}>
-                        <SidebarRight />
-                    </div>
-                )}
+                <div className={`w-[270px] absolute right-0 top-0 bottom-0 ${isShowSidebar ? 'animate-slide-left' : 'animate-slide-right'}` }>
+                    <SidebarRight />
+                </div>
             </div>
 
-            <div className="absolute bottom-5 h-[70px] w-full border border-red-500">
+            <div className="absolute bottom-5 h-[70px] w-full z-50 border border-red-500">
                 <Player setIsShowSidebar={setIsShowSidebar} />
             </div>
         </div>

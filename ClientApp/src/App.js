@@ -4,8 +4,9 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { OnlyBodyLayout } from './layouts';
 import DefaultLayout from './layouts/DefaultLayout';
 import Login from './pages/Login';
+import Register from './pages/Register';
 import { privateRoute, publicRoutes } from './Routes';
-import { routesConfigPrivate, routesConfigPublic, LOGIN } from './Routes/routesConfig';
+import { routesConfigPrivate, routesConfigPublic, LOGIN, REGISTER } from './Routes/routesConfig';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -16,6 +17,7 @@ function App() {
         <div className="App">
             <Routes>
                 <Route path={LOGIN} element={<Login />} />
+                <Route path={REGISTER} element={<Register/>} />
                 <Route path={routesConfigPublic.homeRoute} element={<DefaultLayout />}>
                     {publicRoutes.map((route, index) => {
                         const Page = route.page;

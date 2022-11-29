@@ -13,8 +13,8 @@ module.exports = {
             keyframes: {
                 'slide-left': {
                     '0%': {
-                        '-webkit-transform': 'translateX(100px);',
-                        transform: 'translateX(100px);',
+                        '-webkit-transform': 'translateX(500px);',
+                        transform: 'translateX(500px);',
                     },
                     '100%': {
                         '-webkit-transform': 'translateX(0);',
@@ -27,8 +27,8 @@ module.exports = {
                         transform: 'translateX(0px);',
                     },
                     '100%': {
-                        '-webkit-transform': 'translateX(100px);',
-                        transform: 'translateX(100px);',
+                        '-webkit-transform': 'translateX(500px);',
+                        transform: 'translateX(500px);',
                     },
                 }
             },
