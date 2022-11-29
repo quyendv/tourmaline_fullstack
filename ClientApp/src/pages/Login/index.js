@@ -4,7 +4,7 @@ import styles from './login.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
 // import * as actions from '~/store/actions';
 import * as actions from '../../store/actions'
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { routesConfigPublic } from '../../Routes/routesConfig'
 const cx = classNames.bind(styles);
 function Login() {
@@ -49,6 +49,11 @@ function Login() {
                     <button type="submit" className={cx('login-btn')} onClick={handleLogin}>
                         Login
                     </button>
+                    <div className='mt-5 underline text-activecolor'>
+                        <Link to='/register'>
+                            Chưa có tài khoản? Đăng ký
+                        </Link>
+                    </div>
                 </form>
             </div>
         </div>

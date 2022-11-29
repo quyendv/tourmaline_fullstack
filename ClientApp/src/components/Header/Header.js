@@ -28,7 +28,10 @@ function Header() {
                     </>
                 ) : (
                     <>
-                        <Link to={'login'}>Đăng nhập</Link>
+                        <div className='flex gap-2'>
+                            <Link to={'register'}>Đăng ký</Link>
+                            <Link to={'login'}>Đăng nhập</Link>
+                        </div>
                     </>
                 )}
             </div>

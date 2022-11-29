@@ -39,7 +39,9 @@ function Player({ setIsShowSidebar }) {
     },[])*/
     useEffect(() => {
         setAudio(new Audio('https://localhost:5000/api/song/getMedia/1'));
+        
     }, []);
+    console.log(audio.duration)
     var intervalId;
     useEffect(() => {
         intervalId && clearInterval(intervalId);

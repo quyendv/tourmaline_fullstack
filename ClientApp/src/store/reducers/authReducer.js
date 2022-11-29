@@ -26,9 +26,13 @@ const authReducer = (state = initState, action) => {
             return {
                 ...state,
                 isLoggedIn: false,
-                msg: "",
-                token: null
-            }
+                msg: '',
+                token: null,
+            };
+        case actionTypes.REGISTER_SUCCESS:
+            return state;
+        case actionTypes.REGISTER_FAIL:
+            return state;
         default:
             return state;
     }
