@@ -11,9 +11,9 @@ namespace tourmaline.Controllers;
 [Route("api/[controller]")]
 public class PlaylistController : ControllerBase
 {
-    private readonly DbConnection _database;
+    private readonly Database _database;
 
-    public PlaylistController(DbConnection database)
+    public PlaylistController(Database database)
     {
         _database = database;
     }
