@@ -85,10 +85,11 @@ CREATE TABLE `playlist` (
   `id` int NOT NULL AUTO_INCREMENT,
   `user` varchar(45) NOT NULL,
   `name` varchar(45) NOT NULL,
+  `cover_url` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK_PLAYLIST_USER_idx` (`user`),
   CONSTRAINT `FK_PLAYLIST_USER` FOREIGN KEY (`user`) REFERENCES `user` (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1975350825 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -97,6 +98,7 @@ CREATE TABLE `playlist` (
 
 LOCK TABLES `playlist` WRITE;
 /*!40000 ALTER TABLE `playlist` DISABLE KEYS */;
+INSERT INTO `playlist` VALUES (1975350824,'anhquan7826','my playlist',NULL);
 /*!40000 ALTER TABLE `playlist` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -123,6 +125,7 @@ CREATE TABLE `playlistsongs` (
 
 LOCK TABLES `playlistsongs` WRITE;
 /*!40000 ALTER TABLE `playlistsongs` DISABLE KEYS */;
+INSERT INTO `playlistsongs` VALUES (1975350824,1339683217);
 /*!40000 ALTER TABLE `playlistsongs` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -228,4 +231,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-11-28 22:33:17
+-- Dump completed on 2022-11-29 15:05:44
