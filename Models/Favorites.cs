@@ -2,12 +2,12 @@ namespace tourmaline.Models;
 
 public class Favorites
 {
-    public Favorites(string username = "", int songId = -1)
+    public Favorites(string username = "", List<Song>? songs = null)
     {
         UserName = username;
-        SongId = songId;
+        Songs = songs ?? new List<Song>();
     }
 
     public string UserName { get; set; }
-    public int SongId { get; set; }
+    public List<Song> Songs { get; set; }
 }
