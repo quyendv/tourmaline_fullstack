@@ -141,7 +141,6 @@ public class UserController : ControllerBase
                             Guid.NewGuid().ToString()),
                         new Claim(IsAdminClaimName, user.IsAdmin.ToString())
                     }),
-                    Expires = DateTime.UtcNow.AddMinutes(5),
                     Issuer = _configuration["Jwt:Issuer"],
                     Audience = _configuration["Jwt:Audience"],
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
