@@ -159,8 +159,7 @@ public class UserController : ControllerBase
             PasswordVerificationResult verificationResult =
                 hasher.VerifyHashedPassword(user, result[0]["password"], loginModel.Password);
 
-            if (verificationResult == PasswordVerificationResult.Success ||
-                verificationResult == PasswordVerificationResult.SuccessRehashNeeded)
+            if (verificationResult is PasswordVerificationResult.Success or PasswordVerificationResult.SuccessRehashNeeded)
             {
                 var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
                 var tokenDescriptor = new SecurityTokenDescriptor
