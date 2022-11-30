@@ -63,7 +63,7 @@ $main-login-color: #03e9f4;
     }
 
     .login-input:focus,
-    .login-input:not([value='']) {
+    .login-input:not(:placeholder-shown) {
         border-color: $main-login-color;
         & + label {
             top: -20px;
@@ -72,6 +72,10 @@ $main-login-color: #03e9f4;
             font-size: 14px;
             transition: 0.5s;
         }
+    }
+
+    .form-msg {
+        @apply pt-1 text-red-500;
     }
 }
 

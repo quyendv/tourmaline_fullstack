@@ -15,13 +15,19 @@ $main-register-color: #03e9f4;
     background: rgba(0, 0, 0, 0.5);
     box-shadow: 0 15px 25px rgba(0, 0, 0, 0.6);
     color: white;
-
+    
     .title {
         text-align: center;
         font-size: 36px;
         font-weight: 600;
         letter-spacing: 2px;
         margin-bottom: 12px;
+    }
+    
+    > form {
+        padding: 4px;
+        max-height: 70vh;
+        overflow-y: overlay;
     }
 
     .register-btn {
@@ -40,7 +46,7 @@ $main-register-color: #03e9f4;
 .user-box {
     position: relative;
     & + .user-box {
-        margin-top: 36px;
+        margin-top: 32px;
     }
     label {
         position: absolute;
@@ -63,7 +69,7 @@ $main-register-color: #03e9f4;
     }
 
     .register-input:focus,
-    .register-input:not([value='']) {
+    .register-input:not(:placeholder-shown) {
         border-color: $main-register-color;
         & + label {
             top: -20px;
@@ -73,6 +79,11 @@ $main-register-color: #03e9f4;
             transition: 0.5s;
         }
     }
+
+}
+
+.form-msg {
+    @apply pt-1 text-red-500;
 }
 
 .radio {

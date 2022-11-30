@@ -12,7 +12,7 @@ function MenuItem({ data }) {
     return (
         <Link className={cx('menu-item', { 'separate-top': !!data.separateTop })} to={data.to}>
             <div onClick={(e) => {
-                if(data.title == 'Logout') {
+                if(data.title === 'Logout') {
                     e.stopPropagation()
                     dispatch(actions.logout())
                 }

@@ -1,27 +1,35 @@
-import classNames from 'classnames/bind';
-import { useEffect, useState } from 'react';
-import styles from './login.module.scss';
-import { useDispatch, useSelector } from 'react-redux';
-import * as actions from '../../store/actions';
-import { Link, useNavigate } from 'react-router-dom';
-import { routesConfigPublic } from '../../Routes/routesConfig';
-import { useForm } from 'react-hook-form';
-import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import classNames from 'classnames/bind';
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import * as yup from 'yup';
+import { routesConfigPublic } from '../../Routes/routesConfig';
+import * as actions from '../../store/actions';
+import styles from './login.module.scss';
 
 const cx = classNames.bind(styles);
 const yupSchema = yup
     .object({
-        username: yup.string().required(),
+        username: yup.string().required('Username is required!'),
+        password: yup
+            .string()
+            .required('Password is required!')
+            .matches(
+                /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/,
+                'Must contain at least 6 characters, one uppercase, one lowercase, one number and one special case character',
+            ),
     })
     .required();
 
 // TODO: làm nút goBack cho login, register, forgot password
 function Login() {
-    const [payload, setPayload] = useState({ username: '', password: '' });
     const dispatch = useDispatch();
     const { isLoggedIn } = useSelector((state) => state.auth);
     const navigate = useNavigate();
+
+    // Validate resolver
     const {
         register,
         handleSubmit,
@@ -30,10 +38,11 @@ function Login() {
         resolver: yupResolver(yupSchema),
     });
 
-    const handleLogin = (e) => {
-        e.preventDefault();
-        // console.log(payload)
-        dispatch(actions.login(payload));
+    const handleLogin = (data) => {
+        // e.preventDefault(); // if have errors auto preventDefault
+        // K cần check object empty (errors), handleSubmit chỉ khi hết lỗi mới thực hiện hàm
+        console.log(data);
+        dispatch(actions.login(data)); // or getValueRoot
     };
 
     useEffect(() => {
@@ -44,31 +53,31 @@ function Login() {
         <div className={cx('login-page')}>
             <div className={cx('login-form')}>
                 <h2 className={cx('title')}>Login</h2>
-                <form onSubmit={handleSubmit((data) => console.log(data))}>
+                <form onSubmit={handleSubmit(handleLogin)}>
                     {/* Username */}
                     <div className={cx('user-box')}>
                         <input
                             type="text"
+                            placeholder="&nbsp;"
                             className={cx('login-input')}
-                            value={payload.username}
-                            onChange={(e) => setPayload((prev) => ({ ...prev, username: e.target.value }))}
                             {...register('username')}
                         />
                         <label>Username</label>
-                        {errors.username && <p>{errors.username.message}</p>}
+                        {errors.username && <p className={cx('form-msg')}>{errors.username.message}</p>}
                     </div>
                     {/* Password */}
                     <div className={cx('user-box')}>
                         <input
                             type="password"
+                            placeholder="&nbsp;"
                             className={cx('login-input')}
-                            value={payload.password}
-                            onChange={(e) => setPayload((prev) => ({ ...prev, password: e.target.value }))}
+                            {...register('password')}
                         />
                         <label>Password</label>
+                        {errors.password && <p className={cx('form-msg')}>{errors.password.message}</p>}
                     </div>
                     {/* Submit btn */}
-                    <button type="submit" className={cx('login-btn')} onClick={handleLogin}>
+                    <button type="submit" className={cx('login-btn')}>
                         Login
                     </button>
                     {/* Link register */}
