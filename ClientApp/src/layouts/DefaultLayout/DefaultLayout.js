@@ -1,22 +1,35 @@
 import classNames from 'classnames/bind';
 import styles from './DefaultLayout.module.scss';
 import {useState} from 'react';
-import {useDispatch} from 'react-redux';
-import {Outlet} from 'react-router-dom';
+import {useDispatch, useSelector} from 'react-redux';
+import {Outlet, useNavigate} from 'react-router-dom';
 
 import Header from '../../components/Header';
 import Sidebar from '../../components/Sidebar';
 import Player from '../../components/Player';
 import SidebarRight from '../../components/SidebarRight';
 import * as actions from '../../store/actions'
+import { crePlaylist } from '../../services/music';
 
 const cx = classNames.bind(styles);
 
 function DefaultLayout() {
     const [isShowSidebar, setIsShowSidebar] = useState(false);
     const [isOpenModal, setIsOpenModal] = useState(false);
+    const {token} = useSelector(state => state.auth)
+    const [title, setTitle] = useState('')
     const dispatch = useDispatch()
+    const navigate = useNavigate()
     dispatch(actions.openModal(setIsOpenModal))
+    const handleCreplaylist = async (e) => {
+        const finalPayload = {
+            name : title
+        }
+        const response = await crePlaylist(finalPayload, token)
+        if(response.status) {
+            setIsOpenModal(prev => !prev)
+        }
+    }
     return (
         <div className="relative flex flex-col overflow-x-hidden bg-gradient-to-r from-[#18162c] to-[#16135e]">
             {isOpenModal && <div className="fixed top-0 right-0 bottom-0 left-0 z-40 bg-[#000] opacity-30"></div>}
@@ -28,8 +41,10 @@ function DefaultLayout() {
                         type="text"
                         placeholder="Nhập tên playlist"
                         className="mb-8 w-full rounded-r-full rounded-l-full border border-gray-400 bg-[#000]/5 px-4 py-2 text-sm"
-                    />
-                    <button onClick={() => setIsOpenModal(prev => !prev)}
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                   />
+                    <button onClick={handleCreplaylist}
                             className="mb-8 w-full rounded-r-full rounded-l-full border border-gray-400 bg-[#000]/5 px-4 py-2 text-sm">
                         Tạo mới
                     </button>

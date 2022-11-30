@@ -1,87 +1,154 @@
-import styles from './Register.module.scss';
+import { yupResolver } from '@hookform/resolvers/yup';
 import classNames from 'classnames/bind';
-import {useState} from 'react';
-import {Link} from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import * as yup from 'yup';
+import * as actions from '../../store/actions';
+import styles from './Register.module.scss';
 
 const cx = classNames.bind(styles);
+const yupSchema = yup
+    .object({
+        username: yup.string().required('Username is required'),
+        name: yup.string().required('Name is required'),
+        password: yup
+            .string()
+            .required('Password is required')
+            .matches(
+                /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/,
+                'Must contain at least 6 characters, one uppercase, one lowercase, one number and one special case character',
+            ),
+        confirmPassword: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match'),
+        email: yup
+            .string()
+            .required('Email is required')
+            .matches(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Email is invalid'),
+        gender: yup.mixed().required('Gender is required'),
+    })
+    .required();
 
 function Register() {
-    const [payload, setPayload] = useState({username: '', name: '', email: '', password: '', gender: '0'});
-    const handleRegister = (e) => {
-        e.preventDefault();
-        console.log(payload);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    // Validate resolver
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm({
+        resolver: yupResolver(yupSchema),
+    });
+
+    const handleRegister = (data) => {
+        // e.preventDefault();
+        console.log(data); // contains confirm password
+
+        const payload = dispatch(actions.register(payload));
+        navigate('/login');
     };
+
     return (
-        <div className={cx('login-page')}>
-            <div className={cx('login-form')}>
+        <div className={cx('register-page')}>
+            <div className={cx('register-form')}>
                 <h2 className={cx('title')}>Register</h2>
-                <form>
+                <form onSubmit={handleSubmit(handleRegister)}>
+                    {/* username */}
                     <div className={cx('user-box')}>
                         <input
                             type="text"
-                            className={cx('login-input')}
-                            value={payload.username}
-                            onChange={(e) => setPayload((prev) => ({...prev, ['username']: e.target.value}))}
+                            className={cx('register-input')}
+                            placeholder="&nbsp;"
+                            {...register('username')}
                         />
                         <label>Username</label>
+                        {errors.username && <p className={cx('form-msg')}>{errors.username.message}</p>}
                     </div>
-                    {/* <InputForm text='Username'/> */}
+                    {/* name */}
                     <div className={cx('user-box')}>
                         <input
                             type="text"
-                            className={cx('login-input')}
-                            value={payload.name}
-                            onChange={(e) => setPayload((prev) => ({...prev, ['name']: e.target.value}))}
+                            className={cx('register-input')}
+                            placeholder="&nbsp;"
+                            {...register('name')}
                         />
                         <label>Name</label>
+                        {errors.name && <p className={cx('form-msg')}>{errors.name.message}</p>}
                     </div>
-
+                    {/* password */}
                     <div className={cx('user-box')}>
                         <input
                             type="password"
-                            className={cx('login-input')}
-                            value={payload.password}
-                            onChange={(e) => setPayload((prev) => ({...prev, ['password']: e.target.value}))}
+                            className={cx('register-input')}
+                            placeholder="&nbsp;"
+                            {...register('password')}
                         />
                         <label>Password</label>
+                        {errors.password && <p className={cx('form-msg')}>{errors.password.message}</p>}
                     </div>
+                    {/* confirm password */}
+                    <div className={cx('user-box')}>
+                        <input
+                            type="password"
+                            className={cx('register-input')}
+                            placeholder="&nbsp;"
+                            {...register('confirmPassword')}
+                        />
+                        <label>Confirm Password</label>
+                        {errors.confirmPassword && <p className={cx('form-msg')}>{errors.confirmPassword.message}</p>}
+                    </div>
+                    {/* email */}
                     <div className={cx('user-box')}>
                         <input
                             type="text"
-                            className={cx('login-input')}
-                            value={payload.email}
-                            onChange={(e) => setPayload((prev) => ({...prev, ['email']: e.target.value}))}
+                            className={cx('register-input')}
+                            placeholder="&nbsp;"
+                            {...register('email')}
                         />
                         <label>Email</label>
+                        {errors.email && <p className={cx('form-msg')}>{errors.email.message}</p>}
                     </div>
-                    <div className="flex gap-2">
-                        <div className="flex items-center gap-1">
-                            <input
-                                type="radio"
-                                value="1"
-                                className={cx('radio')}
-                                checked={payload.gender == '1'}
-                                onChange={(e) => setPayload((prev) => ({...prev, ['gender']: e.target.value}))}
-                            />
-                            <label>Male</label>
+                    {/* Gender */}
+                    <div className="mt-9 flex flex-col">
+                        <div className="flex gap-5">
+                            <div className="flex items-center gap-2">
+                                <input
+                                    type="radio"
+                                    value="1"
+                                    className={cx('radio')}
+                                    id="radio-male"
+                                    {...register('gender')}
+                                />
+                                <label className="cursor-pointer" htmlFor="radio-male">
+                                    Male
+                                </label>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <input
+                                    type="radio"
+                                    value="0"
+                                    className={cx('radio')}
+                                    id="radio-female"
+                                    {...register('gender')}
+                                />
+                                <label className="cursor-pointer" htmlFor="radio-female">
+                                    Female
+                                </label>
+                            </div>
                         </div>
-                        <div className="flex items-center gap-1">
-                            <input
-                                type="radio"
-                                value="0"
-                                className={cx('radio')}
-                                checked={payload.gender == '0'}
-                                onChange={(e) => setPayload((prev) => ({...prev, ['gender']: e.target.value}))}
-                            />
-                            <label>Female</label>
-                        </div>
+                        {errors.gender && <p className={cx('form-msg')}>{errors.gender.message}</p>}
                     </div>
-                    {/* <InputForm text='Password'/> */}
-                    <button type="submit" className={cx('login-btn')} onClick={handleRegister}>
+                    {/* Register btn */}
+                    <button type="submit" className={cx('register-btn')}>
                         Register
                     </button>
-                    <div className='mt-5 underline text-activecolor'>
-                        <Link to={'/login'}>Đã có tài khoản? Đăng nhập</Link>
+                    {/* Login link */}
+                    <div className="mt-6 py-2 tracking-wide text-white">
+                        Already on Tourmaline?{' '}
+                        <Link className={cx('login-link')} to="/login">
+                            Log in
+                        </Link>
                     </div>
                 </form>
             </div>

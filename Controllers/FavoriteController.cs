@@ -11,12 +11,12 @@ namespace tourmaline.Controllers
     [ApiController]
     public class FavoriteController : ControllerBase
     {
-        public FavoriteController(DbConnection database)
+        public FavoriteController(Database database)
         {
             _database = database;
         }
 
-        private readonly DbConnection _database;
+        private readonly Database _database;
 
         [Route("add")]
         [HttpPut]

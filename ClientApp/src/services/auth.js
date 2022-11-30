@@ -19,7 +19,7 @@ export const apiRegister = (payload) =>
         try {
             const response = await axiosConfig({
                 method: 'post',
-                url: '/api/user/register',
+                url: '/api/user/signup',
                 data: payload,
             });
             resolve(response);

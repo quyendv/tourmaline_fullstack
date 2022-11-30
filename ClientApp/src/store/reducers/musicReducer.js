@@ -9,7 +9,10 @@ const initState = {
 const musicReducer = (state = initState, action) => {
     switch (action.type) {
         case actionTypes.SET_CUR_SONG_ID:
-            return state
+            return {
+                ...state,
+                curSongId: action.sid
+            }
         case actionTypes.PLAY:
             return {
                 ...state,

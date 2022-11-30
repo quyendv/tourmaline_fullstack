@@ -10,12 +10,12 @@ namespace tourmaline.Controllers;
 [ApiController]
 public class RecentController : ControllerBase
 {
-    public RecentController(DbConnection dbConnection)
+    public RecentController(Database database)
     {
-        _database = dbConnection;
+        _database = database;
     }
 
-    private DbConnection _database;
+    private Database _database;
 
     [Route("api/[controller]/recents")]
     public async Task<ActionResult<Recents>> GetRecentSongs()

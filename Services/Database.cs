@@ -2,9 +2,9 @@ using MySqlConnector;
 
 namespace tourmaline.Services;
 
-public class DbConnection
+public class Database
 {
-    public DbConnection(string connectionString)
+    public Database(string connectionString)
     {
         ConnectionString = connectionString;
     }

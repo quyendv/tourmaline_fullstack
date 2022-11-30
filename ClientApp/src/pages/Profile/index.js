@@ -1,11 +1,10 @@
-import {faCameraRetro} from '@fortawesome/free-solid-svg-icons';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import { faCameraRetro } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames/bind';
-import {createContext, useEffect, useRef, useState} from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styles from './Profile.module.scss';
 
 const cx = classNames.bind(styles);
-const UserContext = createContext();
 
 function Profile() {
     const [userInfo, setUserInfo] = useState({});
@@ -67,7 +66,7 @@ function Profile() {
             {/* Avatar + About */}
             <div className={cx('profile-item1')}>
                 <div className={cx('profile__avatar', 'mb-4')}>
-                    <img src={userInfo.avatar} alt="" className="mx-auto h-[90px] w-[90px] rounded-full object-cover"/>
+                    <img src={userInfo.avatar} alt="" className="mx-auto h-[90px] w-[90px] rounded-full object-cover" />
                 </div>
 
                 <div className={cx('profile__name', 'flex flex-col items-center justify-center')}>
@@ -82,10 +81,10 @@ function Profile() {
                             'mx-auto flex items-center justify-center gap-2 rounded-lg bg-blue-400 p-2',
                         )}
                     >
-                        <FontAwesomeIcon icon={faCameraRetro}/>
+                        <FontAwesomeIcon icon={faCameraRetro} />
                         <span>Change Photos</span>
                     </div>
-                    <input type="file" className="absolute inset-0 cursor-pointer opacity-0"/>
+                    <input type="file" className="absolute inset-0 cursor-pointer opacity-0" />
                 </div>
 
                 {/* {userInfo.createTime && (
@@ -186,21 +185,23 @@ function Profile() {
                                 <input
                                     type="radio"
                                     className={cx('form-control')}
+                                    id="male"
                                     name="gender"
                                     value={1}
                                     defaultChecked={userInfo.gender}
                                     onChange={handleChangeInput}
                                 />
-                                <span>Male</span>
+                                <label htmlFor="male">Male</label>
                                 <input
                                     type="radio"
                                     className={cx('form-control')}
+                                    id="female"
                                     name="gender"
                                     value={0}
                                     defaultChecked={!userInfo.gender}
                                     onChange={handleChangeInput}
                                 />
-                                <span>Female</span>
+                                <label htmlFor="female">Female</label>
                             </div>
                         </div>
                     </div>
@@ -225,6 +226,7 @@ function Profile() {
                             'profile__cancel-btn',
                             'rounded-md bg-gray-300 py-1.5 px-3 text-xl font-semibold',
                         )}
+                        type="button"
                     >
                         Cancel
                     </button>
@@ -244,5 +246,4 @@ function Profile() {
     );
 }
 
-export {Profile, UserContext};
 export default Profile;

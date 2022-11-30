@@ -32,16 +32,12 @@ function Player({setIsShowSidebar}) {
     const thumbRef = useRef();
     console.log(isPlaying);
     // TODOS
-    /*    useEffect(() => {
-        const fetchSong = async() => {
-            const response = await apis.getSong(1)
-        }
-        fetchSong()
-    },[])*/
     useEffect(() => {
-        setAudio(new Audio('https://localhost:5000/api/song/getMedia/1'));
-
-    }, []);
+        let src
+        src = curSongId == 1 ?  'http://media.w3.org/2010/05/sound/sound_90.mp3' : 'https://vnno-pt-4-tf-mp3-s1-m-zmp3.zmdcdn.me/8180715f2f1ec6409f0f/1039021604412062272?authen=exp=1669952480~acl=/8180715f2f1ec6409f0f/*~hmac=c1d40db9108312521ee50d6af1b0cd38'
+        audio.pause()
+        setAudio(new Audio(src))
+    }, [curSongId])
     console.log(audio.duration)
     var intervalId;
     useEffect(() => {
@@ -52,9 +48,9 @@ function Player({setIsShowSidebar}) {
             audio.play();
             intervalId = setInterval(() => {
                 setCurrentSecond(audio.currentTime);
-                let percent = Math.round((audio.currentTime * 10000) / 255) / 100;
+                let percent = Math.round((audio.currentTime * 10000) / audio.duration) / 100;
                 thumbRef.current.style.cssText = `right:${100 - percent}%`;
-            }, 500);
+            }, 200);
         }
         return () => {
             intervalId && clearInterval(intervalId);
@@ -72,10 +68,21 @@ function Player({setIsShowSidebar}) {
     useEffect(() => {
         audio.volume = volume / 100;
     }, [volume]);
+    useEffect(() => {
+        const handleEnd = () => {
+            console.log('end')
+            audio.pause();
+            dispatch(actions.play(false))
+        }
+        audio.addEventListener('ended', handleEnd);
+        return () => {
+            audio.removeEventListener('ended', handleEnd)
+        }
+    },[audio])
     const handleClickProgressbar = (e) => {
         const trackkRect = trackRef.current.getBoundingClientRect();
         const percent = Math.round(((e.clientX - trackkRect.left) * 10000) / trackkRect.width) / 100;
-        audio.currentTime = (percent * 255) / 100;
+        audio.currentTime = (percent * audio.duration) / 100;
         thumbRef.current.style.cssText = `right: ${100 - percent}%`;
         setCurrentSecond(audio.currentTime);
     };
@@ -119,7 +126,7 @@ function Player({setIsShowSidebar}) {
                             className="absolute top-0 left-0 bottom-0 rounded-r-full rounded-l-full bg-activecolor"
                         ></div>
                     </div>
-                    <span>{moment.utc(255 * 1000).format('mm:ss')}</span>
+                    <span>{moment.utc((audio.duration || 0 ) * 1000).format('mm:ss')}</span>
                 </div>
             </div>
 
