@@ -29,6 +29,23 @@ html {
   }
 }
 
+// Scrollbar
+html *::-webkit-scrollbar {
+    border-radius: 0;
+    width: 8px;
+    opacity: 0;
+}
+
+html *::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(22, 24, 35, 0.06);
+}
+
+html *::-webkit-scrollbar-track {
+    border-radius: 0;
+    background-color: rgba(0, 0, 0, 0);
+}
+
 body {
   font-family: 'ProximaNovaRegular';
   // font-size: 1.6rem;

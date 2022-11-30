@@ -185,21 +185,23 @@ function Profile() {
                                 <input
                                     type="radio"
                                     className={cx('form-control')}
+                                    id="male"
                                     name="gender"
                                     value={1}
                                     defaultChecked={userInfo.gender}
                                     onChange={handleChangeInput}
                                 />
-                                <span>Male</span>
+                                <label htmlFor="male">Male</label>
                                 <input
                                     type="radio"
                                     className={cx('form-control')}
+                                    id="female"
                                     name="gender"
                                     value={0}
                                     defaultChecked={!userInfo.gender}
                                     onChange={handleChangeInput}
                                 />
-                                <span>Female</span>
+                                <label htmlFor="female">Female</label>
                             </div>
                         </div>
                     </div>
