@@ -1,12 +1,12 @@
 import classNames from 'classnames/bind';
-import {useCallback, useEffect, useRef, useState} from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import uploadImages from '../../assets/images';
 import styles from './DropFile.module.scss';
 import FileItem from './FileItem';
 
 const cx = classNames.bind(styles);
 
-function DropFile({onFileChange}) {
+function DropFile({ onFileChange }) {
     const [file, setFile] = useState(); // inputFile: audio, includes song's info when click addBtn
     const [fileList, setFileList] = useState([]); // List Audio File with each file contains song's info
     const [songName, setSongName] = useState('');
@@ -17,11 +17,7 @@ function DropFile({onFileChange}) {
     const dropAreaRef = useRef();
     const inputFileAudioRef = useRef();
     const songDetailsRef = useRef();
-
-    // TODO: test re-render
-    useEffect(() => {
-        console.log('useEffect DropFile called!');
-    });
+    const newData = useRef();
 
     // --------- handle remove class (css) -------------
     const handleDragEnter = () => {
@@ -58,6 +54,11 @@ function DropFile({onFileChange}) {
             };
             setFileList([...fileList, file]);
 
+            // Save to newData:
+            newData.current = { ...file.data, file };
+            // TODO: Sơn Kao post data chỗ này
+            console.log(newData.current);
+
             // clear song-details (clear inputs + clear state file (clear shortPreview when it's null))
             // + clear inputFile (can re-choose prevFile again)
             // + clear class 'invalid' in songDetailsRef.current
@@ -92,8 +93,9 @@ function DropFile({onFileChange}) {
         <div className={cx('wrapper')}>
             {/* Drop & Info */}
             <div className={cx('upload-area')}>
-                {/* Drop */}
+                {/* Drop & shortPreview */}
                 <div className={cx('left-part')}>
+                    {/* Drop */}
                     <div
                         className={cx('drop-area')}
                         ref={dropAreaRef}
@@ -101,7 +103,7 @@ function DropFile({onFileChange}) {
                         onDragLeave={handleDragLeave}
                         onDrop={handleDrop}
                     >
-                        <img src={uploadImages.cloudUpload} alt=""/>
+                        <img src={uploadImages.cloudUpload} alt="" />
                         <p>Drag & Drop or Choose your files here</p>
                         <input
                             type="file"
@@ -111,7 +113,7 @@ function DropFile({onFileChange}) {
                         />
                     </div>
                     {/* ShortPreview: check file.type, some file extensions are not recognized: sql, ... -> handle after */}
-                    {file && file.type && <FileItem file={file}/>}
+                    {file && file.type && <FileItem file={file} />}
                 </div>
 
                 {/* Info */}
