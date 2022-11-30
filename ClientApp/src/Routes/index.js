@@ -3,7 +3,6 @@ import OnlyBodyLayout from '../layouts/OnlyBody';
 import Contact from '../pages/Contact';
 import Login from '../pages/Login';
 import MainScreen from '../pages/MainScreen';
-import Player from '../pages/Player';
 import Upload from '../pages/Upload';
 import Library from '../pages/Library';
 import { routesConfigPrivate, routesConfigPublic } from './routesConfig';
@@ -15,10 +14,7 @@ export const publicRoutes = [
         page: MainScreen,
     },
 
-    {
-        path: routesConfigPublic.playerRoute,
-        page: Player,
-    },
+
 
     {
         path: routesConfigPublic.libraryRoute,
