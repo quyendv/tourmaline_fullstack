@@ -9,8 +9,11 @@ export const routesConfigPublic = {
     
     STAR: '*',
 };
+
 export const LOGIN = '/login';
 export const REGISTER = '/register';
+export const ForgotPasswordRoute = '/forgot-password';
+
 export const routesConfigPrivate = {
     system: '/system/',
     profileRoute: 'profile',
