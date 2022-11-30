@@ -1,16 +1,24 @@
 import styles from './Register.module.scss';
 import classNames from 'classnames/bind';
 import {useState} from 'react';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
+import { apiRegister } from '../../services/auth';
+import { useDispatch } from 'react-redux';
+import * as actions from '../../store/actions'
 
 const cx = classNames.bind(styles);
 
 function Register() {
     const [payload, setPayload] = useState({username: '', name: '', email: '', password: '', gender: '0'});
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
     const handleRegister = (e) => {
         e.preventDefault();
-        console.log(payload);
+        const finalpayload = {username: payload.username, password: payload.password}
+        dispatch(actions.register(finalpayload))
+        navigate('/login')
     };
+    
     return (
         <div className={cx('login-page')}>
             <div className={cx('login-form')}>

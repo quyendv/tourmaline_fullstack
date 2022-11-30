@@ -5,6 +5,8 @@ export const routesConfigPublic = {
     albumRoute: 'album',
     favoritesRoute: 'favorites',
     settingsRoute: 'setting',
+    playlist__title__pid:'playlist/:title/:pid',
+    
     STAR: '*',
 };
 export const LOGIN = '/login';
