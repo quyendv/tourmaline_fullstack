@@ -27,17 +27,6 @@
         <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Areas\FavoriteController\Controllers" />
-      <Folder Include="Areas\FavoriteController\Data" />
-      <Folder Include="Areas\FavoriteController\Models" />
-      <Folder Include="Areas\FavoriteController\Views" />
-      <Folder Include="Areas\SuggestionController\Controllers" />
-      <Folder Include="Areas\SuggestionController\Data" />
-      <Folder Include="Areas\SuggestionController\Models" />
-      <Folder Include="Areas\SuggestionController\Views" />
-    </ItemGroup>
-
     <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
         <!-- Ensure Node.js is installed -->
         <Exec Command="node --version" ContinueOnError="true">

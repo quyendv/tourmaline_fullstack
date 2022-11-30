@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -36,11 +37,9 @@ public class SongController : ControllerBase
         {
             Id = result.First()["id"],
             Album = result.First()["album"],
-            CoverUrl = result.First()["coverUrl"],
             Description = result.First()["description"],
             Lyrics = result.First()["lyrics"],
             Name = result.First()["name"],
-            Path = result.First()["path"],
             Uploader = result.First()["uploader"],
             UploadTime = result.First()["uploadTime"]
         };
@@ -105,6 +104,7 @@ public class SongController : ControllerBase
 
     [HttpPost("FileUpload")]
     [Route("upload")]
+    [DataType("multipart/formdata")]
     public async Task<ActionResult> UploadSong([FromForm] IFormFile media, [FromForm] IFormFile cover,
         [FromForm] string name)
     {
@@ -134,8 +134,6 @@ public class SongController : ControllerBase
                 Name = name,
                 Uploader = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value,
                 UploadTime = DateTime.Now,
-                Path = fileName,
-                CoverUrl = imageName
             };
             await _connection.Add("song", new Dictionary<string, dynamic>
             {
@@ -143,11 +141,11 @@ public class SongController : ControllerBase
                 { "uploadTime", song.UploadTime.ToString("yyyy-MM-dd H:mm:ss") },
                 { "uploader", song.Uploader },
                 { "name", song.Name },
-                { "coverUrl", song.CoverUrl },
+                { "coverUrl", imageName },
                 { "lyrics", song.Lyrics },
                 { "description", song.Description },
                 { "album", song.Album },
-                { "path", song.Path }
+                { "path", fileName }
             });
             return Ok("Upload succeeded!");
         }

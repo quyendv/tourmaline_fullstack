@@ -50,11 +50,9 @@ public class PlaylistController : ControllerBase
             {
                 Id = songId,
                 Album = songQuery["album"],
-                CoverUrl = songQuery["coverUrl"],
                 Description = songQuery["description"],
                 Lyrics = songQuery["lyrics"],
                 Name = songQuery["name"],
-                Path = songQuery["path"],
                 UploadTime = songQuery["uploadTime"],
                 Uploader = songQuery["uploader"]
             });
