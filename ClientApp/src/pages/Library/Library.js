@@ -1,11 +1,21 @@
+import { useEffect } from 'react'
 import {useSelector} from 'react-redux'
-import {icons} from '../../utils/icons'
 
+import {icons} from '../../utils/icons'
+import { getPlaylist } from '../../services/music'
 
 const {BsFillPlayFill, AiOutlinePlusCircle} = icons
 
 function Library() {
     const {setIsOpenModal} = useSelector(state => state.actions)
+    const {token} = useSelector(state => state.auth)
+    useEffect(() => {
+        const fetchPlaylist = async () => {
+            const response = await getPlaylist(token, 1)
+            console.log(response)            
+        }
+        fetchPlaylist()
+    }, [])
     return (
         <div className='text-white'>
             <div className='flex items-center px-5 mt-10 gap-4'>
