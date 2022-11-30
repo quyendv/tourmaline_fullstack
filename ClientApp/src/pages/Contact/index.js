@@ -33,7 +33,6 @@ function Contact() {
         const toastId = toast.loading('Please wait...');
         emailjs.sendForm('service_ri6yvj6', 'template_indvrjj', e.target, 'eZafXlsFn3sqDHeHI').then(
             (result) => {
-                //add 1 cai thong bao gui thanh cong quyen oi
                 toast.update(toastId, {
                     render: 'Send message successfully!',
                     type: 'success',
@@ -44,8 +43,7 @@ function Contact() {
                     },
                 });
             },
-            (error) => {
-                //add thong bao gui that bai
+            (error) => {      
                 toast.update(toastId, {
                     render: 'Send message failed!',
                     type: 'error',
@@ -164,24 +162,7 @@ function Contact() {
                     </p>
                 </div>
 
-                {/* Social */}
-                <div className="mt-8">
-                    <i className={cx('contact-info__social-icon')}>
-                        <FontAwesomeIcon icon={faFacebookSquare}/>
-                    </i>
-                    <i className={cx('contact-info__social-icon')}>
-                        <FontAwesomeIcon icon={faGooglePlusSquare}/>
-                    </i>
-                    <i className={cx('contact-info__social-icon')}>
-                        <FontAwesomeIcon icon={faGithubSquare}/>
-                    </i>
-                    <i className={cx('contact-info__social-icon')}>
-                        <FontAwesomeIcon icon={faInstagramSquare}/>
-                    </i>
-                    <i className={cx('contact-info__social-icon')}>
-                        <FontAwesomeIcon icon={faLinkedin}/>
-                    </i>
-                </div>
+                
             </div>
         </div>
     );
