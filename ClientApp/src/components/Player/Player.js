@@ -32,18 +32,11 @@ function Player({setIsShowSidebar}) {
     const thumbRef = useRef();
     console.log(isPlaying);
     // TODOS
-    /*    useEffect(() => {
-        const fetchSong = async() => {
-            const response = await apis.getSong(1)
-        }
-        fetchSong()
-    },[])*/
-    // useEffect(() => {
-    //     setAudio(new Audio('https://localhost:5000/api/song/getMedia/1'));
-
-    // }, []);
     useEffect(() => {
-        setAudio(new Audio('http://media.w3.org/2010/05/sound/sound_90.mp3'))
+        let src
+        src = curSongId == 1 ?  'http://media.w3.org/2010/05/sound/sound_90.mp3' : 'https://vnno-pt-4-tf-mp3-s1-m-zmp3.zmdcdn.me/8180715f2f1ec6409f0f/1039021604412062272?authen=exp=1669952480~acl=/8180715f2f1ec6409f0f/*~hmac=c1d40db9108312521ee50d6af1b0cd38'
+        audio.pause()
+        setAudio(new Audio(src))
     }, [curSongId])
     console.log(audio.duration)
     var intervalId;
