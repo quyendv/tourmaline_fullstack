@@ -205,4 +205,42 @@ public class SongController : ControllerBase
             return result ? Ok() : StatusCode(StatusCodes.Status500InternalServerError);
         }
     }
+
+    [HttpGet]
+    [AllowAnonymous]
+    [Route("getUploaded")]
+    public async Task<JsonResult> GetSongs(string username)
+    {
+        var userNameMatchCond = new Dictionary<string, dynamic>() { { "username", username } };
+        var doesUserExist = (await _connection.Read("user", userNameMatchCond)).Count != 0;
+
+        if (!doesUserExist)
+        {
+            return new JsonResult("User not found!")
+            {
+                StatusCode = StatusCodes.Status406NotAcceptable
+            };
+        }
+
+        var songsInfo = await _connection.Read("song", new Dictionary<string, dynamic>() { { "uploader", username } },
+            new List<string>()
+            {
+                "id",
+                "uploadTime",
+                "name",
+                "lyrics",
+                "description",
+                "album"
+            });
+
+        return new JsonResult(songsInfo);
+    }
+
+    [HttpGet]
+    [AllowAnonymous]
+    [Route("find")]
+    public async Task<JsonResult> FindSongs(string keyword)
+    {
+        return new JsonResult(await _connection.CallFindProcedure("FindSongs", keyword));
+    }
 }

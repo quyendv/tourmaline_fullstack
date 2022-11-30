@@ -20,6 +20,14 @@ public class UserController : ControllerBase
 
     public static readonly string IsAdminClaimName = "IsAdmin";
 
+    private bool CanCurrentUserModifyThisUser(string username)
+    {
+        var isAdminClaim = HttpContext.User.FindFirst(UserController.IsAdminClaimName);
+        if (isAdminClaim != null && bool.Parse(isAdminClaim.Value)) return true;
+
+        return username == HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
+    }
+
     public UserController(Database connection, IConfiguration configuration)
     {
         _connection = connection;
@@ -86,19 +94,43 @@ public class UserController : ControllerBase
             return StatusCode(StatusCodes.Status400BadRequest, "Cannot create user!");
     }
 
-    [HttpPost]
-    [Route("editProfile")]
-    public async Task<ActionResult> EditProfile([FromBody] User user)
+    [HttpPut]
+    [Route("edit")]
+    public async Task<ActionResult> EditProfile()
     {
-        var result =
-            await _connection.Read("user", new Dictionary<string, dynamic>() { { "username", user.Username } });
-        if (result.Count == 0)
+        var info = await Request.ReadFromJsonAsync<EditProfileModel>();
+        if (info == null) return StatusCode(StatusCodes.Status406NotAcceptable, "Incorrect request body!");
+
+        var userNameMatchCond = new Dictionary<string, dynamic>() { { "username", info.Username } };
+        var doesUserExist = (await _connection.Read("user", userNameMatchCond)).Count != 0;
+
+        if (!doesUserExist)
         {
-            return StatusCode(StatusCodes.Status400BadRequest);
+            return StatusCode(StatusCodes.Status406NotAcceptable, "User not found!");
         }
 
-        // TODO: add edit profile
-        return StatusCode(StatusCodes.Status201Created);
+        if (!CanCurrentUserModifyThisUser(info.Username))
+        {
+            return StatusCode(StatusCodes.Status403Forbidden, "Current user does not have the required permission to edit the targeted user's profile!");
+        }
+
+        var result = await _connection.CallUpdateProcedure("EditUserProfile", new Dictionary<string, dynamic>()
+        {
+            { "username", info.Username },
+            { "newName", info.Name },
+            { "newBio", info.Bio },
+            { "newBirth", info.Birth },
+            { "newGender", info.Gender },
+            { "newEmail", info.Email },
+            { "newIsAdmin", info.IsAdmin }
+        });
+
+        if (!result)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Error occured on server side updating profile!");
+        }
+
+        return Ok();
     }
 
     [HttpPost]
@@ -157,5 +189,13 @@ public class UserController : ControllerBase
         }
 
         return StatusCode(StatusCodes.Status406NotAcceptable, "User not found!");
+    }
+
+    [HttpGet]
+    [AllowAnonymous]
+    [Route("find")]
+    public async Task<JsonResult> FindUsers(string keyword)
+    {
+        return new JsonResult(await _connection.CallFindProcedure("FindUsers", keyword));
     }
 }

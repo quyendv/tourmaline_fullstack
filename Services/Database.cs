@@ -142,4 +142,70 @@ public class Database
         connection.Close();
         return Task.FromResult(check);
     }
+
+    private MySqlDataReader CallProcedure(MySqlConnection connection, string procedureName, Dictionary<string, dynamic> parameters)
+    {
+        var command = new MySqlCommand(procedureName, connection);
+        foreach (var parameter in parameters)
+        {
+            command.Parameters.AddWithValue(parameter.Key, parameter.Value);
+        }
+        command.CommandType = System.Data.CommandType.StoredProcedure;
+
+        return command.ExecuteReader();
+    }
+
+    public Task<List<Dictionary<string, dynamic>>> CallFindProcedure(string procedureName, string match)
+    {
+        return CallReadProcedure(procedureName, new Dictionary<string, dynamic>() { { "keyword", '%' + match + '%' } });
+    }
+
+    public Task<bool> CallUpdateProcedure(string procedureName, Dictionary<string, dynamic> parameters)
+    {
+        var result = true;
+        var connection = new MySqlConnection(ConnectionString);
+        connection.Open();
+        try
+        {
+            CallProcedure(connection, procedureName, parameters);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            result = false;
+        }
+
+        connection.Close();
+        return Task.FromResult(result);
+    }
+
+    public Task<List<Dictionary<string, dynamic>>> CallReadProcedure(string procedureName, Dictionary<string, dynamic> parameters)
+    {
+        var result = new List<Dictionary<string, dynamic>>();
+        var connection = new MySqlConnection(ConnectionString);
+        connection.Open();
+        try
+        {
+            var reader = CallProcedure(connection, procedureName, parameters);
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    var record = new Dictionary<string, dynamic>();
+                    for (var i = 0; i < reader.FieldCount; i++)
+                        record.Add(reader.GetName(i), reader.GetValue(i));
+
+                    result.Add(record);
+                }
+
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+
+        connection.Close();
+        return Task.FromResult(result);
+    }
 }
