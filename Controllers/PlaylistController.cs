@@ -61,6 +61,25 @@ public class PlaylistController : ControllerBase
         return Ok(playlist);
     }
 
+    [Route("getCover")]
+    [HttpGet]
+    public async Task<ActionResult> GetCover(int id)
+    {
+        var idConds = new Dictionary<string, dynamic>() { { "id", id } };
+        var query = await _database.Read("playlist", idConds);
+        var isPlaylistExist = query.Count != 0;
+
+        if (!isPlaylistExist) return StatusCode(StatusCodes.Status400BadRequest, "Song not found!");
+        string coverPath = query[0]["cover_url"];
+
+        var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        var file = new FileStream($"{homeDir}/storage/cover/{coverPath}", FileMode.Open, FileAccess.Read,
+            FileShare.None, 2048,
+            true);
+
+        return File(file, "image/jpeg", true);
+    }
+
     [Route("create")]
     [HttpPost]
     public async Task<ActionResult<Playlist>> CreatePlaylist([FromForm] string name, [FromForm] IFormFile? cover)

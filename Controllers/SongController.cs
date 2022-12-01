@@ -85,21 +85,15 @@ public class SongController : ControllerBase
         var songObjects = await _connection.Read("song", idConds);
         var isSongExist = songObjects.Count != 0;
 
-        if (isSongExist)
-        {
-            string coverPath = songObjects[0]["coverUrl"];
+        if (!isSongExist) return StatusCode(StatusCodes.Status400BadRequest, "Song not found!");
+        string coverPath = songObjects[0]["coverUrl"];
 
-            var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            var file = new FileStream($"{homeDir}/storage/cover/{coverPath}", FileMode.Open, FileAccess.Read,
-                FileShare.None, 2048,
-                true);
+        var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        var file = new FileStream($"{homeDir}/storage/cover/{coverPath}", FileMode.Open, FileAccess.Read,
+            FileShare.None, 2048,
+            true);
 
-            return File(file, "image/jpeg", true);
-        }
-        else
-        {
-            return StatusCode(StatusCodes.Status400BadRequest, "Song not found!");
-        }
+        return File(file, "image/jpeg", true);
     }
 
     [HttpPost("FileUpload")]
