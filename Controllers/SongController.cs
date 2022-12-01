@@ -2,6 +2,8 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Newtonsoft.Json;
+using NuGet.Protocol;
 using tourmaline.Models;
 using tourmaline.Services;
 
@@ -100,69 +102,70 @@ public class SongController : ControllerBase
     [Route("upload")]
     [DataType("multipart/formdata")]
     public async Task<ActionResult> UploadSong([FromForm] IFormFile media, [FromForm] IFormFile cover,
-        [FromForm] string name)
+        [FromBody] Song info)
     {
-        if (media.Length > 0 && cover.Length > 0)
+        if (media.Length <= 0 || cover.Length <= 0) return StatusCode(StatusCodes.Status406NotAcceptable);
+        var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        Directory.CreateDirectory($"{homeDir}/storage/media");
+        Directory.CreateDirectory($"{homeDir}/storage/cover");
+        var id = new Random().Next();
+        var fileName = $"{id}.mp3";
+        var filePath = Path.Combine($"{homeDir}/storage/media", fileName);
+        var imageName = $"{id}.jpg";
+        var imagePath = Path.Combine($"{homeDir}/storage/cover", imageName);
+        await using (var stream = new FileStream(filePath, FileMode.Create))
         {
-            var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            Directory.CreateDirectory($"{homeDir}/storage/media");
-            Directory.CreateDirectory($"{homeDir}/storage/cover");
-            var id = new Random().Next();
-            var fileName = $"{id}.mp3";
-            var filePath = Path.Combine($"{homeDir}/storage/media", fileName);
-            var imageName = $"{id}.jpg";
-            var imagePath = Path.Combine($"{homeDir}/storage/cover", imageName);
-            await using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await media.CopyToAsync(stream);
-            }
-
-            await using (var stream = new FileStream(imagePath, FileMode.Create))
-            {
-                await cover.CopyToAsync(stream);
-            }
-
-            var song = new Song
-            {
-                Id = id,
-                Name = name,
-                Uploader = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value,
-                UploadTime = DateTime.Now,
-            };
-            await _connection.Add("song", new Dictionary<string, dynamic>
-            {
-                { "id", song.Id },
-                { "uploadTime", song.UploadTime.ToString("yyyy-MM-dd H:mm:ss") },
-                { "uploader", song.Uploader },
-                { "name", song.Name },
-                { "coverUrl", imageName },
-                { "lyrics", song.Lyrics },
-                { "description", song.Description },
-                { "album", song.Album },
-                { "path", fileName }
-            });
-            return Ok("Upload succeeded!");
+            await media.CopyToAsync(stream);
         }
 
-        return StatusCode(StatusCodes.Status406NotAcceptable);
+        await using (var stream = new FileStream(imagePath, FileMode.Create))
+        {
+            await cover.CopyToAsync(stream);
+        }
+
+        info.Uploader = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+        await _connection.Add("song", new Dictionary<string, dynamic>
+        {
+            { "id", info.Id },
+            { "uploadTime", info.UploadTime.ToString("yyyy-MM-dd H:mm:ss") },
+            { "uploader", info.Uploader },
+            { "name", info.Name },
+            { "coverUrl", imageName },
+            { "lyrics", info.Lyrics },
+            { "description", info.Description },
+            { "album", info.Album },
+            { "path", fileName }
+        });
+        return Ok("Upload succeeded!");
     }
 
     [HttpPut]
     [Route("edit")]
-    public async Task<ActionResult> EditSong(string id, IDictionary<string, dynamic> infos)
+    public async Task<ActionResult> EditSong([FromBody] Song info)
     {
-        var idConds = new Dictionary<string, dynamic>() { { "id", long.Parse(id) } };
-        var songObjects = await _connection.Read("song", idConds);
-        var isSongExist = songObjects.Count != 0;
+        var queryResult = await _connection.Read("song", new Dictionary<string, dynamic>()
+        {
+            { "id", info.Id }
+        });
+        var isSongExist = queryResult.Count != 0;
 
         if (isSongExist)
         {
             // Check song ownership
-            if (!CanCurrentUserModifySong(songObjects[0]["uploader"]))
+            if (!CanCurrentUserModifySong(queryResult[0]["uploader"]))
                 return StatusCode(StatusCodes.Status403Forbidden,
                     "The current user does not have the required permission to delete the song!");
 
-            var result = await _connection.Update("song", infos, idConds);
+            var toDictionary = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(info.ToJson())!;
+            toDictionary.Remove("id");
+            var result = await _connection.Update(
+                "song",
+                toDictionary,
+                new Dictionary<string, dynamic>()
+                {
+                    { "id", info.Id }
+                }
+            );
             return result ? Ok() : StatusCode(StatusCodes.Status500InternalServerError);
         }
         else

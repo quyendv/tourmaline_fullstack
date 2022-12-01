@@ -3,15 +3,16 @@ namespace tourmaline.Models;
 public class Song
 {
     public Song(int id = -1, string uploader = "", string name = "", string lyrics = "",
-        string description = "", string album = "")
+        string description = "", string album = "", List<string>? tags = null)
     {
         Id = id;
-        UploadTime = DateTime.Parse("1970-01-01 00:00:00");
+        UploadTime = DateTime.Now;
         Uploader = uploader;
         Name = name;
         Lyrics = lyrics;
         Description = description;
         Album = album;
+        Tags = tags ?? new List<string>();
     }
 
     public int Id { get; set; }
@@ -21,4 +22,5 @@ public class Song
     public string Lyrics { get; set; }
     public string Description { get; set; }
     public string Album { get; set; }
+    public List<string> Tags { get; set; }
 }

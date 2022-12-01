@@ -33,7 +33,6 @@ public class PlaylistController : ControllerBase
             Id = result.First()["id"],
             UserName = result.First()["user"],
             Name = result.First()["name"],
-            Cover = result.First()["cover_url"]
         };
         var songs = await _database.Read("playlistsongs", new Dictionary<string, dynamic>()
         {
@@ -90,19 +89,17 @@ public class PlaylistController : ControllerBase
             Name = name,
             UserName = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value,
         };
-
+        
+        var fileName = $"{playlist.Id}.jpg";
         if (cover != null)
         {
             var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             Directory.CreateDirectory($"{homeDir}/storage/cover");
-            var fileName = $"{playlist.Id}.jpg";
             var filePath = Path.Combine($"{homeDir}/storage/cover", fileName);
             await using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 await cover.CopyToAsync(stream);
             }
-
-            playlist.Cover = fileName;
         }
 
         await _database.Add("playlist", new Dictionary<string, dynamic>()
@@ -110,7 +107,7 @@ public class PlaylistController : ControllerBase
             { "id", playlist.Id },
             { "name", playlist.Name },
             { "user", playlist.UserName },
-            { "cover_url", playlist.Cover }
+            { "cover_url", fileName }
         });
         return Ok(playlist);
     }
@@ -143,29 +140,33 @@ public class PlaylistController : ControllerBase
         var isPlaylistExist =
             (await _database.Read("playlist", new Dictionary<string, dynamic>() { { "id", playlistId } })).Count != 0;
         if (!isPlaylistExist) return StatusCode(StatusCodes.Status400BadRequest, "Playlist not found!");
-        await _database.Add("playlistsongs", new Dictionary<string, dynamic>()
+        var result = await _database.Add("playlistsongs", new Dictionary<string, dynamic>()
         {
             { "songId", songId },
             { "playlistId", playlistId }
         });
-        return Ok();
+        return result ? Ok() : StatusCode(StatusCodes.Status409Conflict, "Song is already added!");
     }
 
     [Route("remove")]
     [HttpDelete]
-    public async Task<ActionResult> RemoveFromPlaylist(int songId, int playlistId)
+    public async Task<ActionResult> RemoveFromPlaylist([FromBody] int[] songIds, int playlistId)
     {
-        var isSongExist =
-            (await _database.Read("song", new Dictionary<string, dynamic>() { { "id", songId } })).Count != 0;
-        if (!isSongExist) return StatusCode(StatusCodes.Status400BadRequest, "Song not found!");
-        var isPlaylistExist =
-            (await _database.Read("playlist", new Dictionary<string, dynamic>() { { "id", playlistId } })).Count != 0;
-        if (!isPlaylistExist) return StatusCode(StatusCodes.Status400BadRequest, "Playlist not found!");
-        await _database.Delete("playlistsongs", new Dictionary<string, dynamic>()
+        foreach (var songId in songIds)
         {
-            { "songId", songId },
-            { "playlistId", playlistId }
-        });
+            var isSongExist =
+                (await _database.Read("song", new Dictionary<string, dynamic>() { { "id", songId } })).Count != 0;
+            var isPlaylistExist =
+                (await _database.Read("playlist", new Dictionary<string, dynamic>() { { "id", playlistId } })).Count != 0;
+            if (isSongExist && isPlaylistExist)
+            {
+                await _database.Delete("playlistsongs", new Dictionary<string, dynamic>()
+                {
+                    { "songId", songId },
+                    { "playlistId", playlistId }
+                });
+            }
+        }
         return Ok();
     }
 }

@@ -15,7 +15,7 @@ public class RecentController : ControllerBase
         _database = database;
     }
 
-    private Database _database;
+    private readonly Database _database;
 
     [Route("api/[controller]/recents")]
     public async Task<ActionResult<Recents>> GetRecentSongs()
