@@ -19,14 +19,14 @@ public class Database
         connection.Open();
         try
         {
-            if (columns == null || columns.Count == 0)
-            {
-                columns = new List<string>();
-                var query = new MySqlCommand($"SHOW COLUMNS FROM `{table}`", connection).ExecuteReader();
-                while (query.Read()) columns.Add(query.GetString(0));
-                query.Close();
-            }
-
+            // if (columns == null || columns.Count == 0)
+            // {
+            //     columns = new List<string>();
+            //     var query = new MySqlCommand($"SHOW COLUMNS FROM `{table}`", connection).ExecuteReader();
+            //     while (query.Read()) columns.Add(query.GetString(0));
+            //     query.Close();
+            // }
+            //
             var cons = new List<string>();
             if (conditions != null)
                 foreach (var entry in conditions)
@@ -36,14 +36,14 @@ public class Database
                 }
 
             var queryString =
-                $"SELECT {(columns.Count == 0 ? "*" : string.Join(", ", columns))} FROM {table} {(conditions != null ? $"WHERE {string.Join(", ", cons)}" : "")} {(sortBy == null ? "" : $"SORT BY {sortBy}")}";
+                $"SELECT {(columns is { Count: 0 } ? "*" : string.Join(", ", columns))} FROM {table} {(conditions != null ? $"WHERE {string.Join(", ", cons)}" : "")} {(sortBy == null ? "" : $"SORT BY {sortBy}")}";
             Console.WriteLine($"Query: {queryString}");
             var reader = new MySqlCommand(queryString, connection).ExecuteReader();
             if (reader.HasRows)
                 while (reader.Read())
                 {
                     var record = new Dictionary<string, dynamic>();
-                    for (var i = 0; i < columns.Count; i++) record.Add(columns[i], reader.GetValue(i));
+                    for (var i = 0; i < reader.FieldCount; i++) record.Add(reader.GetName(i), reader.GetValue(i));
                     result.Add(record);
                 }
         }

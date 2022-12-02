@@ -29,6 +29,8 @@ public class SongController : ControllerBase
         return songOwnerName == HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
     }
 
+    private string CurrentSessionUsername => HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
+
     [HttpGet]
     [Route("get")]
     public async Task<ActionResult<Song>> GetSongInfo(int id)
@@ -101,8 +103,7 @@ public class SongController : ControllerBase
     [HttpPost("FileUpload")]
     [Route("upload")]
     [DataType("multipart/formdata")]
-    public async Task<ActionResult> UploadSong([FromForm] IFormFile media, [FromForm] IFormFile cover,
-        [FromBody] Song info)
+    public async Task<ActionResult> UploadSong([FromForm] IFormFile media, [FromForm] IFormFile cover, [FromForm] string name)
     {
         if (media.Length <= 0 || cover.Length <= 0) return StatusCode(StatusCodes.Status406NotAcceptable);
         var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
@@ -123,17 +124,16 @@ public class SongController : ControllerBase
             await cover.CopyToAsync(stream);
         }
 
-        info.Uploader = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+        name = name.Replace("'", "\'");
+        name = name.Replace("\"", "\"");
+
         await _connection.Add("song", new Dictionary<string, dynamic>
         {
-            { "id", info.Id },
-            { "uploadTime", info.UploadTime.ToString("yyyy-MM-dd H:mm:ss") },
-            { "uploader", info.Uploader },
-            { "name", info.Name },
+            { "id", id },
+            { "uploadTime", DateTime.Now.ToString("yyyy-MM-dd H:mm:ss") },
+            { "uploader", CurrentSessionUsername },
+            { "name", name },
             { "coverUrl", imageName },
-            { "lyrics", info.Lyrics },
-            { "description", info.Description },
-            { "album", info.Album },
             { "path", fileName }
         });
         return Ok("Upload succeeded!");
