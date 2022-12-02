@@ -11,7 +11,7 @@ const Loading = () => {
                 wrapperClass=""
                 visible={true}
                 ariaLabel="oval-loading"
-                secondaryColor="#4fa94d"
+                secondaryColor="rgba(0,0,0,0.3)"
                 strokeWidth={2}
                 strokeWidthSecondary={2}
             />

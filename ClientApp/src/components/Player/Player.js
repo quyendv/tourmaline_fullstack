@@ -7,6 +7,8 @@ import {icons} from '../../utils/icons';
 import * as actions from '../../store/actions';
 import {clear} from '@testing-library/user-event/dist/clear';
 
+
+import avatarSong from '../../assets/images/Pop.svg'
 const {
     BsFillPlayFill,
     CiShuffle,
@@ -25,70 +27,83 @@ function Player({setIsShowSidebar}) {
 
     const [volume, setVolume] = useState(100);
     const [songInfo, setSongInfo] = useState(null);
-    const [audio, setAudio] = useState(new Audio());
-    const source = useRef()
+    const audio = useRef()
     const [currentSecond, setCurrentSecond] = useState(0);
+    const [duration, setDuration] = useState(0)
     const dispatch = useDispatch();
     const trackRef = useRef();
     const thumbRef = useRef();
     // TODOS
+    
     useEffect(() => {
+
         let src
-        src = curSongId == 1 ?  'http://media.w3.org/2010/05/sound/sound_90.mp3' : 'https://vnno-pt-4-tf-mp3-s1-m-zmp3.zmdcdn.me/8180715f2f1ec6409f0f/1039021604412062272?authen=exp=1669952480~acl=/8180715f2f1ec6409f0f/*~hmac=c1d40db9108312521ee50d6af1b0cd38'
-        audio.pause()
-        audio.load()
-        setAudio(new Audio(src))
+        src = curSongId === 1 ?  'http://media.w3.org/2010/05/sound/sound_90.mp3' : 'https://vnno-pt-4-tf-mp3-s1-m-zmp3.zmdcdn.me/8180715f2f1ec6409f0f/1039021604412062272?authen=exp=1669952480~acl=/8180715f2f1ec6409f0f/*~hmac=c1d40db9108312521ee50d6af1b0cd38'
+        audio.current.pause()
+        audio.current.src = src     
+        audio.current.onloadedmetadata = (e) => {
+            if(audio.current.readyState > 0) {
+                setDuration(audio.current.duration)
+            }
+        }
+        console.log(audio.current)
     }, [curSongId])
     var intervalId;
     useEffect(() => {
         intervalId && clearInterval(intervalId);
 
         if (isPlaying && thumbRef.current) {
-            audio.pause();
-            audio.play();
+            audio.current.pause();
+            audio.current.play();
             intervalId = setInterval(() => {
-                setCurrentSecond(audio.currentTime);
-                let percent = Math.round((audio.currentTime * 10000) / audio.duration) / 100;
+                setCurrentSecond(audio.current.currentTime);
+                let percent = Math.round((audio.current.currentTime * 10000) / duration) / 100;
                 thumbRef.current.style.cssText = `right:${100 - percent}%`;
             }, 200);
         }
         return () => {
             intervalId && clearInterval(intervalId);
         };
-    }, [audio]);
+    }, [audio.current?.src, isPlaying]);
     const handleToggleMusic = () => {
         if (isPlaying) {
-            audio.pause();
+            audio.current.pause();
             dispatch(actions.play(false));
         } else {
-            audio.play();
+            audio.current.play();
             dispatch(actions.play(true));
         }
     };
     useEffect(() => {
-        audio.volume = volume / 100;
+        audio.current.volume = volume / 100;
     }, [volume]);
     useEffect(() => {
         const handleEnd = () => {
-            audio.pause();
+            audio.current.pause();
             dispatch(actions.play(false))
         }
-        audio.addEventListener('ended', handleEnd);
+        audio.current.addEventListener('ended', handleEnd);
         return () => {
-            audio.removeEventListener('ended', handleEnd)
+            audio.current.removeEventListener('ended', handleEnd)
         }
     },[audio])
     const handleClickProgressbar = (e) => {
         const trackkRect = trackRef.current.getBoundingClientRect();
         const percent = Math.round(((e.clientX - trackkRect.left) * 10000) / trackkRect.width) / 100;
-        audio.currentTime = (percent * audio.duration) / 100;
+        audio.current.currentTime = (percent * duration) / 100;
         thumbRef.current.style.cssText = `right: ${100 - percent}%`;
-        setCurrentSecond(audio.currentTime);
+        setCurrentSecond(audio.current.currentTime);
     };
     return (
         <div className="flex h-full text-white">
             {/* //Songdetai */}
-            <div className="w-[30%] border border-white">Songdetail</div>
+            <div className="w-[30%] border border-white flex items-center gap-4 px-4">
+                <img className={`w-[60px] h-[60px] object-cover ${isPlaying ? 'rounded-full animate-rotate-center ' : ''}`} src={avatarSong}/>
+                <div>
+                    <h3 className='text-sm'>Song</h3>
+                    <span className='text-xs opacity-70'>Artist name</span>
+                </div>
+            </div>
 
             <div className="flex w-[40%] flex-col items-center justify-center gap-2 border border-white">
                 {/* //Main Player */}
@@ -112,6 +127,8 @@ function Player({setIsShowSidebar}) {
                     <span className="cursor-pointer">
                         <CiRepeat size={24}/>
                     </span>
+                    <audio ref={audio}> </audio>
+
                 </div>
                 <div className="flex w-full items-center justify-center gap-2 text-sm">
                     <span>{moment.utc(currentSecond * 1000).format('mm:ss')}</span>
@@ -125,7 +142,7 @@ function Player({setIsShowSidebar}) {
                             className="absolute top-0 left-0 bottom-0 rounded-r-full rounded-l-full bg-activecolor"
                         ></div>
                     </div>
-                    <span>{moment.utc((audio.duration || 0 ) * 1000).format('mm:ss')}</span>
+                    <span>{moment.utc((duration || 0 ) * 1000).format('mm:ss')}</span>
                 </div>
             </div>
 

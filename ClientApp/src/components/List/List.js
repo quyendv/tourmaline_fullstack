@@ -12,7 +12,7 @@ function List({ id, src, artistName, description, duration }) {
             className="flex cursor-pointer items-center gap-3 border border-white text-white"
             onClick={() => {
                 id != curSongId && dispatch(actions.setCurSongId(id));
-                !isPlaying && dispatch(actions.play(true));
+                dispatch(actions.play(true));
             }}
         >
             <div className="flex items-center gap-2">
