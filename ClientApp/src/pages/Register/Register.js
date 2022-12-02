@@ -45,7 +45,10 @@ function Register() {
         // e.preventDefault();
         console.log(data); // contains confirm password
 
-        const payload = dispatch(actions.register(payload));
+        const payload = {...data};
+        delete payload.confirmPassword;
+        
+        dispatch(actions.register(payload));
         navigate('/login');
     };
 

@@ -43,6 +43,7 @@ function Login() {
         // K cần check object empty (errors), handleSubmit chỉ khi hết lỗi mới thực hiện hàm
         console.log(data);
         dispatch(actions.login(data)); // or getValueRoot
+        dispatch(actions.setUsername(data.username))
     };
 
     useEffect(() => {

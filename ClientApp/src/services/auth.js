@@ -7,6 +7,9 @@ export const apiLogin = (payload) =>
                 method: 'post',
                 url: '/api/user/login',
                 data: payload,
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
             });
             resolve(response);
         } catch (err) {
@@ -21,6 +24,9 @@ export const apiRegister = (payload) =>
                 method: 'post',
                 url: '/api/user/signup',
                 data: payload,
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
             });
             resolve(response);
         } catch (err) {

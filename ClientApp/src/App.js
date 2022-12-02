@@ -12,7 +12,6 @@ import { ForgotPasswordRoute, LOGIN, REGISTER, routesConfigPrivate, routesConfig
 
 function App() {
     const { isLoggedIn, token } = useSelector((state) => state.auth);
-    // console.log(token);
     return (
         <div className="App">
             <Routes>

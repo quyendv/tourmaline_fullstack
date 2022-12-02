@@ -26,12 +26,15 @@ export const getDetailSong = (sid) => new Promise(async (resolve, reject) => {
 })
 
 export const crePlaylist = (data, token) => new Promise(async(resolve, reject) => {
-
+    let formData = new FormData()
+    formData.append('name', data.name)
+    formData.append('cover', data.cover)
+    console.log(formData.get('cover'))
     try {
         const response = await axiosConfig({
             url: '/api/playlist/create',
             method:'post',
-            data: data,
+            data: formData,
             headers: {
                 "Authorization" : `Bearer ${token}`,
                 "Content-Type": "multipart/form-data",
@@ -44,13 +47,49 @@ export const crePlaylist = (data, token) => new Promise(async(resolve, reject) =
     }
 })
 
-export const getPlaylist = (token) => new Promise(async(resolve, reject) => {
+export const getPlaylist = (id, token) => new Promise(async(resolve, reject) => {
     try {
         const response = await axiosConfig({
-            url: '/api/playlist/get',
+            url: `/api/playlist/get`,
             method: 'get',
+            params: {
+                id
+            },
             headers: {
                 "Authorization": `Bearer ${token}`
+            }
+        })
+        resolve(response)
+    } catch (error) {
+        reject(error)
+    }
+})
+// export const getCover = (id, token) => new Promise(async(resolve, reject) => {
+//     try {
+//         const response = await axiosConfig({
+//             url: `/api/song/getCover`,
+//             method: 'get',
+//             params:{
+//                 id
+//             },
+//             headers: {
+//                 "Authorization": `Bearer ${token}`
+//             }
+//         })
+//         resolve(response)
+//     } catch (error) {
+//         reject(error)
+//     }
+// })
+export const uploadFile = (data, token) => new Promise(async(resolve, reject) => {
+    try {
+        const response = await axiosConfig({
+            url: '/api/song/upload',
+            method: 'post',
+            data: data,
+            headers: {
+                'Authorization' : `Bearer ${token}`,
+                'Content-Type' : 'multipart/form-data'
             }
         })
         resolve(response)
