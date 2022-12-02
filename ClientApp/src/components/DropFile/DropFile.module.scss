@@ -54,7 +54,6 @@ $border-color: #4267b2;
     position: relative;
     font-size: 16px;
     font-weight: 400;
-    width: 400px;
 
     .add {
         position: absolute;
@@ -74,7 +73,7 @@ $border-color: #4267b2;
 
     .song-info {
         .form-group {
-            padding-left: 16px;
+            padding-left: 8px;
 
             label {
                 font-weight: 600;
@@ -94,12 +93,7 @@ $border-color: #4267b2;
     }
 
     .message {
-        display: none;
-        text-align: center;
-        color: red;
-        font-weight: 600;
-        font-style: italic;
-        margin-top: 10px;
+        @apply hidden text-center text-sm font-semibold italic text-red-600;
     }
 
     &.invalid .message {
@@ -109,13 +103,13 @@ $border-color: #4267b2;
 
 // preview
 .preview {
-    margin: 24px 0 10px;
+    margin: 10px 0;
     font-weight: 500;
 
     .preview-container {
         // scroll
         overflow-y: auto;
-        height: 200px;
+        max-height: 200px;
         margin-top: 5px;
 
         &::-webkit-scrollbar {
@@ -132,19 +126,15 @@ $border-color: #4267b2;
         &::-webkit-scrollbar-track {
             opacity: 0;
         }
-
-        .file-list {
-            margin: 0 10px;
-        }
     }
 }
 
 .drop-file-item {
     display: flex;
     align-items: center;
-    margin-top: 15px;
+    margin-top: 12px;
     background-color: #d9dce4;
-    padding: 10px 45px 10px 10px;
+    padding: 10px;
     border-radius: 20px;
 
     img {
@@ -169,5 +159,8 @@ $border-color: #4267b2;
         font-size: 18px;
         margin-left: 10px;
         cursor: pointer;
+    }
+    .del-drop-file-item {
+        margin-right: 30px;
     }
 }

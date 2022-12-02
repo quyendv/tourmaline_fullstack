@@ -2,13 +2,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    // width: 100vw;
-    // min-height: 100vh;
-    height: calc(100vh - 64px);
 }
 
 .container {
-    // min-width: 530px;
     min-height: 300px;
     border-radius: 24px;
     margin: 24px;
@@ -16,6 +12,6 @@
     background-color: #fff;
 
     .title {
-        @apply p-5 text-center text-3xl font-bold;
+        @apply pt-4 pb-2 text-center text-3xl font-bold;
     }
 }

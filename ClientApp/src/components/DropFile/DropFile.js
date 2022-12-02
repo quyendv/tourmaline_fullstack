@@ -1,5 +1,5 @@
 import classNames from 'classnames/bind';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import uploadImages from '../../assets/images';
 import styles from './DropFile.module.scss';
 import FileItem from './FileItem';
@@ -8,79 +8,90 @@ import { useSelector } from 'react-redux';
 
 const cx = classNames.bind(styles);
 
+// TODO: response
 function DropFile({ onFileChange }) {
-    const [file, setFile] = useState(); // inputFile: audio, includes song's info when click addBtn
-    const [fileList, setFileList] = useState([]); // List Audio File with each file contains song's info
+    const [fileList, setFileList] = useState([]); // List Audio File (for preview) with each element is Obj { audioFile: , infos: }
     const [songName, setSongName] = useState('');
-    const [coverUrl, setCoverUrl] = useState('');
     const [lyric, setLyric] = useState('');
     const [description, setDescription] = useState('');
+    const [audioFile, setAudioFile] = useState(); // only use to forceUpdate
 
-    const dropAreaRef = useRef();
-    const inputFileAudioRef = useRef();
-    const songDetailsRef = useRef();
-    const newData = useRef();
+    const coverImgRef = useRef(); // coverImg input file
+    const audioFileRef = useRef(); // inputFile: audio
+    const newData = useRef(); // newData is obj { audioFile: , infos: } (is child of fileList)
+    const dropAreaRef = useRef(); // to css dragover
+    const songDetailsRef = useRef(); // to css songInfos invalid
 
     const {token} = useSelector(state => state.auth)
-
-    // --------- handle remove class (css) -------------
-    const handleDragEnter = () => {
+    
+    // --------- handle toggle class (css) -------------
+    const addStyleDragOver = () => {
         dropAreaRef.current.classList.add(styles.dragover);
     };
-    const handleDragLeave = () => {
-        dropAreaRef.current.classList.remove(styles.dragover);
-    };
-    const handleDrop = () => {
+    const removeStyleDragOver = () => {
         dropAreaRef.current.classList.remove(styles.dragover);
     };
 
     // ---------- handle logic with file -----------------------
     // onChange input file
-    const handleDropFile = useCallback((e) => {
-        // const newFile = e.target.files[0];
-        const newFile = inputFileAudioRef.current.files[0];
+    const handleDropAudioFile = useCallback((e) => {
+        const newFile = e.target.files[0];
+        // const newFile = audioFileRef.current.files[0];
         if (newFile) {
-            setFile(newFile);
+            audioFileRef.current.file = newFile;
+            setAudioFile(newFile);
             // e.target.value = null; // not here, addToPreview first and then clear to re-choose prevFile again
         }
     }, []);
-
     // click addBtn: add FileItem with data
     const handleAddToPreview = useCallback(() => {
         // check song's info
-        if (file && songName.trim() && coverUrl.trim() && lyric.trim() && description.trim()) {
-            // add data to file then add file to fileList
-            file.data = {
+        if (
+            audioFileRef.current.file &&
+            songName.trim() &&
+            coverImgRef.current.file &&
+            lyric.trim() &&
+            description.trim()
+        ) {
+            // ------ add data to file then add file to fileList
+            const infos = {
                 songName,
-                coverUrl,
+                coverImg: coverImgRef.current.file,
                 lyric,
                 description,
             };
-            setFileList([...fileList, file]);
+            setFileList([...fileList, { audioFile: audioFileRef.current.file, infos }]);
 
-            // Save to newData:
-            newData.current = { ...file.data, file };
+            // ------ Save to newData & handleAPI:
+            newData.current = { audioFile: audioFileRef.current.file, infos };
+            // console.log(newData.current);
+            // console.log(audioFileRef);
             // TODO: Sơn Kao post data chỗ này
 
-            console.log(newData.current);
-
-            // clear song-details (clear inputs + clear state file (clear shortPreview when it's null))
-            // + clear inputFile (can re-choose prevFile again)
-            // + clear class 'invalid' in songDetailsRef.current
-            setSongName('');
-            setCoverUrl('');
-            setLyric('');
-            setDescription('');
-            setFile(null);
-            inputFileAudioRef.current.value = null;
-            songDetailsRef.current.classList.remove(styles.invalid);
+            // ------ clear song-details
+            handleClearData();
         } else {
             songDetailsRef.current.classList.add(styles.invalid);
-            if (!file) {
+            if (!audioFileRef.current.value) {
                 throw new Error(`Invalid Audio File, type is ' ${typeof file}`);
             }
         }
-    }, [coverUrl, description, file, fileList, lyric, songName]);
+    }, [description, fileList, lyric, songName]);
+
+    function handleClearData() {
+        // clear inputs + clear audioFileRef.current.value (clear shortPreview when it's null)
+        // + clear inputFile (can re-choose prevFile again)
+        // + clear class 'invalid' in songDetailsRef.current
+        setSongName('');
+        setLyric('');
+        setDescription('');
+        setAudioFile(null); // clear preview if check by state
+        coverImgRef.current.value = null; // clear value input to re-choose prevFile
+        delete coverImgRef.current.file; // delete key
+        audioFileRef.current.value = null; // clear value input to re-choose prevFile
+        delete audioFileRef.current.file; // delete key & clear preview if check by .file
+        songDetailsRef.current.classList.remove(styles.invalid); // clear style invalid
+    }
 
     // onClick close FileItem: remove FileItem from Preview List
     const handleRemoveFileFromPreview = useCallback(
@@ -92,7 +103,7 @@ function DropFile({ onFileChange }) {
         [fileList],
     );
 
-    // onFileChange(fileList);
+    // onFileChange(fileList); // show list file
 
     return (
         <div className={cx('wrapper')}>
@@ -104,21 +115,23 @@ function DropFile({ onFileChange }) {
                     <div
                         className={cx('drop-area')}
                         ref={dropAreaRef}
-                        onDragEnter={handleDragEnter}
-                        onDragLeave={handleDragLeave}
-                        onDrop={handleDrop}
+                        onDragEnter={addStyleDragOver}
+                        onDragLeave={removeStyleDragOver}
+                        onDrop={removeStyleDragOver}
                     >
                         <img src={uploadImages.cloudUpload} alt="" />
                         <p>Drag & Drop or Choose your files here</p>
                         <input
                             type="file"
-                            ref={inputFileAudioRef}
-                            onChange={handleDropFile}
+                            id="audio-file"
+                            ref={audioFileRef}
+                            onChange={handleDropAudioFile}
                             accept="audio/*" // only audio
                         />
                     </div>
-                    {/* ShortPreview: check file.type, some file extensions are not recognized: sql, ... -> handle after */}
-                    {file && file.type && <FileItem file={file} />}
+                    {/* ShortPreview: check audioFile?.file?.type (check audioFileRef.current.file & audioFileRef.current.file.type), some file extensions are not recognized: sql, ... -> handle after, note data is obj {audioFile: , infos: } => but not re-render => not work => use state */}
+                    {/* {audioFileRef.current?.file?.type && <FileItem data={{ audioFile: audioFileRef.current.file }} />} */}
+                    {audioFile?.type && <FileItem data={{ audioFile }} />}
                 </div>
 
                 {/* Info */}
@@ -141,14 +154,13 @@ function DropFile({ onFileChange }) {
                             />
                         </div>
                         <div className={cx('form-group')}>
-                            <label htmlFor="cover-url">Cover URL</label>
+                            <label htmlFor="cover">Cover Image</label>
                             <input
                                 className={cx('form-control')}
-                                id="cover-url"
-                                type="url"
-                                placeholder="https://example.png"
-                                value={coverUrl}
-                                onChange={(e) => setCoverUrl(e.target.value)}
+                                id="cover"
+                                type="file"
+                                ref={coverImgRef}
+                                onChange={(e) => (coverImgRef.current.file = e.target.files[0])}
                             />
                         </div>
                         <div className={cx('form-group')}>
@@ -157,7 +169,6 @@ function DropFile({ onFileChange }) {
                                 className={cx('form-control')}
                                 value={lyric}
                                 id="lyric"
-                                // cols="30"
                                 rows="2"
                                 onChange={(e) => setLyric(e.target.value)}
                             ></textarea>
@@ -168,7 +179,6 @@ function DropFile({ onFileChange }) {
                                 className={cx('form-control')}
                                 value={description}
                                 id="description"
-                                // cols="30"
                                 rows="2"
                                 onChange={(e) => setDescription(e.target.value)}
                             ></textarea>
@@ -185,16 +195,14 @@ function DropFile({ onFileChange }) {
                 <div className={cx('preview')}>
                     <h3 className="text-2xl font-semibold">Ready to upload</h3>
                     <div className={cx('preview-container')}>
-                        <div className={cx('file-list')}>
-                            {fileList.map((file, index) => (
-                                <FileItem
-                                    key={index}
-                                    file={file}
-                                    // handleRemove={() => handleRemoveFile(file)}
-                                    handleRemove={handleRemoveFileFromPreview}
-                                />
-                            ))}
-                        </div>
+                        {fileList.map((dataItem, index) => (
+                            <FileItem
+                                key={index}
+                                data={dataItem}
+                                // handleRemove={() => handleRemoveFile(file)}
+                                handleRemove={handleRemoveFileFromPreview}
+                            />
+                        ))}
                     </div>
                 </div>
             )}
