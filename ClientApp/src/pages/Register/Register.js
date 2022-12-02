@@ -47,7 +47,6 @@ function Register() {
 
         const payload = {...data};
         delete payload.confirmPassword;
-        
         dispatch(actions.register(payload));
         navigate('/login');
     };

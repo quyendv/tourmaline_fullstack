@@ -8,29 +8,30 @@ import styles from './DropFile.module.scss';
 
 const cx = classNames.bind(styles);
 
-function FileItem({ file, handleRemove }) {
+function FileItem({ data, handleRemove }) {
     const downloadBtnRef = useRef();
     const hrefRef = useRef();
 
-    const handleDownload = (file) => {
-        if (file && file.data) {
+    const handleDownload = (data) => {
+        if (data.audioFile && data.infos) {
+            // console.log(data);
 
             // clear/create URL
             if (hrefRef.current) URL.revokeObjectURL(hrefRef.current);
-            hrefRef.current = URL.createObjectURL(file);
+            hrefRef.current = URL.createObjectURL(data.audioFile);
 
             // set property download button (href, download='file.ext') and then click()
             if (downloadBtnRef.current) {
                 downloadBtnRef.current.href = hrefRef.current;
 
-                downloadBtnRef.current.download = `${file.data.songName}.${file.type.split('/')[1]}`;
-                // downloadBtnRef.current.download = `${file.data.songName}.${file.name.split('.')[1]}`;
+                downloadBtnRef.current.download = `${data.infos.songName}.${data.audioFile.type.split('/')[1]}`;
+                // downloadBtnRef.current.download = `${data.infos.songName}.${data.audioFile.name.split('.')[1]}`;
 
                 // console.log(downloadBtnRef.current.download);
                 downloadBtnRef.current.click();
             }
         } else {
-            throw new Error('Download error in FileItem!! Invalid file or file.data, passing file argument');
+            throw new Error('Download error in FileItem!! Invalid data, passing file argument');
         }
     };
 
@@ -41,18 +42,18 @@ function FileItem({ file, handleRemove }) {
     // auto download when rendering: tắt StrictMode mới hoạt động đúng
     useEffect(() => {
         if (handleRemove) {
-            console.log('useEffect called!'); // test re-render
-            handleDownload(file);
+            // console.log('useEffect called!'); // test re-render
+            handleDownload(data);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
         <div className={cx('drop-file-item')}>
-            <img src={uploadImages[file.type.split('/')[1]] || uploadImages.default} alt="" />
+            <img src={uploadImages[data.audioFile.type.split('/')[1]] || uploadImages.default} alt="" />
             <div className={cx('drop-file-item-info')}>
-                <p>{file.name}</p>
-                <p>{file.size}B</p>
+                <p>{data.audioFile.name}</p>
+                <p>{data.audioFile.size}B</p>
             </div>
 
             {/* only use to download, auto hidden */}
@@ -62,7 +63,7 @@ function FileItem({ file, handleRemove }) {
             {/* Tạm chỉ xử lý remove + download khỏi preview khi truyền hàm close -> fix sau */}
             {handleRemove && (
                 <>
-                    <span className={cx('down-drop-file-item')} onClick={() => handleDownload(file)}>
+                    <span className={cx('down-drop-file-item')} onClick={() => handleDownload(data.audioFile)}>
                         <FontAwesomeIcon icon={faCircleDown} />
                     </span>
                     <span className={cx('del-drop-file-item')} onClick={handleRemove}>
