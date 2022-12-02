@@ -5,6 +5,7 @@ import {persistReducer} from 'redux-persist';
 import authReducer from './authReducer';
 import musicReducer from './musicReducer';
 import actionsReducer from './actionsReducer';
+import userReducer from './userReducer';
 
 const commonConfig = {
     storage,
@@ -21,10 +22,17 @@ const musicConfig = {
     key: 'music',
     whitelist: ['curSongId']
 }
+const userConfig = {
+    ...commonConfig,
+    key: 'user',
+    whitelist: ['username']
+}
 const rootReducer = combineReducers({
     auth: persistReducer(authConfig, authReducer),
     music: persistReducer(musicConfig, musicReducer),
+    user: persistReducer(userConfig, userReducer),
     actions: actionsReducer
+
 });
 
 export default rootReducer;

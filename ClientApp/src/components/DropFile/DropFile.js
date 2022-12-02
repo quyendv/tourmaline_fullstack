@@ -3,6 +3,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import uploadImages from '../../assets/images';
 import styles from './DropFile.module.scss';
 import FileItem from './FileItem';
+import {uploadFile} from '../../services/music'
+import { useSelector } from 'react-redux';
 
 const cx = classNames.bind(styles);
 
@@ -18,6 +20,8 @@ function DropFile({ onFileChange }) {
     const inputFileAudioRef = useRef();
     const songDetailsRef = useRef();
     const newData = useRef();
+
+    const {token} = useSelector(state => state.auth)
 
     // --------- handle remove class (css) -------------
     const handleDragEnter = () => {
@@ -57,6 +61,7 @@ function DropFile({ onFileChange }) {
             // Save to newData:
             newData.current = { ...file.data, file };
             // TODO: Sơn Kao post data chỗ này
+
             console.log(newData.current);
 
             // clear song-details (clear inputs + clear state file (clear shortPreview when it's null))
@@ -122,6 +127,7 @@ function DropFile({ onFileChange }) {
                     <button className={cx('add')} onClick={handleAddToPreview}>
                         Add
                     </button>
+
                     <div className={cx('song-info')}>
                         <div className={cx('form-group')}>
                             <label htmlFor="song-name">Song name</label>

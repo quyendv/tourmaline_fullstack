@@ -14,7 +14,6 @@ function FileItem({ file, handleRemove }) {
 
     const handleDownload = (file) => {
         if (file && file.data) {
-            // console.log(file);
 
             // clear/create URL
             if (hrefRef.current) URL.revokeObjectURL(hrefRef.current);

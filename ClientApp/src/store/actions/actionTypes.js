@@ -8,12 +8,20 @@ const actionTypes = {
     REGISTER_FAIL: 'REGISTER_FAILED',
 
 
+
+
+
     //music
     SET_CUR_SONG_ID: 'SET_CUR_SONG_ID',
     PLAY: 'PLAY',
 
 
-    //
-    SET_IS_OPEN_MODAL: 'SET_IS_OPEN_MODAL'
+    // actions
+    SET_IS_OPEN_MODAL: 'SET_IS_OPEN_MODAL',
+
+    //user
+    SET_USERNAME: 'SET_USERNAME',
+
+
 };
 export {actionTypes};

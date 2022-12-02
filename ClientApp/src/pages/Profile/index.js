@@ -3,13 +3,18 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames/bind';
 import { useEffect, useRef, useState } from 'react';
 import styles from './Profile.module.scss';
+import moment from 'moment';
+
+import {getProfile, setProfile} from '../../services/user'
+import { useSelector } from 'react-redux';
 
 const cx = classNames.bind(styles);
 
 function Profile() {
     const [userInfo, setUserInfo] = useState({});
     const newUserInfo = useRef({});
-
+    const {token} = useSelector(state => state.auth)
+    const {username} = useSelector(state => state.user)
     useEffect(() => {
         getUserInfo();
     }, []);
@@ -18,27 +23,44 @@ function Profile() {
         e.preventDefault();
         // TODO: update user info in database through API
         // setUserInfo by newUserInfo.current
-        console.log(userInfo);
+       
+       const createTime = moment().format().split('+')[0]
+       const birth = moment().format().split('+')[0]
+        const finalPayload = {
+            ...userInfo,
+            username: username,
+            createTime,
+            birth
+        }
+        const response = await setProfile(finalPayload,token)
+        console.log(response)
+        // console.log(userInfo);
     };
 
     const getUserInfo = async () => {
         // Fetch API to get account information: username, email, password (?), phone number, address. (JSON)
         // Hardcode for now
-        const response = {
-            username: 'username.demo', // read only
-            name: 'Full Name',
-            bio: "I'm ... . Full Stack Designer I enjoy creating user-centric, delightful and human experiences.",
-            birth: '2002-12-12', // yyyy-mm-dd
-            gender: 1, // int 1:male, 2:female
-            avatar: 'https://www.bootdey.com/img/Content/avatar/avatar7.png',
-            email: 'admin@tourmaline.com',
-            phone: '0987654321',
-            address: '123, ABC Street, XYZ City, 12345',
-            createTime: '09 Dec 2017',
-            isAdmin: 1,
-        };
-        setUserInfo(response);
-        newUserInfo.current = response;
+        // const info = {
+        //     username: 'username.demo', // read only
+        //     name: 'Full Name',
+        //     bio: "I'm ... . Full Stack Designer I enjoy creating user-centric, delightful and human experiences.",
+        //     birth: '2002-12-12', // yyyy-mm-dd
+        //     gender: true, // int 1:male, 2:female
+        //     // avatar: 'https://www.bootdey.com/img/Content/avatar/avatar7.png',
+        //     email: 'admin@tourmaline.com',
+        //     // phone: '0987654321',
+        //     // address: '123, ABC Street, XYZ City, 12345',
+        //     createTime: '09 Dec 2017',
+        //     isAdmin: false,
+        // };
+        const response = await getProfile(username, token)
+        const finalInfo = {
+            ...response.data,
+            createTime: response.data.createTime.split('T')[0],
+            birth: response.data.birth.split('T')[0]
+        }
+        setUserInfo(finalInfo);
+        newUserInfo.current = finalInfo;
     };
 
     // TODO: update useRef()

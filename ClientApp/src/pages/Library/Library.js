@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import {useSelector} from 'react-redux'
 
 import {icons} from '../../utils/icons'
-import { getPlaylist } from '../../services/music'
+import { getPlaylist, getCover } from '../../services/music'
 
 const {BsFillPlayFill, AiOutlinePlusCircle} = icons
 
@@ -11,9 +11,11 @@ function Library() {
     const {token} = useSelector(state => state.auth)
     useEffect(() => {
         const fetchPlaylist = async () => {
-            const response = await getPlaylist(token, 1)
-            console.log(response)            
+            const response = await getPlaylist(632811153, token)
+            // const res2 = await getCover(632811153, token)
+            // console.log(res2)
         }
+
         fetchPlaylist()
     }, [])
     return (

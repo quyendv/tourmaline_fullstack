@@ -26,19 +26,19 @@ function Player({setIsShowSidebar}) {
     const [volume, setVolume] = useState(100);
     const [songInfo, setSongInfo] = useState(null);
     const [audio, setAudio] = useState(new Audio());
+    const source = useRef()
     const [currentSecond, setCurrentSecond] = useState(0);
     const dispatch = useDispatch();
     const trackRef = useRef();
     const thumbRef = useRef();
-    console.log(isPlaying);
     // TODOS
     useEffect(() => {
         let src
         src = curSongId == 1 ?  'http://media.w3.org/2010/05/sound/sound_90.mp3' : 'https://vnno-pt-4-tf-mp3-s1-m-zmp3.zmdcdn.me/8180715f2f1ec6409f0f/1039021604412062272?authen=exp=1669952480~acl=/8180715f2f1ec6409f0f/*~hmac=c1d40db9108312521ee50d6af1b0cd38'
         audio.pause()
+        audio.load()
         setAudio(new Audio(src))
     }, [curSongId])
-    console.log(audio.duration)
     var intervalId;
     useEffect(() => {
         intervalId && clearInterval(intervalId);
@@ -55,7 +55,7 @@ function Player({setIsShowSidebar}) {
         return () => {
             intervalId && clearInterval(intervalId);
         };
-    }, [audio, isPlaying]);
+    }, [audio]);
     const handleToggleMusic = () => {
         if (isPlaying) {
             audio.pause();
@@ -70,7 +70,6 @@ function Player({setIsShowSidebar}) {
     }, [volume]);
     useEffect(() => {
         const handleEnd = () => {
-            console.log('end')
             audio.pause();
             dispatch(actions.play(false))
         }
