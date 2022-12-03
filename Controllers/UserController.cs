@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using NuGet.Protocol;
 using tourmaline.Models;
 using tourmaline.Services;
 
@@ -129,57 +130,55 @@ public class UserController : ControllerBase
     [HttpPost]
     [Route("login")]
     [AllowAnonymous]
-    public async Task<ActionResult> Login([FromForm] string username, [FromForm] string password)
+    public async Task<ActionResult> Login([FromForm] LoginModel loginModel)
     {
+        Console.WriteLine(loginModel.ToJson());
         var result = await _connection.Read("user",
-            new Dictionary<string, dynamic>() { { "username", username } });
-        if (result.Count != 0)
+            new Dictionary<string, dynamic>() { { "username", loginModel.Username } });
+        if (result.Count == 0) return StatusCode(StatusCodes.Status406NotAcceptable, "User not found!");
+        var user = new User
         {
-            var user = new User
-            {
-                Username = result.First()["username"],
-                Bio = result.First()["bio"],
-                Birth = result.First()["birth"],
-                Email = result.First()["email"],
-                Gender = result.First()["gender"] == 1,
-                Name = result.First()["name"],
-                CreateTime = result.First()["createTime"],
-                IsAdmin = result.First()["isAdmin"] == 1
-            };
+            Username = result.First()["username"],
+            Bio = result.First()["bio"],
+            Birth = result.First()["birth"],
+            Email = result.First()["email"],
+            Gender = result.First()["gender"] == 1,
+            Name = result.First()["name"],
+            CreateTime = result.First()["createTime"],
+            IsAdmin = result.First()["isAdmin"] == 1
+        };
 
-            var hasher = new PasswordHasher<User>();
-            PasswordVerificationResult verificationResult =
-                hasher.VerifyHashedPassword(user, result[0]["password"], password);
+        var hasher = new PasswordHasher<User>();
+        PasswordVerificationResult verificationResult =
+            hasher.VerifyHashedPassword(user, result[0]["password"], loginModel.Password);
 
-            if (verificationResult is PasswordVerificationResult.Success or PasswordVerificationResult.SuccessRehashNeeded)
+        if (verificationResult is PasswordVerificationResult.Success or PasswordVerificationResult.SuccessRehashNeeded)
+        {
+            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
+            var tokenDescriptor = new SecurityTokenDescriptor
             {
-                var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
-                var tokenDescriptor = new SecurityTokenDescriptor
+                Subject = new ClaimsIdentity(new[]
                 {
-                    Subject = new ClaimsIdentity(new[]
-                    {
-                        new Claim("Id", Guid.NewGuid().ToString()),
-                        new Claim(JwtRegisteredClaimNames.Sub, username),
-                        new Claim(JwtRegisteredClaimNames.Jti,
-                            Guid.NewGuid().ToString()),
-                        new Claim(IsAdminClaimName, user.IsAdmin.ToString())
-                    }),
-                    Issuer = _configuration["Jwt:Issuer"],
-                    Audience = _configuration["Jwt:Audience"],
-                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
-                        SecurityAlgorithms.HmacSha512Signature)
-                };
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var token = tokenHandler.CreateToken(tokenDescriptor);
-                return Ok(tokenHandler.WriteToken(token));
-            }
-            else
-            {
-                return StatusCode(StatusCodes.Status403Forbidden, "User password is incorrect!");
-            }
+                    new Claim("Id", Guid.NewGuid().ToString()),
+                    new Claim(JwtRegisteredClaimNames.Sub, loginModel.Username),
+                    new Claim(JwtRegisteredClaimNames.Jti,
+                        Guid.NewGuid().ToString()),
+                    new Claim(IsAdminClaimName, user.IsAdmin.ToString())
+                }),
+                Issuer = _configuration["Jwt:Issuer"],
+                Audience = _configuration["Jwt:Audience"],
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
+                    SecurityAlgorithms.HmacSha512Signature)
+            };
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return Ok(tokenHandler.WriteToken(token));
+        }
+        else
+        {
+            return StatusCode(StatusCodes.Status403Forbidden, "User password is incorrect!");
         }
 
-        return StatusCode(StatusCodes.Status406NotAcceptable, "User not found!");
     }
 
     [HttpGet]
