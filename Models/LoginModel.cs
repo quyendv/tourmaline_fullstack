@@ -2,10 +2,10 @@ namespace tourmaline.Models;
 
 public class LoginModel
 {
-    public LoginModel(string username, string password)
+    public LoginModel()
     {
-        Username = username;
-        Password = password;
+        Username = "";
+        Password = "";
     }
 
     public string Username { get; set; }
