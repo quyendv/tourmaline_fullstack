@@ -26,7 +26,7 @@ const yupSchema = yup
 // TODO: làm nút goBack cho login, register, forgot password
 function Login() {
     const dispatch = useDispatch();
-    const { isLoggedIn } = useSelector((state) => state.auth);
+    const { isLoggedIn, msg } = useSelector((state) => state.auth);
     const navigate = useNavigate();
 
     // Validate resolver
@@ -41,6 +41,7 @@ function Login() {
     const handleLogin = (data) => {
         // e.preventDefault(); // if have errors auto preventDefault
         // K cần check object empty (errors), handleSubmit chỉ khi hết lỗi mới thực hiện hàm
+        dispatch(actions.logout())
         console.log(data);
         dispatch(actions.login(data)); // or getValueRoot
         dispatch(actions.setUsername(data.username))
@@ -49,7 +50,10 @@ function Login() {
     useEffect(() => {
         isLoggedIn && navigate(routesConfigPublic.homeRoute);
     }, [isLoggedIn]);
-
+    useEffect(() => {
+        //wền sửa ở đây
+        console.log(msg)
+    },[msg])
     return (
         <div className={cx('login-page')}>
             <div className={cx('login-form')}>

@@ -14,13 +14,13 @@ export const login = (payload) => async (dispatch) => {
         } else {
             dispatch({
                 type: actionTypes.LOGIN_FAIL,
-                data: response.data
+                data: "Invalid Username or PassWord"
             })
         }
     } catch (err) {
         dispatch({
             type: actionTypes.LOGIN_FAIL,
-            data: null
+            data: "Invalid Username or Password"
         })
 
     }
@@ -39,11 +39,13 @@ export const register = (payload) => async (dispatch) => {
         else {
             dispatch({
                 type: actionTypes.REGISTER_FAIL,
+                data: "Username is already exist"
             })
         }
     } catch (err) {
         dispatch({
             type: actionTypes.REGISTER_FAIL,
+            data: "Username is already exist"
         })
     }
 };
