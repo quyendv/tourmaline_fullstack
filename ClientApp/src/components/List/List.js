@@ -1,6 +1,7 @@
 import Pop from '../../assets/images/Pop.svg';
 import * as actions from '../../store/actions';
 import {getCover} from '../../services/music'
+import {BASE_URL} from '../../utils/constant'
 
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,14 +15,11 @@ function List({ songData }) {
     const [src, setSrc] = useState('')
     useEffect(() => {
         const fetchCover = async() => {
-            const response = await getCover(songData.id, token)
-            // console.log(response)
-            
-            // const srcImage = require(response.data
-            setSrc(response.data)
+
+            setSrc(`${BASE_URL}/api/song/getCover?id=${songData.id}`)
 
         }
-        // fetchCover()
+        fetchCover()
     },[])
     return (
         <div
@@ -32,9 +30,12 @@ function List({ songData }) {
             }}
         >
             <div className="flex items-center gap-2">
-                {/* <img className="h-[40px] w-[40px] rounded-md object-cover" src={`data:image/*;base64, ${src}`}/> */}
-                <span>{songData.name}</span>
-                {/* <span>-{description}</span> */}
+                <img className="h-[40px] w-[40px] rounded-md object-cover" src={src}/>
+                <span className='flex flex-col'>
+                    <span className='text-sm'>{songData.name}</span>
+                    <span className='text-xs text-gray-500'>Various artist</span>
+                </span>
+                
             </div>
             {/* <span>{moment.utc((songData.duration || 0) * 1000).format('mm:ss')}</span> */}
         </div>

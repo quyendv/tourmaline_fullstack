@@ -32,7 +32,7 @@ const yupSchema = yup
 function Register() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const {isRegisterSuccess} = useSelector(state => state.auth)
+    const {isRegisterSuccess, msg} = useSelector(state => state.auth)
 
 
     // Validate resolver
@@ -47,7 +47,7 @@ function Register() {
     const handleRegister = (data) => {
         // e.preventDefault();
         // console.log(data); // contains confirm password
-
+        dispatch(actions.logout())
         const payload = {...data};
         delete payload.confirmPassword;
         dispatch(actions.register(payload));
@@ -57,7 +57,10 @@ function Register() {
     useEffect(() => {
         isRegisterSuccess && navigate('/login');
     }, [isRegisterSuccess])
-
+    useEffect(() => {
+        //wền sửa ở đây
+        console.log(msg)
+    }, [msg])
     return (
         <div className={cx('register-page')}>
             <div className={cx('register-form')}>

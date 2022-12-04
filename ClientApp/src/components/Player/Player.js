@@ -50,20 +50,13 @@ function Player({ setIsShowSidebar }) {
             // }
         };
         fetchSong();
-        // audio.current.pause()
-        // audio.current.src = src
-        // audio.current.onloadedmetadata = (e) => {
-        //     if(audio.current.readyState > 0) {
-        //         setDuration(audio.current.duration)
-        //     }
-        // }
+
     }, [curSongId]);
     var intervalId;
     useEffect(() => {
         intervalId && clearInterval(intervalId);
 
         if (isPlaying && thumbRef.current) {
-            console.log('in')
             audio.current.pause();
             audio.current.play();
             intervalId = setInterval(() => {

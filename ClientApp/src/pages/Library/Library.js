@@ -47,7 +47,7 @@ function Library() {
                     <AiOutlinePlusCircle size={20} />
                 </span>
             </div>
-            <div>
+            <div className='flex flex-col gap-2'>
                 {songsUploaded.map((item) => (
                     <List key={item.id} songData={item} />
                 ))}

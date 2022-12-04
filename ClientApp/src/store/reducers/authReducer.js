@@ -34,11 +34,14 @@ const authReducer = (state = initState, action) => {
             return {
                 ...state,
                 isRegisterSuccess: true
+
             };
         case actionTypes.REGISTER_FAIL:
             return {
                 ...state,
-                isRegisterSuccess: false
+                isRegisterSuccess: false,
+                msg: action.data
+
             };
         default:
             return state;
