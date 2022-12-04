@@ -13,13 +13,11 @@ const cx = classNames.bind(styles);
 const yupSchema = yup
     .object({
         username: yup.string().required('Username is required!'),
-        password: yup
-            .string()
-            .required('Password is required!')
-            .matches(
-                /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/,
-                'Must contain at least 6 characters, one uppercase, one lowercase, one number and one special case character',
-            ),
+        password: yup.string().required('Password is required!'),
+        // .matches(
+        //     /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/,
+        //     'Must contain at least 6 characters, one uppercase, one lowercase, one number and one special case character',
+        // ),
     })
     .required();
 
@@ -33,6 +31,8 @@ function Login() {
     const {
         register,
         handleSubmit,
+        setError,
+        clearErrors,
         formState: { errors },
     } = useForm({
         resolver: yupResolver(yupSchema),
@@ -41,19 +41,24 @@ function Login() {
     const handleLogin = (data) => {
         // e.preventDefault(); // if have errors auto preventDefault
         // K cần check object empty (errors), handleSubmit chỉ khi hết lỗi mới thực hiện hàm
-        dispatch(actions.logout())
-        console.log(data);
-        dispatch(actions.login(data)); // or getValueRoot
-        dispatch(actions.setUsername(data.username))
+
+        dispatch(actions.logout()); // đoạn này t tưởng luôn logout trước khi vào đăng nhập rồi?
+        // console.log(data); // data form
+        dispatch(actions.login(data)); // or getValue("root")
+        // console.log([isLoggedIn, msg]);
+        dispatch(actions.setUsername(data.username)); // setUsername để làm gì đây, t k thấy dispatch nó như nào??
+
     };
 
     useEffect(() => {
-        isLoggedIn && navigate(routesConfigPublic.homeRoute);
-    }, [isLoggedIn]);
-    useEffect(() => {
-        //wền sửa ở đây
-        console.log(msg)
-    },[msg])
+        if (msg) {
+            setError('password', { type: 'custom', message: 'Invalid user or password' }, { shouldFocus: true });
+        } else {
+            clearErrors('password');
+            if (isLoggedIn) navigate(routesConfigPublic.homeRoute);
+        }
+    }, [isLoggedIn, msg]);
+
     return (
         <div className={cx('login-page')}>
             <div className={cx('login-form')}>
