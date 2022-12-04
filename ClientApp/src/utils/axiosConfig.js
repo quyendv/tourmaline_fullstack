@@ -1,7 +1,14 @@
 import axios from 'axios';
+import { useSelector } from 'react-redux';
+import { BASE_URL } from './constant';
 
+// const token = JSON.parse(localStorage.getItem('persist:auth')).token
 const instance = axios.create({
-    baseURL: 'https://localhost:5000',
+    baseURL: BASE_URL,
+    // headers: {
+    //     // "Authorization" : `Bearer ${token}`
+    // }
+
 });
 
 // Add a request interceptor
