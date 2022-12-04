@@ -1,7 +1,8 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import classNames from 'classnames/bind';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import * as actions from '../../store/actions';
@@ -31,6 +32,8 @@ const yupSchema = yup
 function Register() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const {isRegisterSuccess} = useSelector(state => state.auth)
+
 
     // Validate resolver
     const {
@@ -43,13 +46,17 @@ function Register() {
 
     const handleRegister = (data) => {
         // e.preventDefault();
-        console.log(data); // contains confirm password
+        // console.log(data); // contains confirm password
 
         const payload = {...data};
         delete payload.confirmPassword;
         dispatch(actions.register(payload));
-        navigate('/login');
+        
     };
+
+    useEffect(() => {
+        isRegisterSuccess && navigate('/login');
+    }, [isRegisterSuccess])
 
     return (
         <div className={cx('register-page')}>

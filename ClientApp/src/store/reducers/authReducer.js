@@ -4,6 +4,7 @@ const initState = {
     isLoggedIn: false,
     token: null,
     msg: '',
+    isRegisterSuccess: null
 };
 
 const authReducer = (state = initState, action) => {
@@ -30,9 +31,15 @@ const authReducer = (state = initState, action) => {
                 token: null,
             };
         case actionTypes.REGISTER_SUCCESS:
-            return state;
+            return {
+                ...state,
+                isRegisterSuccess: true
+            };
         case actionTypes.REGISTER_FAIL:
-            return state;
+            return {
+                ...state,
+                isRegisterSuccess: false
+            };
         default:
             return state;
     }

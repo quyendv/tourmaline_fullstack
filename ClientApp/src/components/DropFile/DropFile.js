@@ -3,8 +3,8 @@ import { useCallback, useRef, useState } from 'react';
 import uploadImages from '../../assets/images';
 import styles from './DropFile.module.scss';
 import FileItem from './FileItem';
-import {uploadFile} from '../../services/music'
 import { useSelector } from 'react-redux';
+import { uploadFile } from '../../services/music';
 
 const cx = classNames.bind(styles);
 
@@ -22,8 +22,8 @@ function DropFile({ onFileChange }) {
     const dropAreaRef = useRef(); // to css dragover
     const songDetailsRef = useRef(); // to css songInfos invalid
 
-    const {token} = useSelector(state => state.auth)
-    
+    const { token } = useSelector((state) => state.auth);
+
     // --------- handle toggle class (css) -------------
     const addStyleDragOver = () => {
         dropAreaRef.current.classList.add(styles.dragover);
@@ -56,7 +56,6 @@ function DropFile({ onFileChange }) {
             // ------ add data to file then add file to fileList
             const infos = {
                 songName,
-                coverImg: coverImgRef.current.file,
                 lyric,
                 description,
             };
@@ -67,9 +66,19 @@ function DropFile({ onFileChange }) {
             // console.log(newData.current);
             // console.log(audioFileRef);
             // TODO: Sơn Kao post data chỗ này
+            const finalPayload = {
+                media: audioFileRef.current.file,
+                cover: coverImgRef.current.file,
+                name: infos.songName
+            }
 
+            const upload = async () => {
+                    const response = await uploadFile(finalPayload, token)
+                    console.log(response)
+            }
+            upload()
             // ------ clear song-details
-            handleClearData();
+            // handleClearData();
         } else {
             songDetailsRef.current.classList.add(styles.invalid);
             if (!audioFileRef.current.value) {

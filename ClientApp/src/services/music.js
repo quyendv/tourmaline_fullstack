@@ -1,10 +1,16 @@
 import axiosConfig from '../utils/axiosConfig'
 
-export const getSong = (sid) => new Promise(async (resolve, reject) => {
+export const getSong = (id, token) => new Promise(async (resolve, reject) => {
     try {
         const response = await axiosConfig({
-            url: `api/song/getMedia/${sid}`,
+            url: `api/song/getMedia`,
             method: 'get',
+            params: {
+                id
+            },
+            headers: {
+                "Authorization" : `Bearer ${token}`,
+            }
         })
         resolve(response)
     } catch (error) {
@@ -64,23 +70,24 @@ export const getPlaylist = (id, token) => new Promise(async(resolve, reject) => 
         reject(error)
     }
 })
-// export const getCover = (id, token) => new Promise(async(resolve, reject) => {
-//     try {
-//         const response = await axiosConfig({
-//             url: `/api/song/getCover`,
-//             method: 'get',
-//             params:{
-//                 id
-//             },
-//             headers: {
-//                 "Authorization": `Bearer ${token}`
-//             }
-//         })
-//         resolve(response)
-//     } catch (error) {
-//         reject(error)
-//     }
-// })
+export const getCover = (id, token) => new Promise(async(resolve, reject) => {
+    try {
+        const response = await axiosConfig({
+            url: `/api/song/getCover`,
+            method: 'get',
+            params:{
+                id
+            },
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "responseType": "arraybuffer"
+            }
+        })
+        resolve(response)
+    } catch (error) {
+        reject(error)
+    }
+})
 export const uploadFile = (data, token) => new Promise(async(resolve, reject) => {
     try {
         const response = await axiosConfig({
@@ -90,6 +97,24 @@ export const uploadFile = (data, token) => new Promise(async(resolve, reject) =>
             headers: {
                 'Authorization' : `Bearer ${token}`,
                 'Content-Type' : 'multipart/form-data'
+            }
+        })
+        resolve(response)
+    } catch (error) {
+        reject(error)
+    }
+})
+
+export const getSongs = (username, token) => new Promise(async(resolve, reject) => {
+    try {
+        const response = await axiosConfig({
+            url: '/api/song/getUploaded',
+            method: 'get',
+            params:{
+                username
+            },
+            headers: {
+                'Authorization' : `Bearer ${token}`,
             }
         })
         resolve(response)
