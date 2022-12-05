@@ -24,6 +24,10 @@ export const publicRoutes = [
         path: routesConfigPublic.playlist__title__pid,
         page: Playlist
     },
+    {
+        path: routesConfigPublic.library__playlist__title__pid,
+        page: Playlist
+    },
 
     {
         path: routesConfigPublic.STAR,

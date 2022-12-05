@@ -6,6 +6,7 @@ module.exports = {
             colors: {
                 'main-100': '#1e1e1e',
                 'activecolor': '#009cf4',
+                'overlay-30':'rgba(0,0,0,0.3)'
             },
             screens: {
                 1280: '1280px',
@@ -41,11 +42,34 @@ module.exports = {
                       transform: 'rotate(360deg);',
                     },
                   },
+                  'scale-up-image':{
+                    '0%': {
+                        '-webkit-transform': 'scale(1)',
+                        transform:'scale(1)'
+                    },
+                    '100%': {
+                        '-webkit-transform': 'scale(1.05)',
+                        transform:'scale(1.05)'
+                    }
+                  },
+                  'scale-down-image':{
+                    '0%': {
+                        '-webkit-transform': 'scale(1.05)',
+                        transform:'scale(1.1)'
+                    },
+                    '100%': {
+                        '-webkit-transform': 'scale(1.05)',
+                        transform:'scale(1)'
+                    }
+                  }
             },
+            
             animation: {
                 'slide-left': 'slide-left 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;',
                 'slide-right': 'slide-right 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;',
                 'rotate-center': 'rotate-center 8s linear infinite',
+                'scale-up-image': 'scale-up-image 0.6s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;',
+                'scale-down-image': 'scale-down-image 0.6s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;'
             }
         },
     },
