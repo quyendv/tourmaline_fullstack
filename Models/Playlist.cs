@@ -6,12 +6,12 @@ public class Playlist
     {
         Id = id;
         Name = name;
-        UserName = username;
+        Username = username;
         Songs = new List<Song>();
     }
 
     public int Id { get; set; }
-    public string UserName { get; set; }
+    public string Username { get; set; }
     public string Name { get; set; }
     public List<Song> Songs { get; set; }
 }

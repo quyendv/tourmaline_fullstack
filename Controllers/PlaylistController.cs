@@ -18,6 +18,8 @@ public class PlaylistController : ControllerBase
         _database = database;
     }
 
+    private string Username => HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+
     [Route("get")]
     [HttpGet]
     public async Task<ActionResult<Playlist>> GetPlaylist(int id)
@@ -31,7 +33,7 @@ public class PlaylistController : ControllerBase
         var playlist = new Playlist
         {
             Id = result.First()["id"],
-            UserName = result.First()["user"],
+            Username = result.First()["user"],
             Name = result.First()["name"],
         };
         var songs = await _database.Read("playlistsongs", new Dictionary<string, dynamic>()
@@ -87,7 +89,7 @@ public class PlaylistController : ControllerBase
         {
             Id = new Random().Next(),
             Name = name,
-            UserName = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value,
+            Username = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value,
         };
         
         var fileName = $"{playlist.Id}.jpg";
@@ -106,7 +108,7 @@ public class PlaylistController : ControllerBase
         {
             { "id", playlist.Id },
             { "name", playlist.Name },
-            { "user", playlist.UserName },
+            { "user", playlist.Username },
             { "cover_url", fileName }
         });
         return Ok(playlist);
@@ -168,5 +170,50 @@ public class PlaylistController : ControllerBase
             }
         }
         return Ok();
+    }
+
+    [Route("playlists")]
+    [HttpGet]
+    public async Task<ActionResult<UserPlaylist>> GetAllPlaylist()
+    {
+        var userPlaylist = new UserPlaylist();
+        var result = await _database.Read("playlist", new Dictionary<string, dynamic>()
+        {
+            { "user", Username}
+        });
+        foreach (var playlist in result.Select(pl => new Playlist
+                 {
+                     Id = pl["id"],
+                     Name = pl["name"],
+                     Username = Username,
+                 }))
+        {
+            var songs = await _database.Read("playlistsongs", new Dictionary<string, dynamic>()
+            {
+                { "playlistId", playlist.Id }
+            });
+            foreach (var s in songs)
+            {
+                var tags = (await _database.Read("songtags", new Dictionary<string, dynamic>()
+                {
+                    { "id", s["id"] }
+                })).Select((e) => e["tag"].ToString()).Cast<string>().ToList();
+                var song = new Song
+                {
+                    Name = s["name"],
+                    Uploader = s["uploader"],
+                    Id = s["id"],
+                    UploadTime = DateTime.Parse(s["uploadTime"]),
+                    Album = s["album"],
+                    Description = s["description"],
+                    Lyrics = s["lyrics"],
+                    Tags = tags,
+                };
+                playlist.Songs.Add(song);
+            }
+            userPlaylist.Playlists.Add(playlist);
+        }
+
+        return Ok(userPlaylist);
     }
 }
