@@ -19,14 +19,6 @@ public class Database
         connection.Open();
         try
         {
-            // if (columns == null || columns.Count == 0)
-            // {
-            //     columns = new List<string>();
-            //     var query = new MySqlCommand($"SHOW COLUMNS FROM `{table}`", connection).ExecuteReader();
-            //     while (query.Read()) columns.Add(query.GetString(0));
-            //     query.Close();
-            // }
-            //
             var cons = new List<string>();
             if (conditions != null)
                 foreach (var entry in conditions)
