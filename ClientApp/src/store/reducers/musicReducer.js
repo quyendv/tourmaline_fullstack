@@ -2,7 +2,8 @@ import {actionTypes} from "../actions/actionTypes"
 
 const initState = {
     curSongId: null,
-    isPlaying: false
+    isPlaying: false,
+    recentSong: []
 }
 
 //TODOS

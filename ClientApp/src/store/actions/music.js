@@ -9,3 +9,7 @@ export const play = (play) => ({
     type: actionTypes.PLAY,
     play
 })
+export const setRecent = (data) => ({
+    type: actionTypes.SET_RECENT,
+    data
+})

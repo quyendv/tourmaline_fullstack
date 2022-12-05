@@ -19,6 +19,7 @@ const {
     SlVolume1,
     SlVolume2,
     SlVolumeOff,
+    RiRepeatOneLine
 } = icons;
 
 function Player({ setIsShowSidebar }) {
@@ -29,6 +30,8 @@ function Player({ setIsShowSidebar }) {
     const audio = useRef();
     const [currentSecond, setCurrentSecond] = useState(0);
     const [duration, setDuration] = useState(0);
+    const [isShuffle, setIsShuffle] = useState(false)
+    const [isRepeat, setIsRepeat] = useState(0)
     const dispatch = useDispatch();
     const trackRef = useRef();
     const thumbRef = useRef();
@@ -102,6 +105,12 @@ function Player({ setIsShowSidebar }) {
         thumbRef.current.style.cssText = `right: ${100 - percent}%`;
         setCurrentSecond(audio.current.currentTime);
     };
+    const handleNextSong = (e) => {
+
+    }
+    const handlePrevSong = (e) => {
+        
+    }
     return (
         <div className="flex h-full text-white">
             {/* //Songdetai */}
@@ -121,10 +130,10 @@ function Player({ setIsShowSidebar }) {
             <div className="flex w-[40%] flex-col items-center justify-center gap-2 border border-white">
                 {/* //Main Player */}
                 <div className="flex items-center justify-center gap-8">
-                    <span className="cursor-pointer">
+                    <span onClick={() =>setIsShuffle(prev => !prev)} className={`${isShuffle && 'text-activecolor'} cursor-pointer`}>
                         <CiShuffle size={24} />
                     </span>
-                    <span className="cursor-pointer">
+                    <span onClick={handlePrevSong} className="cursor-pointer text-gray-600 pointer-events-none">
                         <MdSkipPrevious size={24} />
                     </span>
                     <span onClick={handleToggleMusic} className="cursor-pointer rounded-full border border-white p-1">
@@ -134,11 +143,11 @@ function Player({ setIsShowSidebar }) {
                             <BsPauseFill size={24} className="mr-[-1px]" />
                         )}
                     </span>
-                    <span className="cursor-pointer">
+                    <span onClick={handleNextSong} className="cursor-pointer text-gray-600 pointer-events-none">
                         <MdSkipNext size={24} />
                     </span>
-                    <span className="cursor-pointer">
-                        <CiRepeat size={24} />
+                    <span onClick={() => setIsRepeat(prev => (prev == 2 ? 0 : (prev + 1)))} className={`cursor-pointer ${isRepeat > 0 && 'text-activecolor'}`}>
+                        {isRepeat == 2 ? <RiRepeatOneLine size={24}/> : <CiRepeat  size={24} />}
                     </span>
                     <audio ref={audio}> </audio>
                 </div>

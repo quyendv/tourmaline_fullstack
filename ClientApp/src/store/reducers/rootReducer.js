@@ -20,7 +20,7 @@ const authConfig = {
 const musicConfig = {
     ...commonConfig,
     key: 'music',
-    whitelist: ['curSongId']
+    whitelist: ['curSongId','recentSongs']
 }
 const userConfig = {
     ...commonConfig,

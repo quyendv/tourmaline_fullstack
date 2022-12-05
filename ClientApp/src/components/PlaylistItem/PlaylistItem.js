@@ -31,7 +31,9 @@ function PlaylistItem({ playlistData }) {
         <div className="flex flex-col ">
             <div
                 className="relative h-[220px] w-[220px] overflow-hidden rounded-md"
-                onClick={() => navigate(link)}
+                onClick={() => navigate(link, {
+                    state: playlistData
+                })}
                 onMouseEnter={handleHover}
                 onMouseLeave={handleLeave}
             >
