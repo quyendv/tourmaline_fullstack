@@ -84,9 +84,7 @@ namespace tourmaline.Controllers
                 favorite.Songs.Add(new Song
                 {
                     Id = songId,
-                    Album = songQuery["album"],
                     Description = songQuery["description"],
-                    Lyrics = songQuery["lyrics"],
                     Name = songQuery["name"],
                     UploadTime = songQuery["uploadTime"],
                     Uploader = songQuery["uploader"]

@@ -50,9 +50,7 @@ public class PlaylistController : ControllerBase
             playlist.Songs.Add(new Song
             {
                 Id = songId,
-                Album = songQuery["album"],
                 Description = songQuery["description"],
-                Lyrics = songQuery["lyrics"],
                 Name = songQuery["name"],
                 UploadTime = songQuery["uploadTime"],
                 Uploader = songQuery["uploader"]
@@ -204,9 +202,7 @@ public class PlaylistController : ControllerBase
                     Uploader = s["uploader"],
                     Id = s["id"],
                     UploadTime = DateTime.Parse(s["uploadTime"]),
-                    Album = s["album"],
                     Description = s["description"],
-                    Lyrics = s["lyrics"],
                     Tags = tags,
                 };
                 playlist.Songs.Add(song);
