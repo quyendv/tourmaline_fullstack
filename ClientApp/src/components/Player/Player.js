@@ -2,10 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
 
-import * as apis from '../../services/music';
 import { icons } from '../../utils/icons';
 import * as actions from '../../store/actions';
-import { getSong } from '../../services/music';
+import { getInfoSong } from '../../services/music';
 import { BASE_URL } from '../../utils/constant';
 
 import avatarSong from '../../assets/images/Pop.svg';
@@ -50,6 +49,11 @@ function Player({ setIsShowSidebar }) {
             // }
         };
         fetchSong();
+        const fetchInfoSong = () => {
+            const response = getInfoSong(curSongId, token)
+            console.log(response)
+        }
+        fetchInfoSong()
 
     }, [curSongId]);
     var intervalId;

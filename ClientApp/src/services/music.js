@@ -18,12 +18,31 @@ export const getSong = (id, token) => new Promise(async (resolve, reject) => {
     }
 })
 
-export const getDetailSong = (sid) => new Promise(async (resolve, reject) => {
+export const getInfoSong = (id, token) => new Promise(async (resolve, reject) => {
     try {
         const response = await axiosConfig({
-            url: '/infosong',
-            method: 'get',
-            params: {id: sid}
+            url: '/api/song/get',
+            method: 'get',  
+            params: {id},
+            headers: {
+                "Authorization":`Beaer ${token}`
+            }
+        })
+        resolve(response)
+    } catch (error) {
+        reject(error)
+    }
+})
+
+export const deleteSong = (id, token) => new Promise(async (resolve, reject) => {
+    try {
+        const response = await axiosConfig({
+            url: '/api/song/delete',
+            method: 'delete',  
+            params: {id},
+            headers: {
+                "Authorization":`Beaer ${token}`
+            }
         })
         resolve(response)
     } catch (error) {
@@ -70,6 +89,42 @@ export const getPlaylist = (id, token) => new Promise(async(resolve, reject) => 
         reject(error)
     }
 })
+
+export const getAllPlaylist = (token) => new Promise(async(resolve, reject) => {
+    try {
+        const response = await axiosConfig({
+            url: `/api/playlist/playlists`,
+            method: 'get',
+            // params: {
+            //     id
+            // },
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        })
+        resolve(response)
+    } catch (error) {
+        reject(error)
+    }
+})
+export const deletePlaylist = (id, token) => new Promise(async(resolve, reject) => {
+    try {
+        const response = await axiosConfig({
+            url:'/api/playlist/delete',
+            method:'delete',
+            params:{
+                id
+            },
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        })
+        resolve(response)
+    } catch (error) {
+        reject(error)
+    }
+})
+
 export const getCover = (id, token) => new Promise(async(resolve, reject) => {
     try {
         const response = await axiosConfig({
@@ -121,3 +176,4 @@ export const getSongs = (username, token) => new Promise(async(resolve, reject) 
         reject(error)
     }
 })
+
