@@ -14,6 +14,7 @@ const actionTypes = {
     //music
     SET_CUR_SONG_ID: 'SET_CUR_SONG_ID',
     PLAY: 'PLAY',
+    SET_RECENT:'SET_RECENT',
 
 
     // actions

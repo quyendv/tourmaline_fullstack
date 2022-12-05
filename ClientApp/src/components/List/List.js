@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 
-const {AiFillCloseCircle} = icons
+const {AiFillCloseCircle, BsMusicNoteBeamed} = icons
 function List({ songData }) {
     const dispatch = useDispatch();
     const { curSongId, isPlaying } = useSelector((state) => state.music);
@@ -28,7 +28,7 @@ function List({ songData }) {
         const response = await deleteSong(songData.id, token)
         console.log(response)
     }
-    return (
+    return (    
         <div
             className="flex cursor-pointer items-center gap-3 border border-white text-white justify-between"
             onClick={() => {
@@ -37,6 +37,7 @@ function List({ songData }) {
             }}
         >
             <div className="flex items-center gap-2">
+                <span><BsMusicNoteBeamed/></span>
                 <img className="h-[40px] w-[40px] rounded-md object-cover" src={src}/>
                 <span className='flex flex-col'>
                     <span className='text-sm'>{songData.name}</span>
@@ -45,9 +46,12 @@ function List({ songData }) {
                 
             </div>
             
-
+{/* 
             <span className='border border-white p-2' onClick={handleDelete}>
                 <AiFillCloseCircle/>
+            </span> */}
+            <span>
+
             </span>
             {/* <span>{moment.utc((songData.duration || 0) * 1000).format('mm:ss')}</span> */}
         </div>
