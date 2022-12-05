@@ -40,13 +40,13 @@ function FileItem({ data, handleRemove }) {
     // TODO: Xử lý chỉ nhận file audio
 
     // auto download when rendering: tắt StrictMode mới hoạt động đúng
-    useEffect(() => {
-        if (handleRemove) {
-            // console.log('useEffect called!'); // test re-render
-            handleDownload(data);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    // useEffect(() => {
+    //     if (handleRemove) {
+    //         // console.log('useEffect called!'); // test re-render
+    //         handleDownload(data);
+    //     }
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, []);
 
     return (
         <div className={cx('drop-file-item')}>

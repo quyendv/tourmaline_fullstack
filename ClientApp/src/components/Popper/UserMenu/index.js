@@ -10,6 +10,7 @@ function UserMenu({ children, menuList }) {
         <HeadlessTippy
             // visible="true"
             // delay={[0, 200]}
+            trigger='click'
             interactive
             placement="bottom-end"
             render={(attrs) => (

@@ -49,9 +49,7 @@ function DropFile({ onFileChange }) {
         if (
             audioFileRef.current.file &&
             songName.trim() &&
-            coverImgRef.current.file &&
-            lyric.trim() &&
-            description.trim()
+            coverImgRef.current.file /* && lyric.trim() && description.trim() */
         ) {
             // ------ add data to file then add file to fileList
             const infos = {
@@ -69,16 +67,12 @@ function DropFile({ onFileChange }) {
             const finalPayload = {
                 media: audioFileRef.current.file,
                 cover: coverImgRef.current.file,
-                name: infos.songName
-            }
+                name: infos.songName,
+            };
+            handleUploadAPI(finalPayload, token);
 
-            const upload = async () => {
-                    const response = await uploadFile(finalPayload, token)
-                    console.log(response)
-            }
-            upload()
             // ------ clear song-details
-            // handleClearData();
+            handleClearData();
         } else {
             songDetailsRef.current.classList.add(styles.invalid);
             if (!audioFileRef.current.value) {
@@ -86,6 +80,11 @@ function DropFile({ onFileChange }) {
             }
         }
     }, [description, fileList, lyric, songName]);
+
+    const handleUploadAPI = async (finalPayload, token) => {
+        const response = await uploadFile(finalPayload, token);
+        console.log(response);
+    };
 
     function handleClearData() {
         // clear inputs + clear audioFileRef.current.value (clear shortPreview when it's null)
@@ -152,9 +151,11 @@ function DropFile({ onFileChange }) {
 
                     <div className={cx('song-info')}>
                         <div className={cx('form-group')}>
-                            <label htmlFor="song-name">Song name</label>
+                            <label htmlFor="song-name" className={cx('required')}>
+                                Song name
+                            </label>
                             <input
-                                className={cx('form-control')}
+                                className={cx('form-control', 'required')}
                                 id="song-name"
                                 type="text"
                                 placeholder="Enter the name of the uploaded song ..."
@@ -193,9 +194,7 @@ function DropFile({ onFileChange }) {
                             ></textarea>
                         </div>
                     </div>
-                    <p className={cx('message')}>
-                        Please choose your file and fill in all the song's information before adding!
-                    </p>
+                    <p className={cx('message')}>Please choose your file and fill in required fields before adding!</p>
                 </div>
             </div>
 

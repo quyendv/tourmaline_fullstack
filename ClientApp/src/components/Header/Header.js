@@ -67,9 +67,9 @@ function Header() {
 
     return (
         <div className={cx('wrapper')}>
-            <SearchMenu>
+            {/* <SearchMenu> */}
                 <Search />
-            </SearchMenu>
+            {/* </SearchMenu> */}
 
             {/* User dropdown or Auth Buttons */}
             {isLoggedIn ? (
