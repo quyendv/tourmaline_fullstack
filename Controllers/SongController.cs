@@ -40,9 +40,7 @@ public class SongController : ControllerBase
         var song = new Song
         {
             Id = result.First()["id"],
-            Album = result.First()["album"],
             Description = result.First()["description"],
-            Lyrics = result.First()["lyrics"],
             Name = result.First()["name"],
             Uploader = result.First()["uploader"],
             UploadTime = result.First()["uploadTime"]
@@ -103,7 +101,8 @@ public class SongController : ControllerBase
     [HttpPost("FileUpload")]
     [Route("upload")]
     [DataType("multipart/formdata")]
-    public async Task<ActionResult> UploadSong([FromForm] IFormFile media, [FromForm] IFormFile cover, [FromForm] string name)
+    public async Task<ActionResult> UploadSong([FromForm] IFormFile media, [FromForm] IFormFile cover,
+        [FromForm] string name)
     {
         if (media.Length <= 0 || cover.Length <= 0) return StatusCode(StatusCodes.Status406NotAcceptable);
         var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
@@ -133,8 +132,7 @@ public class SongController : ControllerBase
             { "uploadTime", DateTime.Now.ToString("yyyy-MM-dd H:mm:ss") },
             { "uploader", CurrentSessionUsername },
             { "name", name },
-            { "coverUrl", imageName },
-            { "path", fileName }
+            { "description", "" },
         });
         return Ok("Upload succeeded!");
     }
