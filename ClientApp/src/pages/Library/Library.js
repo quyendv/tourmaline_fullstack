@@ -1,11 +1,12 @@
 import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
 
 import { icons } from '../../utils/icons';
 import { getPlaylist, getCover, getSongs, getAllPlaylist } from '../../services/music';
 import List from '../../components/List';
 import PlaylistItem from '../../components/PlaylistItem'
+import * as actions from '../../store/actions'
 
 const { BsFillPlayFill, AiOutlinePlusCircle } = icons;
 
@@ -27,6 +28,11 @@ function Library() {
         fetchAllPlaylist();
         fetchSongs();
     }, []);
+    const dispatch = useDispatch()
+    useEffect(() => {
+        dispatch(actions.createPlaylist(setPlaylistCreated))
+    }, [])
+    console.log(playlistCreated)
     return (
         <div className="text-white">
             <div className="mt-10 flex items-center gap-4 px-5">
@@ -42,7 +48,7 @@ function Library() {
                 </span>
             </div>
             <div className="mt-8 flex items-center gap-4 px-6">
-                {playlistCreated.length > 0 && playlistCreated?.map((item) => (
+                {playlistCreated?.length > 0 && playlistCreated?.map((item) => (
                     <PlaylistItem playlistData={item}/>
                 ))}
             </div>

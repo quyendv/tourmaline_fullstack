@@ -1,5 +1,5 @@
 import { icons } from '../../utils/icons';
-import {crePlaylist} from '../../services/music'
+import { crePlaylist } from '../../services/music';
 import { useSelector } from 'react-redux';
 import { useState, useRef } from 'react';
 
@@ -7,9 +7,9 @@ import Loading from '../Loading';
 
 const { AiFillCloseCircle } = icons;
 function Modal() {
-    const [isLoading, setIsLoading] = useState(false)
-    const {token} = useSelector(state => state.auth)
-    const {setIsOpenModal} = useSelector(state => state.actions)
+    const [isLoading, setIsLoading] = useState(false);
+    const { token } = useSelector((state) => state.auth);
+    const { setIsOpenModal, createPlaylist } = useSelector((state) => state.actions);
     const [title, setTitle] = useState('');
 
     const file = useRef();
@@ -21,11 +21,14 @@ function Modal() {
             name: title,
             cover: file.current,
         };
-        setIsLoading(true)
+        setIsLoading(true);
         const response = await crePlaylist(finalPayload, token);
-        setIsLoading(false)
+        console.log(response);
+        setIsLoading(false);
         if (response.status) {
             setIsOpenModal((prev) => !prev);
+
+            createPlaylist((prev) => [response.data, ...prev]);
         }
     };
     return (
@@ -52,7 +55,7 @@ function Modal() {
                         !title && 'pointer-events-none opacity-30'
                     }`}
                 >
-                    {isLoading ? <Loading/> : 'Tạo mới'}
+                    {isLoading ? <Loading /> : 'Tạo mới'}
                 </button>
             </div>
         </div>

@@ -19,7 +19,7 @@ const actionTypes = {
 
     // actions
     SET_IS_OPEN_MODAL: 'SET_IS_OPEN_MODAL',
-
+    CREATE_PLAYLIST:'CREATE_PLAYLIST',
     //user
     SET_USERNAME: 'SET_USERNAME',
 

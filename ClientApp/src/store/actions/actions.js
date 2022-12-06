@@ -5,3 +5,8 @@ export const openModal = (setIsOpenModal) => ({
     setIsOpenModal
 
 })
+
+export const createPlaylist = (createPlaylist) => ({
+    type: actionTypes.CREATE_PLAYLIST,
+    createPlaylist
+})
