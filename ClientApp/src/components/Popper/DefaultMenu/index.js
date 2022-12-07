@@ -1,20 +1,21 @@
 import HeadlessTippy from '@tippyjs/react/headless';
 import classNames from 'classnames/bind';
 import MenuItem from './MenuItem';
-import styles from './UserMenu.module.scss';
+import styles from './DefaultMenu.module.scss';
 
 const cx = classNames.bind(styles);
 
-function UserMenu({ children, menuList }) {
+function Menu({ children, menuList, placement }) {
     return (
         <HeadlessTippy
             // visible="true"
             // delay={[0, 200]}
-            trigger='click'
+            appendTo={document.body}
+            trigger="click"
             interactive
-            placement="bottom-end"
+            placement={placement || 'bottom-end'}
             render={(attrs) => (
-                <div className={cx('popper-wrapper')} tabIndex="-1" {...attrs}>
+                <div className={cx('popper-wrapper')} tabIndex="-1" {...attrs} onClick={(e) => e.stopPropagation()}>
                     {menuList.map((menuItem, index) => (
                         <MenuItem key={index} data={menuItem} />
                     ))}
@@ -26,4 +27,4 @@ function UserMenu({ children, menuList }) {
     );
 }
 
-export default UserMenu;
+export default Menu;

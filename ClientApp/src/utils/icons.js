@@ -1,9 +1,15 @@
-import {CiShuffle, CiRepeat} from 'react-icons/ci'
-import {BsFillPlayFill, BsPauseFill, BsMusicNoteList, BsThreeDots, BsMusicNoteBeamed} from 'react-icons/bs'
-import {MdSkipPrevious, MdSkipNext} from 'react-icons/md'
-import {SlVolume1, SlVolume2, SlVolumeOff} from 'react-icons/sl'
-import {AiOutlineCloudUpload, AiOutlinePlusCircle, AiFillCloseCircle} from 'react-icons/ai'
-import {RiRepeatOneLine} from 'react-icons/ri'
+import { AiFillCloseCircle, AiOutlineCloudUpload, AiOutlineDownload, AiOutlinePlusCircle } from 'react-icons/ai';
+import { BsFillPlayFill, BsMusicNoteBeamed, BsMusicNoteList, BsPauseFill, BsThreeDots } from 'react-icons/bs';
+import { CiRepeat, CiShuffle } from 'react-icons/ci';
+import { FaRegComment } from 'react-icons/fa';
+import { MdSkipNext, MdSkipPrevious } from 'react-icons/md';
+import { RiRepeatOneLine } from 'react-icons/ri';
+import { SlVolume1, SlVolume2, SlVolumeOff } from 'react-icons/sl';
+import { BsLink45Deg } from 'react-icons/bs';
+import { RiShareForwardLine } from 'react-icons/ri';
+import { FaRegTimesCircle } from 'react-icons/fa';
+import { ImSpinner2 } from 'react-icons/im';
+
 export const icons = {
     CiShuffle,
     BsFillPlayFill,
@@ -20,5 +26,11 @@ export const icons = {
     AiOutlinePlusCircle,
     AiFillCloseCircle,
     RiRepeatOneLine,
-    BsMusicNoteBeamed
-}
+    BsMusicNoteBeamed,
+    FaRegComment,
+    AiOutlineDownload,
+    BsLink45Deg,
+    RiShareForwardLine,
+    FaRegTimesCircle,
+    ImSpinner2,
+};

@@ -1,31 +1,105 @@
 import classNames from 'classnames/bind';
-import {useState} from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styles from './Search.module.scss';
-
-import {SearchIcon} from '../Icons';
+import HeadlessTippy from '@tippyjs/react/headless';
+import { SearchIcon } from '../Icons';
+import { icons } from '~/utils/icons';
+import useDebounce from '~/hooks/useDebounce';
 
 const cx = classNames.bind(styles);
+const { FaRegTimesCircle, ImSpinner2 } = icons;
 
 function Search() {
     const [searchValue, setSearchValue] = useState('');
+    const [searchResult, setSearchResult] = useState([]);
+    const [showResult, setShowResult] = useState(true);
+    const [loading, setLoading] = useState(false);
 
-    const handleChange = (event) => {
-        setSearchValue(event.target.value);
+    const inputRef = useRef();
+    const debouncedValue = useDebounce(searchValue, 500);
+
+    useEffect(() => {
+        if (!searchValue.trim()) {
+            setSearchResult([]);
+            return;
+        }
+        setLoading(true);
+
+        // Gọi api lấy kết quả search:
+        // Chú ý gán kết quả vào searchResult, rồi setLoading(false)
+
+        // VD: Tách ra config axios sau:
+        // axios
+        //     .get('users/search', {
+        //         params: { q: debouncedValue },
+        //     })
+        //     .then((res) => {
+        //         setSearchResult(res.data.data);
+        //         console.log(res.data);
+        //         setLoading(false);
+        //     })
+        //     .catch(() => {
+        //         setLoading(false);
+        //     });
+    }, [debouncedValue]);
+
+    const handleChange = (e) => {
+        const searchValue = e.target.value;
+        if (!searchValue.startsWith(' ')) {
+            setSearchValue(searchValue);
+        }
     };
+
+    const handleClear = () => {
+        setSearchValue('');
+        inputRef.current.focus();
+    };
+
     return (
-        <div className={cx('wrapper')}>
+        <HeadlessTippy
+            appendTo={() => document.body}
+            visible={showResult && searchResult.length > 0}
+            // visible="true"
+            placement="bottom"
+            interactive
+            render={(attrs) => (
+                <div className={cx('popper-wrapper')} tabIndex="-1" {...attrs}>
+                    <div className={cx('search-result')}>
+                        {/* Chưa css lại, chưa biết search ra kết quả gì */}
+                        <h4 className={cx('search-title')}>Suggest for you</h4>
+                        {/* {searchResult.map((result) => (
+                            <AccountItem key={result.id} data={result} />
+                        ))} */}
+                        <div>result1</div>
+                        <div>result2</div>
+                        <div>result3</div>
+                        <div>result4</div>
+                        <div>result5</div>
+                    </div>
+                </div>
+            )}
+            onClickOutside={() => setShowResult(false)}
+        >
             <div className={cx('search')}>
                 <button className={cx('search-btn')}>
-                    <SearchIcon/>
+                    <SearchIcon />
                 </button>
                 <input
                     value={searchValue}
                     type="text"
+                    ref={inputRef}
                     placeholder="Search, Songs, Genre, Album, Artists..."
                     onChange={handleChange}
+                    onFocus={() => setShowResult(true)}
                 />
+                {!!searchValue && !loading && (
+                    <button className={cx('clear')} onClick={handleClear}>
+                        <FaRegTimesCircle />
+                    </button>
+                )}
+                {loading && <ImSpinner2 className={cx('loading')} />}
             </div>
-        </div>
+        </HeadlessTippy>
     );
 }
 
