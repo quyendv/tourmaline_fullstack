@@ -48,8 +48,8 @@ function Library() {
                 </span>
             </div>
             <div className="mt-8 flex items-center gap-4 px-6">
-                {playlistCreated?.length > 0 && playlistCreated?.map((item) => (
-                    <PlaylistItem playlistData={item}/>
+                {playlistCreated.length > 0 && playlistCreated?.map((item, index) => (
+                    <PlaylistItem playlistData={item} key={index}/>
                 ))}
             </div>
             <div className="mt-8 flex items-center gap-4 px-6">

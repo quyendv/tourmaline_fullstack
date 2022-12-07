@@ -4,19 +4,17 @@ import {
     faPhone,
     faRightFromBracket,
     faShieldHalved,
-    faUser,
+    faUser
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames/bind';
-import { useDispatch, useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { LOGIN, REGISTER } from '~/Routes/routesConfig';
 import { icons } from '../../utils/icons';
-import { SearchMenu, UserMenu } from '../Popper';
+import { DefaultMenu as UserMenu } from '../Popper';
 import Search from '../Search';
 import styles from './Header.module.scss';
-import * as actions from '../../store/actions'
-
 
 const { AiOutlineCloudUpload } = icons;
 
@@ -54,9 +52,8 @@ const userMenuList = [
         title: 'Logout',
         to: '',
         onClick: function () {
-            return 0
-        }
-
+            return 0;
+        },
     },
 ];
 
@@ -67,9 +64,7 @@ function Header() {
 
     return (
         <div className={cx('wrapper')}>
-            {/* <SearchMenu> */}
-                <Search />
-            {/* </SearchMenu> */}
+            <Search />
 
             {/* User dropdown or Auth Buttons */}
             {isLoggedIn ? (
