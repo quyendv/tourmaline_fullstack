@@ -23,7 +23,7 @@ public class Database
             if (conditions != null)
                 foreach (var entry in conditions)
                 {
-                    if (entry.Value is string) conditions[entry.Key] = $"'{entry.Value}'";
+                    if ((entry.Value is string) || (entry.Value is DateTime)) conditions[entry.Key] = $"'{entry.Value}'";
                     cons.Add($"{entry.Key} = {conditions[entry.Key]}");
                 }
 
@@ -53,7 +53,7 @@ public class Database
         var connection = new MySqlConnection(ConnectionString);
         connection.Open();
         foreach (var entry in values)
-            if (entry.Value is string)
+            if ((entry.Value is string) || (entry.Value is DateTime))
                 values[entry.Key] = $"'{entry.Value}'";
         var queryString =
             $"INSERT INTO {table} ({string.Join(", ", values.Keys)}) VALUES ({string.Join(", ", values.Values)})";
@@ -77,14 +77,14 @@ public class Database
         var vals = new List<string>();
         foreach (var entry in values)
         {
-            if (entry.Value is string) values[entry.Key] = $"'{entry.Value}'";
+            if ((entry.Value is string) || (entry.Value is DateTime)) values[entry.Key] = $"'{entry.Value}'";
             vals.Add($"{entry.Key} = {values[entry.Key]}");
         }
 
         var cons = new List<string>();
         foreach (var entry in conditions)
         {
-            if (entry.Value is string) conditions[entry.Key] = $"'{entry.Value}'";
+            if ((entry.Value is string) || (entry.Value is DateTime)) conditions[entry.Key] = $"'{entry.Value}'";
             cons.Add($"{entry.Key} = {conditions[entry.Key]}");
         }
 
@@ -112,7 +112,7 @@ public class Database
         var cons = new List<string>();
         foreach (var entry in conditions)
         {
-            if (entry.Value is string) conditions[entry.Key] = $"'{entry.Value}'";
+            if ((entry.Value is string) || (entry.Value is DateTime)) conditions[entry.Key] = $"'{entry.Value}'";
             cons.Add($"{entry.Key} = {conditions[entry.Key]}");
         }
 

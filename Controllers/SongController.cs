@@ -60,7 +60,7 @@ public class SongController : ControllerBase
 
         if (isSongExist)
         {
-            string songPath = songObjects[0]["path"];
+            string songPath = $"{id}.mp3";
 
             var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             var file = new FileStream($"{homeDir}/storage/media/{songPath}", FileMode.Open, FileAccess.Read,
@@ -90,7 +90,7 @@ public class SongController : ControllerBase
         var isSongExist = songObjects.Count != 0;
 
         if (!isSongExist) return StatusCode(StatusCodes.Status400BadRequest, "Song not found!");
-        string coverPath = songObjects[0]["coverUrl"];
+        string coverPath = $"{id}.jpg";
 
         var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         var file = new FileStream($"{homeDir}/storage/cover/{coverPath}", FileMode.Open, FileAccess.Read,
