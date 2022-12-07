@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using NuGet.Protocol;
 using tourmaline.Models;
 using tourmaline.Services;
+using FFMpegCore;
 
 namespace tourmaline.Controllers;
 
@@ -43,7 +44,8 @@ public class SongController : ControllerBase
             Description = result.First()["description"],
             Name = result.First()["name"],
             Uploader = result.First()["uploader"],
-            UploadTime = result.First()["uploadTime"]
+            UploadTime = result.First()["uploadTime"],
+            Duration = result.First()["duration"]
         };
         return Ok(song);
     }
@@ -123,6 +125,16 @@ public class SongController : ControllerBase
             await cover.CopyToAsync(stream);
         }
 
+        TimeSpan duration = TimeSpan.Zero;
+
+        try
+        {
+            duration = (await FFProbe.AnalyseAsync(filePath)).Duration;
+        } catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+
         name = name.Replace("'", "\'");
         name = name.Replace("\"", "\"");
 
@@ -133,6 +145,7 @@ public class SongController : ControllerBase
             { "uploader", CurrentSessionUsername },
             { "name", name },
             { "description", "" },
+            { "duration", duration.TotalSeconds }
         });
         return Ok("Upload succeeded!");
     }
@@ -221,9 +234,8 @@ public class SongController : ControllerBase
                 "id",
                 "uploadTime",
                 "name",
-                "lyrics",
                 "description",
-                "album"
+                "duration"
             });
 
         return new JsonResult(songsInfo);
