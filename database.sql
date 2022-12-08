@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.29, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.31, for Linux (x86_64)
 --
--- Host: 127.0.0.1    Database: tourmaline
+-- Host: localhost    Database: tourmaline
 -- ------------------------------------------------------
--- Server version	8.0.29
+-- Server version	8.0.31-0ubuntu0.22.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -44,7 +44,6 @@ CREATE TABLE `comment` (
 
 LOCK TABLES `comment` WRITE;
 /*!40000 ALTER TABLE `comment` DISABLE KEYS */;
-INSERT INTO `comment` VALUES (3,'@anhquan7826 Ehe','2022-12-07 23:46:07','2022-12-07 23:55:26',41726473,'anhquan7826'),(4,'@anhquan7826 Thang nao vao nick t day dmm','2022-12-07 23:46:22','2022-12-07 23:46:22',41726473,'anhquan7826');
 /*!40000 ALTER TABLE `comment` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -124,7 +123,6 @@ CREATE TABLE `playlist` (
 
 LOCK TABLES `playlist` WRITE;
 /*!40000 ALTER TABLE `playlist` DISABLE KEYS */;
-INSERT INTO `playlist` VALUES (68301647,'anhquan7826','80s jp pop','68301647.jpg'),(1975350824,'anhquan7826','my playlist',NULL);
 /*!40000 ALTER TABLE `playlist` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -152,7 +150,6 @@ CREATE TABLE `playlistsongs` (
 
 LOCK TABLES `playlistsongs` WRITE;
 /*!40000 ALTER TABLE `playlistsongs` DISABLE KEYS */;
-INSERT INTO `playlistsongs` VALUES (68301647,1720979461),(68301647,1847161374),(68301647,1980301390);
 /*!40000 ALTER TABLE `playlistsongs` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -180,7 +177,6 @@ CREATE TABLE `recents` (
 
 LOCK TABLES `recents` WRITE;
 /*!40000 ALTER TABLE `recents` DISABLE KEYS */;
-INSERT INTO `recents` VALUES ('anhquan7826',41726473,'2022-12-07 23:53:09'),('anhquan7826',144930306,'2022-11-30 23:20:05');
 /*!40000 ALTER TABLE `recents` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -198,6 +194,7 @@ CREATE TABLE `song` (
   `name` varchar(255) NOT NULL,
   `description` text,
   `duration` double DEFAULT '0',
+  `listen_times` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `FK_USER_idx` (`uploader`),
   CONSTRAINT `FK_SONG_USER` FOREIGN KEY (`uploader`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -210,7 +207,7 @@ CREATE TABLE `song` (
 
 LOCK TABLES `song` WRITE;
 /*!40000 ALTER TABLE `song` DISABLE KEYS */;
-INSERT INTO `song` VALUES (16919402,'2022-12-02 19:29:22','anhquan7826','new stage','',0),(24665185,'2022-12-02 19:29:21','anhquan7826','Drive','',0),(41726473,'2022-12-07 22:11:22','anhquan7826','I love my dog','',268.643),(45212631,'2022-12-02 19:29:20','anhquan7826','Colors','',0),(82352503,'2022-12-02 19:29:23','anhquan7826','Wanderer','',0),(101157243,'2022-12-02 19:29:22','anhquan7826','Romantic Travel','',0),(114652819,'2022-12-02 19:29:23','anhquan7826','? TAKE ME HOME ? — FEAT. WISHLYST [AIKA REMIX]','',0),(117946796,'2022-12-02 19:29:21','anhquan7826','Lost','',0),(124521406,'2022-12-02 19:29:20','anhquan7826','Claires - Evening Sky','',0),(131703190,'2022-12-02 19:29:22','anhquan7826','noguchii & Jecan - Anymore','',0),(144930306,'2022-11-30 23:17:05','anhquan7826','Magical Candy','',0),(165911875,'2022-12-02 19:29:21','anhquan7826','Lois - Spotlight','',0),(189369224,'2022-12-02 19:46:22','anhquan7826','04 C418 - Death','',0),(196896603,'2022-12-02 19:29:21','anhquan7826','KMNZ - VR (GF ElectroHouse Bootleg)','',0),(204029025,'2022-12-02 19:29:22','anhquan7826','Remember Me','',0),(206879533,'2022-12-02 19:48:04','anhquan7826','Mat. - Perspective EP Track 5','',0),(214631054,'2022-12-02 19:29:20','anhquan7826','breeze','',0),(238957802,'2022-12-02 19:29:21','anhquan7826','Happy Kuru Kuru - Hanbunko Hanabi (Kabuki Remix)','',0),(272565980,'2022-12-02 19:29:21','anhquan7826','Like A Sweet','',0),(287897962,'2022-12-02 19:48:05','anhquan7826','Mat. - Perspective EP Track 7','',0),(313529512,'2022-12-02 19:29:23','anhquan7826','You & Me (Feat.Plemoon)','',0),(346643694,'2022-11-30 23:17:04','anhquan7826','Dance Down','',0),(349288679,'2022-11-30 23:17:05','anhquan7826','Night Tempo - Yukiko','',0),(385237912,'2022-11-30 23:17:05','anhquan7826','Greyl - Planetarium','',0),(393898071,'2022-12-02 19:29:22','anhquan7826','Phantasy','',0),(417570392,'2022-12-02 19:29:23','anhquan7826','Twinkle Layer','',0),(451890113,'2022-12-02 19:29:21','anhquan7826','Jade Key & Meredith Bull - Breathe (Author wind remix)','',0),(465914001,'2022-12-02 19:29:20','anhquan7826','Bloom','',0),(482869611,'2022-12-02 19:48:04','anhquan7826','Mat. - Perspective EP Track 3','',0),(485091761,'2022-12-02 19:29:22','anhquan7826','My Heart','',0),(493068892,'2022-12-02 19:29:22','anhquan7826','Relive','',0),(497055592,'2022-12-02 19:29:22','anhquan7826','Sakura (feat. Kimura Rin) [PIKASONIC Remix]','',0),(505261946,'2022-11-30 23:17:06','anhquan7826','【﻿ｆａｎｔａｓｙ】 MEIKO NAKAHARA (1982)','',0),(512886986,'2022-12-02 19:29:21','anhquan7826','Ferst & Zentra - Pastel Sky (feat. Rainy)(Amidst Remix)','',0),(514405900,'2022-12-02 19:29:22','anhquan7826','MojiX! x Elkuu - Minamo','',0),(565477168,'2022-11-30 23:17:06','anhquan7826','悲しみFOREVER [失恋Rhapsody] EP','',0),(572977732,'2022-12-02 19:29:21','anhquan7826','Flow [5k Followers]','',0),(644362288,'2022-12-02 19:29:21','anhquan7826','Forest','',0),(650949325,'2022-12-02 19:29:20','anhquan7826','COR!S - Moon Garden (GHOST DATA Remix)','',0),(675394911,'2022-12-02 19:29:22','anhquan7826','Moe Punch','',0),(686138791,'2022-12-02 19:29:22','anhquan7826','Mirror','',0),(690090236,'2022-12-02 19:29:22','anhquan7826','Over-Hit!','',0),(702742878,'2022-12-02 19:29:23','anhquan7826','Starlight','',0),(720783535,'2022-12-02 19:29:23','anhquan7826','World (WPIKASONIC)','',0),(733691765,'2022-12-02 19:29:20','anhquan7826','AbyanF - True','',0),(753308253,'2022-12-02 19:29:22','anhquan7826','Ohayou!','',0),(772830337,'2022-12-02 19:29:20','anhquan7826','Artificial','',0),(779739787,'2022-12-02 19:29:22','anhquan7826','Pikasonic - Asuka','',0),(786435040,'2022-12-02 19:29:23','anhquan7826','Virtual (w Puniden)','',0),(794202302,'2022-12-02 19:48:04','anhquan7826','Mat. - Perspective EP Track 4','',0),(827604666,'2022-12-02 19:29:21','anhquan7826','Emptiness','',0),(836437411,'2022-12-02 19:29:22','anhquan7826','Setsuna (Kirara Magic Remix)','',0),(860079903,'2022-12-02 19:29:22','anhquan7826','Rain (w KITSUNE)','',0),(889415535,'2022-12-02 19:29:22','anhquan7826','Osaka Express','',0),(907395639,'2022-12-02 19:48:05','anhquan7826','Mat. - Perspective EP Track 6','',0),(925220689,'2022-12-02 19:29:22','anhquan7826','PIKASONIC - Horizon','',0),(928805643,'2022-12-02 19:29:22','anhquan7826','PIKASONIC - Wildflowers [UXN Release]','',0),(929863895,'2022-11-30 23:17:06','anhquan7826','Yasuha - Flyday Chinatown (Night Tempo Edit)','',0),(934738827,'2022-12-02 19:29:22','anhquan7826','Nostalgica','',0),(946027106,'2022-12-02 19:29:21','anhquan7826','Edge Of The Way','',0),(958018574,'2022-12-02 19:29:20','anhquan7826','AByanF - Slidewalk 『Dubstep』','',0),(988715273,'2022-11-30 23:17:05','anhquan7826','HD - Ramen 5670NINE','',0),(992226217,'2022-11-30 23:17:05','anhquan7826','SUPER RISER!','',0),(1017395806,'2022-12-02 19:29:23','anhquan7826','U And Me','',0),(1018189668,'2022-12-02 19:29:23','anhquan7826','Twinklestar','',0),(1030238271,'2022-12-02 19:29:20','anhquan7826','Awaiting (feat. Rainy)','',0),(1079452472,'2022-12-02 19:48:04','anhquan7826','Mat. - Perspective EP Track 1','',0),(1129699765,'2022-12-02 19:29:22','anhquan7826','Rise','',0),(1133247758,'2022-12-02 19:29:22','anhquan7826','Path To Fairyland','',0),(1142730826,'2022-12-02 19:29:20','anhquan7826','Daydream Cafe (Kirara Magic Remix) feat. Shion','',0),(1146631662,'2022-12-02 19:29:20','anhquan7826','Cosmos','',0),(1202625906,'2022-12-02 19:29:20','anhquan7826','Dreaming','',0),(1217918966,'2022-12-02 19:29:23','anhquan7826','Smile','',0),(1227443045,'2022-12-02 19:29:22','anhquan7826','Play','',0),(1236932759,'2022-12-02 19:29:22','anhquan7826','Rainbow sky(wREVERSED)','',0),(1261048123,'2022-12-02 19:29:21','anhquan7826','Fantasy (w MONICO)','',0),(1263927684,'2022-11-30 23:17:05','anhquan7826','October 3 Project','',0),(1275941856,'2022-11-30 23:17:06','anhquan7826','時空 Rendez-Vous','',0),(1284151857,'2022-12-02 19:29:23','anhquan7826','Summer Of Beach','',0),(1302122541,'2022-11-30 23:17:04','anhquan7826','Android52 - Real Love','',0),(1305740319,'2022-11-30 23:17:06','anhquan7826','ミカヅキBIGWAVE - シャボンのシャンプー','',0),(1323228764,'2022-11-30 23:17:05','anhquan7826','S U B W A Y S - アイスクリーム','',0),(1331674615,'2022-11-30 23:17:04','anhquan7826','Android52 - Romance','',0),(1333697111,'2022-12-02 19:48:04','anhquan7826','Mat. - Perspective EP Track 2','',0),(1358822488,'2022-12-02 19:29:23','anhquan7826','The twenty three (Free Download)','',0),(1359486456,'2022-12-02 19:29:20','anhquan7826','Amidst x Sacry - Carousel','',0),(1384781338,'2022-12-02 19:29:21','anhquan7826','Mihony - Cute Swing','',0),(1420621256,'2022-11-30 23:17:06','anhquan7826','heaven beach','',0),(1420811583,'2022-12-02 19:29:21','anhquan7826','Eternity','',0),(1421402119,'2022-11-30 23:17:05','anhquan7826','Payᵖᵃʸ','',0),(1432367093,'2022-12-02 19:29:22','anhquan7826','Rytmeklubben - Girlfriend (Moe Shop Edit)','',0),(1466908070,'2022-12-02 19:28:08','anhquan7826','AByanF - Slidewalk 『Dubstep』','',0),(1475184453,'2022-12-02 19:29:21','anhquan7826','Kyori','',0),(1477897836,'2022-12-02 19:29:21','anhquan7826','Honey (feat. Shion)','',0),(1488365695,'2022-12-02 19:29:20','anhquan7826','Creed','',0),(1497542337,'2022-12-02 19:29:21','anhquan7826','Michael Li - Gomenasai','',0),(1517870492,'2022-12-02 19:29:23','anhquan7826','Tako','',0),(1522146267,'2022-12-02 19:29:22','anhquan7826','PIKASONIC & Tatsunoshin - Lockdown (ft. NEONA)','',0),(1544402921,'2022-12-02 19:29:22','anhquan7826','PIKASONIC - Inside [UXN Release]','',0),(1578902249,'2022-11-30 23:17:05','anhquan7826','She Is...','',0),(1589426509,'2022-12-02 19:29:20','anhquan7826','Cloudier - A Centimetre Apart (Systile Remix)','',0),(1602301361,'2022-12-02 19:29:22','anhquan7826','Shooting star','',0),(1631183107,'2022-11-30 23:17:04','anhquan7826','First Season','',0),(1664822041,'2022-11-30 23:17:06','anhquan7826','To You','',0),(1693345589,'2022-12-02 19:29:21','anhquan7826','Forever','',0),(1696527422,'2022-11-30 23:17:05','anhquan7826','In Love With You','',0),(1707110337,'2022-12-02 19:29:20','anhquan7826','Couple N & Flay! - Natsumeku','',0),(1708728926,'2022-12-02 19:46:22','anhquan7826','01 C418 - Key','',0),(1720979461,'2022-11-30 23:17:06','anhquan7826','夢の続き ~ Dreams Of Light ~','',0),(1738788031,'2022-12-02 19:29:21','anhquan7826','K-NEXT - Access (Author Wind Remix)','',0),(1742428243,'2022-12-02 19:29:21','anhquan7826','Make A Wish!','',0),(1756539735,'2022-12-02 19:29:20','anhquan7826','Baq5 - Once Again','',0),(1759995885,'2022-12-02 19:29:21','anhquan7826','FreYou - Flight','',0),(1766499416,'2022-12-02 19:46:22','anhquan7826','02 C418 - Door','',0),(1787944684,'2022-12-02 19:29:23','anhquan7826','Tashikametai Nukumori (feat. Shoyun)','',0),(1795000161,'2022-12-02 19:29:21','anhquan7826','Field','',0),(1811741842,'2022-11-30 23:17:05','anhquan7826','TELL ME TELL ME','',0),(1825363300,'2022-12-02 19:29:23','anhquan7826','Surf','',0),(1847161374,'2022-11-30 23:17:05','anhquan7826','SUI UZI - Midnight Sailor','',0),(1849608669,'2022-12-02 19:29:21','anhquan7826','Lone Alpha & KITSUNE - U & Me','',0),(1863330795,'2022-12-02 19:29:23','anhquan7826','SuperNova【FutureProgressive House】','',0),(1866437038,'2022-12-02 19:29:20','anhquan7826','A Sweet Start','',0),(1874020779,'2022-12-02 19:29:20','anhquan7826','Bright','',0),(1918196644,'2022-12-02 19:29:20','anhquan7826','Charm (w Puniden)','',0),(1919003477,'2022-12-02 19:29:22','anhquan7826','Miss You','',0),(1923793143,'2022-12-02 19:29:21','anhquan7826','Imagine','',0),(1925922370,'2022-11-30 23:17:04','anhquan7826','Borderless','',0),(1926788209,'2022-12-02 19:29:23','anhquan7826','You Look So Good','',0),(1942041696,'2022-11-30 23:17:06','anhquan7826','夢のDancing','',0),(1980301390,'2022-11-30 23:17:06','anhquan7826','luv.ly & eiiwun - summer magic','',0),(2002473944,'2022-12-02 19:29:21','anhquan7826','Lunai2 & Pikasonic - Climax (Etopia Remix)','',0),(2050156374,'2022-12-02 19:29:22','anhquan7826','My Kind Of Love (feat. CHIARA)','',0),(2056730330,'2022-12-02 19:29:22','anhquan7826','Notice (w TORIENA)','',0),(2082890648,'2022-12-02 19:29:21','anhquan7826','Halcyon','',0),(2101573346,'2022-12-02 19:29:21','anhquan7826','Mardi - Sunflower [E.T. Summering Release]','',0),(2101619215,'2022-11-30 23:17:04','anhquan7826','Future Rhapsody [失恋Rhapsody] EP','',0),(2102269203,'2022-12-02 19:46:22','anhquan7826','03 C418 - Subwoofer Lullaby','',0),(2113015871,'2022-12-02 19:29:20','anhquan7826','Cosmic [Vibes Release]','',0),(2113671589,'2022-11-30 23:17:05','anhquan7826','SUI UZI - City Night Shadows','',0),(2135920033,'2022-12-02 19:29:21','anhquan7826','Endless Hanabi','',0),(2136127768,'2022-12-02 19:29:21','anhquan7826','Journey (feat. Ugu)','',0),(2139091126,'2022-12-02 19:29:20','anhquan7826','Claires - Submerge','',0),(2146263885,'2022-11-30 23:17:05','anhquan7826','LISA','',0);
+INSERT INTO `song` VALUES (40991359,'2022-12-08 18:41:44','anhquan7826','breeze','',248.215,0),(61132799,'2022-12-08 18:41:48','anhquan7826','Cosmos','',253.44,0),(68786455,'2022-12-08 17:57:54','anhquan7826','Mat. - Perspective EP Track 4','',119.405,0),(119502977,'2022-12-08 18:12:45','anhquan7826','Android52 - Real Love','',302.21,0),(125123863,'2022-12-08 18:41:56','anhquan7826','Miss You','',235.102,0),(148748452,'2022-12-08 17:57:54','anhquan7826','Mat. - Perspective EP Track 2','',100.44,0),(151563750,'2022-12-08 18:41:53','anhquan7826','Journey (feat. Ugu)','',264.071,0),(162751338,'2022-12-08 18:41:44','anhquan7826','Awaiting (feat. Rainy)','',241.214,0),(166488150,'2022-12-08 18:12:47','anhquan7826','Selfish High Heels (feat. Harrison & マクロスMACROSS 82-99)','',226.533,0),(169346560,'2022-12-08 18:41:43','anhquan7826','Achillea - アキレア','',259.082,0),(184041710,'2022-12-08 18:41:58','anhquan7826','Nostalgica','',202.605,0),(185233862,'2022-12-08 18:12:46','anhquan7826','Greyl - Planetarium','',225.645,0),(191650951,'2022-12-08 18:42:06','anhquan7826','Twinklestar','',203.859,0),(202214121,'2022-12-08 18:42:04','anhquan7826','Starlight','',202.579,0),(205854897,'2022-12-08 18:41:58','anhquan7826','Notice (w TORIENA)','',189.204,0),(228882895,'2022-12-08 18:42:02','anhquan7826','Rainbow sky(wREVERSED)','',188.551,0),(233548755,'2022-12-08 18:41:43','anhquan7826','AbyanF - True','',342.047,0),(247148258,'2022-12-08 18:41:52','anhquan7826','FreYou - Flight','',198.034,0),(269984399,'2022-12-08 18:41:59','anhquan7826','Pikasonic - Asuka','',237.217,0),(274203269,'2022-12-08 18:41:58','anhquan7826','Ohayou!','',217.547,0),(285825642,'2022-12-08 18:41:54','anhquan7826','Like A Sweet','',191.582,0),(319524115,'2022-12-08 18:42:08','anhquan7826','ジェリーフィッシュ (feat. ローラーガール)【MEiSTER】','',237.035,0),(347234699,'2022-12-08 18:41:52','anhquan7826','Honey (feat. Shion)','',229.093,0),(352935501,'2022-12-08 18:42:02','anhquan7826','Rain (w KITSUNE)','',189.675,0),(354212266,'2022-12-08 18:12:46','anhquan7826','HD - Ramen 5670NINE','',163.03,0),(363252756,'2022-12-08 17:57:54','anhquan7826','Mat. - Perspective EP Track 3','',106.997,0),(381599194,'2022-12-08 18:42:07','anhquan7826','Virtual (w Puniden)','',212.819,0),(384511220,'2022-12-08 18:12:48','anhquan7826','ミルクセーキ420','',184.842,0),(407336463,'2022-12-08 18:41:50','anhquan7826','Endless Hanabi','',280.032,0),(454027330,'2022-12-08 18:12:47','anhquan7826','SUI UZI - Midnight Sailor','',242.86,0),(482712459,'2022-12-08 18:41:51','anhquan7826','Field','',199.732,0),(531011935,'2022-12-08 18:42:03','anhquan7826','Remember Me','',261.381,0),(550937993,'2022-12-08 18:41:44','anhquan7826','Baq5 - Once Again','',260.362,0),(566139908,'2022-12-08 18:41:50','anhquan7826','Emptiness','',181.394,0),(602831830,'2022-12-08 18:42:03','anhquan7826','Rise','',204.617,0),(679499819,'2022-12-08 18:12:47','anhquan7826','She Is...','',232.594,0),(746951241,'2022-12-08 18:42:04','anhquan7826','Setsuna (Kirara Magic Remix)','',175.307,0),(768196705,'2022-12-08 18:12:47','anhquan7826','To You','',273.867,0),(770410846,'2022-12-08 18:41:55','anhquan7826','Make A Wish!','',281.443,0),(770618848,'2022-12-08 18:42:01','anhquan7826','PIKASONIC - Wildflowers [UXN Release]','',202.605,0),(780420000,'2022-12-08 18:41:46','anhquan7826','Charm (w Puniden)','',196.466,0),(798289163,'2022-12-08 18:12:46','anhquan7826','First Season','',295.836,0),(828225503,'2022-12-08 18:41:50','anhquan7826','Eternity','',266.37,0),(829921864,'2022-12-08 18:12:47','anhquan7826','S U B W A Y S - アイスクリーム','',167.915,0),(834699633,'2022-12-08 18:41:53','anhquan7826','Kyori','',168.777,0),(836517172,'2022-12-08 18:41:52','anhquan7826','Happy Kuru Kuru - Hanbunko Hanabi (Kabuki Remix)','',276.662,0),(844805992,'2022-12-08 18:42:04','anhquan7826','Shooting star','',174.524,0),(846891624,'2022-12-08 18:41:49','anhquan7826','Daydream Cafe (Kirara Magic Remix) feat. Shion','',254.772,0),(876055605,'2022-12-08 18:41:52','anhquan7826','Halcyon','',204.042,0),(887850355,'2022-12-08 18:42:07','anhquan7826','Wanderer','',206.706,0),(891616721,'2022-12-08 18:42:05','anhquan7826','? TAKE ME HOME ? — FEAT. WISHLYST [AIKA REMIX]','',171.781,0),(898934716,'2022-12-08 18:41:59','anhquan7826','Over-Hit!','',247.536,0),(911888322,'2022-12-08 18:42:08','anhquan7826','#ワンナイトマジック (your imouto Remix)','',172.669,0),(923476433,'2022-12-08 18:42:08','anhquan7826','You & Me (Feat.Plemoon)','',178.207,0),(926791513,'2022-12-08 18:41:59','anhquan7826','Phantasy','',217.129,0),(943244083,'2022-12-08 18:42:06','anhquan7826','Twinkle Layer','',243.905,0),(956561799,'2022-12-08 18:41:43','anhquan7826','AByanF - Slidewalk 『Dubstep』','',254.38,0),(968678342,'2022-12-08 18:41:51','anhquan7826','Forest','',268.173,0),(1003770975,'2022-12-08 18:41:51','anhquan7826','Ferst & Zentra - Pastel Sky (feat. Rainy)(Amidst Remix)','',172.173,0),(1044040610,'2022-12-08 18:41:47','anhquan7826','COR!S - Moon Garden (GHOST DATA Remix)','',278.151,0),(1053128219,'2022-12-08 18:41:48','anhquan7826','Couple N & Flay! - Natsumeku','',194.089,0),(1054274455,'2022-12-08 18:41:53','anhquan7826','KMNZ - VR (GF ElectroHouse Bootleg)','',231.81,0),(1060233386,'2022-12-08 18:12:46','anhquan7826','【﻿ｆａｎｔａｓｙ】 MEIKO NAKAHARA (1982)','',291.239,0),(1075716317,'2022-12-08 18:42:03','anhquan7826','Rytmeklubben - Girlfriend (Moe Shop Edit)','',199.053,0),(1075861660,'2022-12-08 18:42:04','anhquan7826','Summer Of Beach','',220.865,0),(1079269818,'2022-12-08 18:12:47','anhquan7826','SUI UZI - City Night Shadows','',249.965,0),(1096444014,'2022-12-08 18:42:02','anhquan7826','Relive','',168.385,0),(1099051195,'2022-12-08 18:12:45','anhquan7826','Android52 - Romance','',214.386,0),(1101076448,'2022-12-08 18:42:02','anhquan7826','Play','',177.057,0),(1110531557,'2022-12-08 18:41:48','anhquan7826','Cosmic [Vibes Release]','',296.045,0),(1129199367,'2022-12-08 18:41:57','anhquan7826','My Heart','',238.158,0),(1141352335,'2022-12-08 18:12:47','anhquan7826','Tatsuro Yamashita - Ride On Time (Night Tempo)','',256.862,0),(1163454618,'2022-12-08 18:12:46','anhquan7826','In Love With You','',266.37,0),(1164623953,'2022-12-08 18:12:48','anhquan7826','ミカヅキBIGWAVE - Emotional Prism 感情的なプリズム [PNTSS0202]','',273.136,0),(1192914459,'2022-12-08 18:12:45','anhquan7826','Dance Down','',181.995,0),(1220802919,'2022-12-08 18:12:48','anhquan7826','夢の続き ~ Dreams Of Light ~','',187.768,0),(1233941788,'2022-12-08 18:42:00','anhquan7826','PIKASONIC - Horizon','',200.202,0),(1255062433,'2022-12-08 18:42:01','anhquan7826','PIKASONIC - 一透星 (feat. nakotanmaru) [MEGAREX Release]','',232.542,0),(1270478676,'2022-12-08 18:42:07','anhquan7826','World (WPIKASONIC)','',224.809,0),(1271091611,'2022-12-08 18:41:56','anhquan7826','Mardi - Sunflower [E.T. Summering Release]','',187.271,0),(1274031112,'2022-12-08 18:41:53','anhquan7826','Imagine','',241.266,0),(1277416943,'2022-12-08 18:42:03','anhquan7826','Sakura (feat. Kimura Rin) [PIKASONIC Remix]','',242.128,0),(1283916905,'2022-12-08 18:41:57','anhquan7826','My Kind Of Love (feat. CHIARA)','',213.792,0),(1284585073,'2022-12-08 18:12:48','anhquan7826','夢のDancing','',181.916,0),(1336434437,'2022-12-08 17:57:54','anhquan7826','Mat. - Perspective EP Track 1','',121.652,0),(1355395857,'2022-12-08 18:41:58','anhquan7826','Osaka Express','',203.467,0),(1368805930,'2022-12-08 18:41:49','anhquan7826','Drive','',180.532,0),(1379074977,'2022-12-08 18:12:46','anhquan7826','luv.ly & eiiwun - summer magic','',164.702,0),(1391322608,'2022-12-08 18:12:46','anhquan7826','heaven beach','',158.197,0),(1392678614,'2022-12-08 18:41:44','anhquan7826','Artificial','',228.806,0),(1415474951,'2022-12-08 18:42:05','anhquan7826','SuperNova【FutureProgressive House】','',229.25,0),(1425474742,'2022-12-08 18:12:46','anhquan7826','LISA','',212.715,0),(1427925220,'2022-12-08 18:41:56','anhquan7826','Mihony - Cute Swing','',215.693,0),(1429354986,'2022-12-08 18:41:49','anhquan7826','Dreaming','',191.764,0),(1435364507,'2022-12-08 18:12:46','anhquan7826','Payᵖᵃʸ','',176.065,0),(1443215327,'2022-12-08 18:41:57','anhquan7826','MojiX! x Elkuu - Minamo','',318.04,0),(1444211657,'2022-12-08 18:41:47','anhquan7826','Colors','',199.732,0),(1464518139,'2022-12-08 18:42:08','anhquan7826','手を伸ばして(Reaching For)Feat. N6','',274.991,0),(1464948583,'2022-12-08 18:41:55','anhquan7826','Lunai2 & Pikasonic - Climax (Etopia Remix)','',226.925,0),(1476883308,'2022-12-08 18:12:48','anhquan7826','ミカヅキBIGWAVE - シャボンのシャンプー','',173.113,0),(1487147285,'2022-12-08 18:12:46','anhquan7826','Jesse Cassettes - Haruka Rhythm! (Album Version) [Magical Girl Album 2019]','',280.032,0),(1487503483,'2022-12-08 18:41:46','anhquan7826','Claires - Submerge','',280.372,0),(1511586169,'2022-12-08 18:41:53','anhquan7826','Jade Key & Meredith Bull - Breathe (Author wind remix)','',174.158,0),(1515041221,'2022-12-08 18:41:54','anhquan7826','Lois - Spotlight','',304.326,0),(1545336872,'2022-12-08 18:41:52','anhquan7826','Forever','',193.175,0),(1558966020,'2022-12-08 18:41:51','anhquan7826','Flow [5k Followers]','',154.592,0),(1563846000,'2022-12-08 18:41:56','anhquan7826','Michael Li - Gomenasai','',161.724,0),(1566437883,'2022-12-08 18:41:47','anhquan7826','Cloudier - A Centimetre Apart (Systile Remix)','',272.039,0),(1574488460,'2022-12-08 18:41:44','anhquan7826','A Sweet Start','',159.425,0),(1587769797,'2022-12-08 17:57:54','anhquan7826','Mat. - Perspective EP Track 6','',236.956,0),(1589344303,'2022-12-08 18:42:05','anhquan7826','Tashikametai Nukumori (feat. Shoyun)','',270.445,0),(1621239364,'2022-12-08 18:41:53','anhquan7826','K-NEXT - Access (Author Wind Remix)','',176.561,0),(1643238269,'2022-12-08 18:12:46','anhquan7826','Magical Candy','',173.792,0),(1708625805,'2022-12-08 18:41:54','anhquan7826','Lone Alpha & KITSUNE - U & Me','',182.987,0),(1742970353,'2022-12-08 18:42:05','anhquan7826','Surf','',240.822,0),(1743087535,'2022-12-08 18:12:45','anhquan7826','Borderless','',306.52,0),(1743166639,'2022-12-08 18:42:03','anhquan7826','Romantic Travel','',214.648,0),(1747497746,'2022-12-08 18:41:56','anhquan7826','Mirror','',261.694,0),(1755383647,'2022-12-08 18:42:04','anhquan7826','Smile','',202.997,0),(1768828045,'2022-12-08 18:12:47','anhquan7826','TELL ME TELL ME','',245.028,0),(1796594433,'2022-12-08 18:41:57','anhquan7826','new stage','',283.533,0),(1817513472,'2022-12-08 18:12:47','anhquan7826','PSYQUI - ヒステリックナイトガール feat. Such (android52 Edit)','',301.035,0),(1828917367,'2022-12-08 18:12:48','anhquan7826','サクラSAKURA-LEE - My Heart Baby (Read The Description)','',242.311,0),(1845125305,'2022-12-08 18:42:08','anhquan7826','You Look So Good','',204.564,0),(1851668614,'2022-12-08 18:41:43','anhquan7826','Amidst x Sacry - Carousel','',180.584,0),(1861082882,'2022-12-08 18:41:44','anhquan7826','Bloom','',203.18,0),(1895727323,'2022-12-08 17:57:54','anhquan7826','Mat. - Perspective EP Track 7','',116.297,0),(1897217881,'2022-12-08 18:42:00','anhquan7826','PIKASONIC - Inside [UXN Release]','',202.083,0),(1897674625,'2022-12-08 18:42:06','anhquan7826','The twenty three (Free Download)','',293.485,0),(1902199571,'2022-12-08 17:57:54','anhquan7826','Mat. - Perspective EP Track 5','',110.341,0),(1929209529,'2022-12-08 18:41:46','anhquan7826','Claires - Evening Sky','',320.574,0),(1945997698,'2022-12-08 18:42:01','anhquan7826','PIKASONIC & Tatsunoshin - Lockdown (ft. NEONA)','',209.893,0),(1953820815,'2022-12-08 18:12:48','anhquan7826','時空 Rendez-Vous','',272.953,0),(1961893614,'2022-12-08 18:41:55','anhquan7826','Love Letter (Ft. 동백)','',245.42,0),(1994077535,'2022-12-08 18:41:51','anhquan7826','Fantasy (w MONICO)','',275.461,0),(2002289372,'2022-12-08 18:41:59','anhquan7826','Path To Fairyland','',234.135,0),(2015752580,'2022-12-08 18:41:57','anhquan7826','noguchii & Jecan - Anymore','',194.115,0),(2020815188,'2022-12-08 18:12:47','anhquan7826','SUPER RISER!','',232.045,0),(2051254989,'2022-12-08 18:42:05','anhquan7826','Tako','',187.846,0),(2059088398,'2022-12-08 18:41:50','anhquan7826','Edge Of The Way','',182.857,0),(2062897242,'2022-12-08 18:41:56','anhquan7826','Moe Punch','',149.342,0),(2082512246,'2022-12-08 18:12:47','anhquan7826','Yasuha - Flyday Chinatown (Night Tempo Edit)','',205.217,0),(2085813953,'2022-12-08 18:41:55','anhquan7826','Lost','',175.229,0),(2100363326,'2022-12-08 18:42:06','anhquan7826','U And Me','',213.551,0),(2104190528,'2022-12-08 18:41:45','anhquan7826','Bright','',256.6,0),(2140874922,'2022-12-08 18:41:48','anhquan7826','Creed','',173.479,0);
 /*!40000 ALTER TABLE `song` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -237,6 +234,7 @@ CREATE TABLE `songtags` (
 
 LOCK TABLES `songtags` WRITE;
 /*!40000 ALTER TABLE `songtags` DISABLE KEYS */;
+INSERT INTO `songtags` VALUES (61132799,'Dubstep'),(162751338,'Dubstep'),(202214121,'Dubstep'),(228882895,'Dubstep'),(233548755,'Dubstep'),(319524115,'Dubstep'),(347234699,'Dubstep'),(407336463,'Dubstep'),(746951241,'Dubstep'),(1099051195,'Dubstep'),(1101076448,'Dubstep'),(1164623953,'Dubstep'),(1233941788,'Dubstep'),(1255062433,'Dubstep'),(1271091611,'Dubstep'),(1391322608,'Dubstep'),(1392678614,'Dubstep'),(1415474951,'Dubstep'),(1464948583,'Dubstep'),(1545336872,'Dubstep'),(1643238269,'Dubstep'),(1768828045,'Dubstep'),(1796594433,'Dubstep'),(1861082882,'Dubstep'),(1945997698,'Dubstep'),(1961893614,'Dubstep'),(119502977,'Electronic'),(185233862,'Electronic'),(191650951,'Electronic'),(202214121,'Electronic'),(274203269,'Electronic'),(285825642,'Electronic'),(381599194,'Electronic'),(846891624,'Electronic'),(968678342,'Electronic'),(1110531557,'Electronic'),(1274031112,'Electronic'),(1277416943,'Electronic'),(1444211657,'Electronic'),(1476883308,'Electronic'),(1574488460,'Electronic'),(1747497746,'Electronic'),(1755383647,'Electronic'),(1817513472,'Electronic'),(1845125305,'Electronic'),(1851668614,'Electronic'),(1861082882,'Electronic'),(1994077535,'Electronic'),(2085813953,'Electronic'),(381599194,'Funk'),(482712459,'Funk'),(531011935,'Funk'),(770410846,'Funk'),(798289163,'Funk'),(844805992,'Funk'),(876055605,'Funk'),(911888322,'Funk'),(1060233386,'Funk'),(1079269818,'Funk'),(1429354986,'Funk'),(1435364507,'Funk'),(1464518139,'Funk'),(1464948583,'Funk'),(1558966020,'Funk'),(1566437883,'Funk'),(1643238269,'Funk'),(1828917367,'Funk'),(1929209529,'Funk'),(2002289372,'Funk'),(2020815188,'Funk'),(2051254989,'Funk'),(40991359,'Future House'),(68786455,'Future House'),(125123863,'Future House'),(151563750,'Future House'),(184041710,'Future House'),(205854897,'Future House'),(352935501,'Future House'),(566139908,'Future House'),(770618848,'Future House'),(834699633,'Future House'),(836517172,'Future House'),(876055605,'Future House'),(891616721,'Future House'),(923476433,'Future House'),(926791513,'Future House'),(943244083,'Future House'),(1044040610,'Future House'),(1192914459,'Future House'),(1255062433,'Future House'),(1336434437,'Future House'),(1355395857,'Future House'),(1368805930,'Future House'),(1464518139,'Future House'),(1587769797,'Future House'),(1742970353,'Future House'),(1902199571,'Future House'),(1945997698,'Future House'),(2015752580,'Future House'),(2140874922,'Future House'),(61132799,'Hiphop'),(119502977,'Hiphop'),(166488150,'Hiphop'),(679499819,'Hiphop'),(780420000,'Hiphop'),(891616721,'Hiphop'),(926791513,'Hiphop'),(1053128219,'Hiphop'),(1075861660,'Hiphop'),(1163454618,'Hiphop'),(1220802919,'Hiphop'),(1415474951,'Hiphop'),(1425474742,'Hiphop'),(1487503483,'Hiphop'),(1515041221,'Hiphop'),(1621239364,'Hiphop'),(1768828045,'Hiphop'),(1953820815,'Hiphop'),(1961893614,'Hiphop'),(40991359,'Lofi'),(68786455,'Lofi'),(148748452,'Lofi'),(169346560,'Lofi'),(205854897,'Lofi'),(269984399,'Lofi'),(363252756,'Lofi'),(384511220,'Lofi'),(798289163,'Lofi'),(829921864,'Lofi'),(834699633,'Lofi'),(887850355,'Lofi'),(956561799,'Lofi'),(1060233386,'Lofi'),(1075716317,'Lofi'),(1096444014,'Lofi'),(1101076448,'Lofi'),(1129199367,'Lofi'),(1274031112,'Lofi'),(1277416943,'Lofi'),(1336434437,'Lofi'),(1427925220,'Lofi'),(1435364507,'Lofi'),(1487147285,'Lofi'),(1511586169,'Lofi'),(1563846000,'Lofi'),(1587769797,'Lofi'),(1589344303,'Lofi'),(1708625805,'Lofi'),(1743166639,'Lofi'),(1747497746,'Lofi'),(1895727323,'Lofi'),(1897217881,'Lofi'),(1902199571,'Lofi'),(2059088398,'Lofi'),(2062897242,'Lofi'),(2140874922,'Lofi'),(184041710,'Rap'),(185233862,'Rap'),(247148258,'Rap'),(454027330,'Rap'),(531011935,'Rap'),(550937993,'Rap'),(602831830,'Rap'),(768196705,'Rap'),(780420000,'Rap'),(828225503,'Rap'),(1003770975,'Rap'),(1270478676,'Rap'),(1271091611,'Rap'),(1284585073,'Rap'),(1443215327,'Rap'),(1743087535,'Rap'),(1851668614,'Rap'),(1897674625,'Rap'),(2082512246,'Rap'),(2104190528,'Rap'),(354212266,'Synthwave'),(602831830,'Synthwave'),(828225503,'Synthwave'),(829921864,'Synthwave'),(898934716,'Synthwave'),(1054274455,'Synthwave'),(1079269818,'Synthwave'),(1141352335,'Synthwave'),(1163454618,'Synthwave'),(1164623953,'Synthwave'),(1270478676,'Synthwave'),(1283916905,'Synthwave'),(1379074977,'Synthwave'),(1443215327,'Synthwave'),(1444211657,'Synthwave'),(1511586169,'Synthwave'),(1545336872,'Synthwave'),(1566437883,'Synthwave'),(1897217881,'Synthwave'),(2002289372,'Synthwave'),(2059088398,'Synthwave'),(2100363326,'Synthwave');
 /*!40000 ALTER TABLE `songtags` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -260,6 +258,7 @@ CREATE TABLE `tags` (
 
 LOCK TABLES `tags` WRITE;
 /*!40000 ALTER TABLE `tags` DISABLE KEYS */;
+INSERT INTO `tags` VALUES ('Dubstep'),('Electronic'),('Funk'),('Future House'),('Hiphop'),('Lofi'),('Rap'),('Synthwave');
 /*!40000 ALTER TABLE `tags` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -294,122 +293,6 @@ LOCK TABLES `user` WRITE;
 INSERT INTO `user` VALUES ('anhquan7826','Nguyen Anh Quan','Temporary','2022-11-18 11:00:50','2015-05-16 05:50:06','AQAAAAEAACcQAAAAEH0d5Z8K2mT20ExGXmAtdLFCUXXf/3Wtgrnv5FqU+9m7hVaT0YctAxXKxb/BLWUTLg==',1,'anhquan7826@gmail.com',0,NULL),('anhquan7826_2','','','2022-11-18 11:15:25','1970-01-01 00:00:00','AQAAAAEAACcQAAAAEKnAO4Q3WEjsedgirBHWx1iXsWKTkivTNH86/6yIf9d5Qf+pAQh1ROd1rR7xWd2Z6w==',1,'',0,NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Dumping routines for database 'tourmaline'
---
-/*!50003 DROP PROCEDURE IF EXISTS `EditComment` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `EditComment`(IN commentId INT, IN newContent TEXT, IN editTime DATETIME)
-BEGIN
-	UPDATE comment SET
-		content = newContent,
-        lastEditedTime = editTime
-	WHERE id = commentId;
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `EditUserProfile` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `EditUserProfile`(IN username VARCHAR(45), IN newName VARCHAR(45), IN newBio VARCHAR(255), IN newBirth DATETIME,
-	IN newGender TINYINT, IN newEmail VARCHAR(120), IN newIsAdmin TINYINT)
-BEGIN
-	UPDATE user SET
-		name = newName,
-        bio = newBio,
-        birth = newBirth,
-        gender = newGender,
-        email = newEmail,
-        isAdmin = newIsAdmin
-	WHERE user.username = username;
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `FindSongs` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `FindSongs`(IN keyword VARCHAR(100))
-BEGIN
-	DECLARE keywordLowered VARCHAR(100);
-    SET keywordLowered = lower(keyword);
-
-	SELECT id, uploadTime, uploader, name, lyrics, description, album FROM song
-    WHERE (LOWER(name) LIKE keywordLowered) OR (LOWER(lyrics) LIKE keywordLowered) OR (LOWER(album) LIKE keywordLowered)
-	OR (LOWER(description) LIKE keywordLowered);
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `FindUsers` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `FindUsers`(IN keyword VARCHAR(100))
-BEGIN
-	SELECT username, name, bio, createTime, birth, gender, isAdmin FROM user
-    WHERE (lower(username) LIKE lower(keyword) OR lower(name) = lower(keyword));
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `ListCommentsOfSong` */;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `ListCommentsOfSong`(IN id INT)
-BEGIN
-	SELECT id, username, content, createTime, lastEditedTime FROM comment WHERE song = id;
-END ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -420,4 +303,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-12-07 23:59:45
+-- Dump completed on 2022-12-08 20:28:22
