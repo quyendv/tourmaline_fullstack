@@ -52,6 +52,14 @@ public class SongController : ControllerBase
             ListenTimes = infos.First()["listen_times"],
             Tags = tags.Cast<string>().ToList(),
         };
+
+        var favorites = (await _connection.Read("favorites", new Dictionary<string, dynamic>()
+        {
+            { "songid", id }
+        })).Count;
+
+        song.Favorites = favorites;
+        
         return Ok(song);
     }
 
