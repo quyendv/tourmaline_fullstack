@@ -38,7 +38,9 @@ public class SongController : ControllerBase
     {
         var infos = await _connection.Read("song", new Dictionary<string, dynamic>() { { "id", id } });
         if (infos.Count == 0) return StatusCode(StatusCodes.Status404NotFound, "Song not found!");
-        var tags = (await _connection.Read("songtags", new Dictionary<string, dynamic>() { { "id", id } })).Select((e) => e["tag"]);
+        var tags =
+            (await _connection.Read("songtags", new Dictionary<string, dynamic>() { { "id", id } })).Select((e) =>
+                e["tag"]);
         var song = new Song
         {
             Id = infos.First()["id"],
@@ -47,6 +49,7 @@ public class SongController : ControllerBase
             Uploader = infos.First()["uploader"],
             UploadTime = infos.First()["uploadTime"],
             Duration = infos.First()["duration"],
+            ListenTimes = infos.First()["listen_times"],
             Tags = tags.Cast<string>().ToList(),
         };
         return Ok(song);
@@ -62,12 +65,23 @@ public class SongController : ControllerBase
 
         if (isSongExist)
         {
-            string songPath = $"{id}.mp3";
+            var songPath = $"{id}.mp3";
 
             var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             var file = new FileStream($"{homeDir}/storage/media/{songPath}", FileMode.Open, FileAccess.Read,
                 FileShare.ReadWrite, 2048,
                 true);
+
+            var listenTimes =
+                (await _connection.Read("song", new Dictionary<string, dynamic>() { { "id", id } })).First()[
+                    "listen_times"];
+            await _connection.Update("song", new Dictionary<string, dynamic>()
+            {
+                { "listen_times", listenTimes + 1 }
+            }, new Dictionary<string, dynamic>()
+            {
+                { "id", id }
+            });
 
             try
             {
@@ -166,7 +180,7 @@ public class SongController : ControllerBase
             { "description", "" },
             { "duration", duration.TotalSeconds }
         });
-        
+
         // var songTags = new List<string>()
         // {
         //     "Lofi",
@@ -203,7 +217,7 @@ public class SongController : ControllerBase
         //         {"tag", tag}
         //     });
         // }
-        
+
         return Ok("Upload succeeded!");
     }
 
@@ -227,6 +241,7 @@ public class SongController : ControllerBase
         toDictionary.Remove("id");
         var songTags = info.Tags;
         toDictionary.Remove("tags");
+        toDictionary.Remove("listen_times");
         await _connection.Update(
             "song",
             toDictionary,
@@ -252,14 +267,15 @@ public class SongController : ControllerBase
                     { "tag", tag }
                 });
             }
+
             await _connection.Add("songtags", new Dictionary<string, dynamic>()
             {
-                {"id", info.Id},
-                {"tag", tag}
+                { "id", info.Id },
+                { "tag", tag }
             });
         }
-        return Ok();
 
+        return Ok();
     }
 
     [HttpDelete]
@@ -310,7 +326,8 @@ public class SongController : ControllerBase
                 "uploadTime",
                 "name",
                 "description",
-                "duration"
+                "duration",
+                "listen_times"
             });
 
         return new JsonResult(songsInfo);

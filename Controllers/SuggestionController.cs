@@ -36,18 +36,24 @@ namespace tourmaline.Controllers
 
         private string _username => HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
 
+        [Route("recentUpload")]
+        [HttpGet]
         private List<Song> GetRecentlyUploaded()
         {
             var result = new List<Song>();
             return result;
         }
         
+        [Route("recentPlay")]
+        [HttpGet]
         private List<Song> GetRecentlyPlayed()
         {
             var result = new List<Song>();
             return result;
         }
         
+        [Route("top50")]
+        [HttpGet]
         private List<Song> GetTop50()
         {
             var result = new List<Song>();
