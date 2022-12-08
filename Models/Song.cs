@@ -3,7 +3,7 @@ namespace tourmaline.Models;
 public class Song
 {
     public Song(int id = -1, string uploader = "", string name = "",
-        string description = "", List<string>? tags = null, int listenTimes = 0)
+        string description = "", List<string>? tags = null, int listenTimes = 0, int favorites = 0)
     {
         Id = id;
         UploadTime = DateTime.Now;
@@ -12,6 +12,7 @@ public class Song
         Description = description;
         Tags = tags ?? new List<string>();
         ListenTimes = listenTimes;
+        Favorites = favorites;
     }
 
     public int Id { get; set; }
@@ -22,4 +23,5 @@ public class Song
     public List<string> Tags { get; set; }
     public double Duration { get; set; }
     public int ListenTimes { get; set; }
+    public int Favorites { get; set; }
 }
