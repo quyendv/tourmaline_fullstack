@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import PlaylistPlaceHolder from '../../assets/images/playlistplaceholder.png';
 import { icons } from '../../utils/icons';
 import { deletePlaylist } from '../../services/music';
@@ -14,6 +14,7 @@ const {
     AiOutlineDownload,
     BsLink45Deg,
     RiShareForwardLine,
+    AiOutlineClose,
 } = icons;
 
 const playlistMenu = [
@@ -42,7 +43,10 @@ const playlistMenu = [
 function PlaylistItem({ playlistData }) {
     const imgRef = useRef();
     const navigate = useNavigate();
-    const link = `playlist/${playlistData.name.replaceAll(' ', '-')}/${playlistData.id}`;
+    const location = useLocation()
+    
+    const path = `${playlistData.name.replaceAll(' ', '-')}/${playlistData.id}`;
+    const link = (location.pathname == '/library' ? '/playlist' : '') + path
     const [isHover, setIsHover] = useState(false);
     const { token } = useSelector((state) => state.auth);
     const handleHover = (e) => {
@@ -66,9 +70,9 @@ function PlaylistItem({ playlistData }) {
     };
 
     return (
-        <div className="flex flex-col ">
+        <div className="flex w-full flex-col gap-2 py-2">
             <div
-                className="relative h-[220px] w-[220px] overflow-hidden rounded-md"
+                className="relative w-full overflow-hidden rounded-md"
                 onClick={() =>
                     navigate(link, {
                         state: playlistData,
@@ -80,7 +84,7 @@ function PlaylistItem({ playlistData }) {
                 {isHover && (
                     <div className="absolute top-0 right-0 left-0 bottom-0 z-20 flex cursor-pointer items-center justify-center gap-3 rounded-md  bg-overlay-30 ">
                         <span className="inline-block rounded-full bg-[#00000033] p-1" onClick={handleDeletePlaylist}>
-                            <AiFillCloseCircle size={24} />
+                            <AiOutlineClose size={24} />
                         </span>
                         <span className="inline-block rounded-full bg-[#00000033] p-1" onClick={handleClickPlay}>
                             <BsFillPlayFill size={24} />
@@ -102,8 +106,19 @@ function PlaylistItem({ playlistData }) {
                     alt="playlist-cover"
                 />
             </div>
-            <span className="text-sm font-bold">{playlistData.name}</span>
-            <span className="text-xs font-semibold text-gray-300">{playlistData.username}</span>
+            <span className="flex flex-col">
+                <span
+                    onClick={() =>
+                        navigate(link, {
+                            state: playlistData,
+                        })
+                    }
+                    className="cursor-pointer text-sm font-bold hover:text-activecolor"
+                >
+                    {playlistData.name}
+                </span>
+                <span className="text-xs font-semibold text-gray-300">{playlistData.username}</span>
+            </span>
         </div>
     );
 }

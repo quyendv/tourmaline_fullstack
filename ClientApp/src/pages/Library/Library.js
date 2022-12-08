@@ -5,8 +5,9 @@ import { useState } from 'react';
 import { icons } from '../../utils/icons';
 import { getPlaylist, getCover, getSongs, getAllPlaylist } from '../../services/music';
 import List from '../../components/List';
-import PlaylistItem from '../../components/PlaylistItem'
-import * as actions from '../../store/actions'
+import PlaylistItem from '../../components/PlaylistItem';
+import * as actions from '../../store/actions';
+import { useNavigate } from 'react-router-dom';
 
 const { BsFillPlayFill, AiOutlinePlusCircle } = icons;
 
@@ -15,11 +16,12 @@ function Library() {
     const { token } = useSelector((state) => state.auth);
     const { username } = useSelector((state) => state.user);
     const [songsUploaded, setSongsUploaded] = useState([]);
-    const [playlistCreated, setPlaylistCreated] = useState([])
+    const [playlistCreated, setPlaylistCreated] = useState([]);
+    const navigate = useNavigate()
     useEffect(() => {
         const fetchAllPlaylist = async () => {
-            const response = await getAllPlaylist(token)
-            setPlaylistCreated(response.data.playlists)
+            const response = await getAllPlaylist(token);
+            setPlaylistCreated(response.data.playlists);
         };
         const fetchSongs = async () => {
             const response = await getSongs(username, token);
@@ -28,11 +30,10 @@ function Library() {
         fetchAllPlaylist();
         fetchSongs();
     }, []);
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(actions.createPlaylist(setPlaylistCreated))
-    }, [])
-    console.log(playlistCreated)
+        dispatch(actions.createPlaylist(setPlaylistCreated));
+    }, []);
     return (
         <div className="text-white">
             <div className="mt-10 flex items-center gap-4 px-5">
@@ -41,16 +42,24 @@ function Library() {
                     <BsFillPlayFill size={24} />
                 </span>
             </div>
-            <div className="mt-8 flex items-center gap-4 px-6">
-                <h3 className="text-xl font-semibold">Playlist</h3>
-                <span onClick={() => setIsOpenModal((prev) => !prev)} className="cursor-pointer">
-                    <AiOutlinePlusCircle size={20} />
+            <div className="mt-8 flex justify-between px-6">
+                <span className='gap-4 flex  items-center'>
+                    <h3 className="text-xl font-semibold">Playlist</h3>
+                    <span onClick={() => setIsOpenModal((prev) => !prev)} className="cursor-pointer">
+                        <AiOutlinePlusCircle size={20} />
+                    </span>
+                </span>
+                <span onClick={() => navigate('/library/playlist', {
+                    state: playlistCreated
+                })} className='font-bold px-6 cursor-pointer'>
+                    TẤT CẢ
                 </span>
             </div>
             <div className="mt-8 flex items-center gap-4 px-6">
-                {playlistCreated.length > 0 && playlistCreated?.map((item, index) => (
-                    <PlaylistItem playlistData={item} key={index}/>
-                ))}
+                {playlistCreated.length > 0 &&
+                    playlistCreated
+                        ?.filter((item, index) => index <= 4)
+                        .map((item, index) => <PlaylistItem playlistData={item} key={index} />)}
             </div>
             <div className="mt-8 flex items-center gap-4 px-6">
                 <h3 className="text-xl font-semibold">Bài hát</h3>
@@ -58,7 +67,7 @@ function Library() {
                     <AiOutlinePlusCircle size={20} />
                 </span>
             </div>
-            <div className='flex flex-col gap-2'>
+            <div className="flex flex-col gap-2">
                 {songsUploaded?.map((item) => (
                     <List key={item.id} songData={item} />
                 ))}
