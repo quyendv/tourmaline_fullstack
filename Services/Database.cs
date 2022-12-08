@@ -88,7 +88,7 @@ public class Database
             cons.Add($"{entry.Key} = {conditions[entry.Key]}");
         }
 
-        var queryString = $"UPDATE {table} SET {string.Join(", ", vals)} WHERE {string.Join(", ", cons)}";
+        var queryString = $"UPDATE {table} SET {string.Join(", ", vals)} WHERE {string.Join("AND ", cons)}";
         Console.WriteLine($"Query: {queryString}");
         var connection = new MySqlConnection(ConnectionString);
         connection.Open();
