@@ -67,12 +67,27 @@ public class SongController : ControllerBase
                 FileShare.ReadWrite, 2048,
                 true);
 
-            await _connection.Add("recents", new Dictionary<string, dynamic>()
+            try
             {
-                { "username", HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value },
-                { "song", id },
-                { "added_date", DateTime.Now.ToString("yyyy-MM-dd H:mm:ss") }
-            });
+                await _connection.Add("recents", new Dictionary<string, dynamic>()
+                {
+                    { "username", HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value },
+                    { "song", id },
+                    { "added_date", DateTime.Now.ToString("yyyy-MM-dd H:mm:ss") }
+                });
+            }
+            catch
+            {
+                await _connection.Update("recent", new Dictionary<string, dynamic>()
+                {
+                    { "added_date", DateTime.Now.ToString("yyyy-MM-dd H:mm:ss") },
+                }, new Dictionary<string, dynamic>()
+                {
+                    { "username", HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value },
+                    { "song", id }
+                });
+            }
+
             return File(file, "audio/mpeg", true);
         }
         else
@@ -115,7 +130,7 @@ public class SongController : ControllerBase
         var filePath = Path.Combine($"{homeDir}/storage/media", fileName);
         var imageName = $"{id}.jpg";
         var imagePath = Path.Combine($"{homeDir}/storage/cover", imageName);
-        
+
         await using (var stream = new FileStream(filePath, FileMode.Create))
         {
             await media.CopyToAsync(stream);
@@ -131,7 +146,8 @@ public class SongController : ControllerBase
         try
         {
             duration = (await FFProbe.AnalyseAsync(filePath)).Duration;
-        } catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             Console.WriteLine(ex);
         }
