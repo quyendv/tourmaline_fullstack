@@ -125,7 +125,7 @@ public class PlaylistController : ControllerBase
         await _database.Delete("playlist", new Dictionary<string, dynamic>()
         {
             { "id", id },
-            { "username", HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value }
+            { "user", HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value }
         });
         return Ok();
     }

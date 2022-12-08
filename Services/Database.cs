@@ -23,12 +23,12 @@ public class Database
             if (conditions != null)
                 foreach (var entry in conditions)
                 {
-                    if ((entry.Value is string) || (entry.Value is DateTime)) conditions[entry.Key] = $"'{entry.Value}'";
+                    if ((entry.Value is string or DateTime)) conditions[entry.Key] = $"'{entry.Value}'";
                     cons.Add($"{entry.Key} = {conditions[entry.Key]}");
                 }
 
             var queryString =
-                $"SELECT {(columns == null ? "*" : string.Join(", ", columns))} FROM {table} {(conditions != null ? $"WHERE {string.Join(", ", cons)}" : "")} {(sortBy == null ? "" : $"SORT BY {sortBy}")}";
+                $"SELECT {(columns == null ? "*" : string.Join(", ", columns))} FROM {table} {(conditions != null ? $"WHERE {string.Join("AND ", cons)}" : "")} {(sortBy == null ? "" : $"SORT BY {sortBy}")}";
             Console.WriteLine($"Query: {queryString}");
             var reader = new MySqlCommand(queryString, connection).ExecuteReader();
             if (reader.HasRows)
