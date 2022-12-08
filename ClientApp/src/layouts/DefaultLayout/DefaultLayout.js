@@ -59,7 +59,7 @@ function DefaultLayout() {
                 </div>
             </div>
 
-            <div className="absolute bottom-5 z-30 h-[70px] w-full border border-red-500">
+            <div className="absolute bottom-5 z-30 h-[70px] w-full bg-gradient-to-b from-player-from to-player-to rounded-t-3xl">
                 <Player setIsShowSidebar={setIsShowSidebar} />
             </div>
         </div>
