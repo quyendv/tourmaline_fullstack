@@ -46,10 +46,6 @@ function Player({ setIsShowSidebar }) {
                 }
             };
             
-            // const res = await getSong(curSongId, token);
-            // if (res.status == 200) {
-
-            // }
         };
         fetchSong();
         const fetchInfoSong = () => {
@@ -112,9 +108,9 @@ function Player({ setIsShowSidebar }) {
         
     }
     return (
-        <div className="flex h-full text-white">
+        <div className="flex items-center h-full text-white px-4 ">
             {/* //Songdetai */}
-            <div className="flex w-[30%] items-center gap-4 border border-white px-4">
+            <div className="flex w-[30%] items-center gap-4 ">
                 <img
                     className={`h-[60px] w-[60px] object-cover ${
                         isPlaying ? 'animate-rotate-center rounded-full ' : ''
@@ -127,7 +123,7 @@ function Player({ setIsShowSidebar }) {
                 </div>
             </div>
 
-            <div className="flex w-[40%] flex-col items-center justify-center gap-2 border border-white">
+            <div className="flex w-[40%] flex-col items-center justify-center gap-2 ">
                 {/* //Main Player */}
                 <div className="flex items-center justify-center gap-8">
                     <span onClick={() =>setIsShuffle(prev => !prev)} className={`${isShuffle && 'text-activecolor'} cursor-pointer`}>
@@ -167,7 +163,7 @@ function Player({ setIsShowSidebar }) {
                 </div>
             </div>
 
-            <div className="flex w-[30%] items-center justify-end gap-2 border border-white p-2">
+            <div className="flex w-[30%] items-center justify-end gap-2 p-2">
                 <span
                     className="cursor-pointer"
                     onClick={() =>
@@ -184,7 +180,7 @@ function Player({ setIsShowSidebar }) {
                     {volume > 70 ? <SlVolume2 /> : volume == 0 ? <SlVolumeOff /> : <SlVolume1 />}{' '}
                 </span>
                 <input
-                    className="cursor-pointer"
+                    className="cursor-pointer font"
                     type="range"
                     min={0}
                     max={100}

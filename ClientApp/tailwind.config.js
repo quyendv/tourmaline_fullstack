@@ -6,7 +6,9 @@ module.exports = {
             colors: {
                 'main-100': '#1e1e1e',
                 'activecolor': '#009cf4',
-                'overlay-30':'rgba(0,0,0,0.3)'
+                'overlay-30':'rgba(0,0,0,0.3)',
+                'player-from':'rgba(255,255,255,0.1)',
+                'player-to': 'rgba(255,255,255,0)'
             },
             screens: {
                 1280: '1280px',

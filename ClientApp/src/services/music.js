@@ -25,7 +25,7 @@ export const getInfoSong = (id, token) => new Promise(async (resolve, reject) =>
             method: 'get',  
             params: {id},
             headers: {
-                "Authorization":`Beaer ${token}`
+                "Authorization":`Bearer ${token}`
             }
         })
         resolve(response)
