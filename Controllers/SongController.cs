@@ -94,7 +94,7 @@ public class SongController : ControllerBase
 
         var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         var file = new FileStream($"{homeDir}/storage/cover/{coverPath}", FileMode.Open, FileAccess.Read,
-            FileShare.None, 2048,
+            FileShare.Read, 2048,
             true);
 
         return File(file, "image/jpeg", true);
