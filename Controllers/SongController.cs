@@ -36,16 +36,18 @@ public class SongController : ControllerBase
     [Route("get")]
     public async Task<ActionResult<Song>> GetSongInfo(int id)
     {
-        var result = await _connection.Read("song", new Dictionary<string, dynamic>() { { "id", id } });
-        if (result.Count == 0) return StatusCode(StatusCodes.Status404NotFound, "Song not found!");
+        var infos = await _connection.Read("song", new Dictionary<string, dynamic>() { { "id", id } });
+        if (infos.Count == 0) return StatusCode(StatusCodes.Status404NotFound, "Song not found!");
+        var tags = (await _connection.Read("songtags", new Dictionary<string, dynamic>() { { "id", id } })).Select((e) => e["tag"]);
         var song = new Song
         {
-            Id = result.First()["id"],
-            Description = result.First()["description"],
-            Name = result.First()["name"],
-            Uploader = result.First()["uploader"],
-            UploadTime = result.First()["uploadTime"],
-            Duration = result.First()["duration"]
+            Id = infos.First()["id"],
+            Description = infos.First()["description"],
+            Name = infos.First()["name"],
+            Uploader = infos.First()["uploader"],
+            UploadTime = infos.First()["uploadTime"],
+            Duration = infos.First()["duration"],
+            Tags = tags.Cast<string>().ToList(),
         };
         return Ok(song);
     }
@@ -141,7 +143,7 @@ public class SongController : ControllerBase
             await cover.CopyToAsync(stream);
         }
 
-        TimeSpan duration = TimeSpan.Zero;
+        var duration = TimeSpan.Zero;
 
         try
         {
@@ -164,6 +166,44 @@ public class SongController : ControllerBase
             { "description", "" },
             { "duration", duration.TotalSeconds }
         });
+        
+        // var songTags = new List<string>()
+        // {
+        //     "Lofi",
+        //     "Future House",
+        //     "Dubstep",
+        //     "Hiphop",
+        //     "Rap",
+        //     "Electronic",
+        //     "Funk",
+        //     "Synthwave",
+        //     "Dance & EDM",
+        // };
+        // var random = new List<string>();
+        // for (var i = 0; i < new Random().Next(1, 3); i++)
+        // {
+        //     random.Add(songTags[new Random().Next(0, songTags.Count - 1)]);
+        // }
+        // foreach (var tag in random)
+        // {
+        //     var isTagExist = (await _connection.Read("tags", new Dictionary<string, dynamic>()
+        //     {
+        //         { "tag", tag }
+        //     })).Count != 0;
+        //     if (!isTagExist)
+        //     {
+        //         await _connection.Add("tags", new Dictionary<string, dynamic>()
+        //         {
+        //             { "tag", tag }
+        //         });
+        //     }
+        //     await _connection.Add("songtags", new Dictionary<string, dynamic>()
+        //     {
+        //         {"id", id},
+        //         {"tag", tag}
+        //     });
+        // }
+        
         return Ok("Upload succeeded!");
     }
 
@@ -177,29 +217,49 @@ public class SongController : ControllerBase
         });
         var isSongExist = queryResult.Count != 0;
 
-        if (isSongExist)
-        {
-            // Check song ownership
-            if (!CanCurrentUserModifySong(queryResult[0]["uploader"]))
-                return StatusCode(StatusCodes.Status403Forbidden,
-                    "The current user does not have the required permission to delete the song!");
+        if (!isSongExist) return StatusCode(StatusCodes.Status400BadRequest, "Song not found!");
+        // Check song ownership
+        if (!CanCurrentUserModifySong(queryResult[0]["uploader"]))
+            return StatusCode(StatusCodes.Status403Forbidden,
+                "The current user does not have the required permission to delete the song!");
 
-            var toDictionary = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(info.ToJson())!;
-            toDictionary.Remove("id");
-            var result = await _connection.Update(
-                "song",
-                toDictionary,
-                new Dictionary<string, dynamic>()
-                {
-                    { "id", info.Id }
-                }
-            );
-            return result ? Ok() : StatusCode(StatusCodes.Status500InternalServerError);
-        }
-        else
+        var toDictionary = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(info.ToJson())!;
+        toDictionary.Remove("id");
+        var songTags = info.Tags;
+        toDictionary.Remove("tags");
+        await _connection.Update(
+            "song",
+            toDictionary,
+            new Dictionary<string, dynamic>()
+            {
+                { "id", info.Id }
+            }
+        );
+        await _connection.Delete("songtags", new Dictionary<string, dynamic>()
         {
-            return StatusCode(StatusCodes.Status400BadRequest, "Song not found!");
+            { "id", info.Id }
+        });
+        foreach (var tag in songTags)
+        {
+            var isTagExist = (await _connection.Read("tags", new Dictionary<string, dynamic>()
+            {
+                { "tag", tag }
+            })).Count != 0;
+            if (!isTagExist)
+            {
+                await _connection.Add("tags", new Dictionary<string, dynamic>()
+                {
+                    { "tag", tag }
+                });
+            }
+            await _connection.Add("songtags", new Dictionary<string, dynamic>()
+            {
+                {"id", info.Id},
+                {"tag", tag}
+            });
         }
+        return Ok();
+
     }
 
     [HttpDelete]

@@ -132,7 +132,6 @@ public class UserController : ControllerBase
     [AllowAnonymous]
     public async Task<ActionResult> Login([FromForm] LoginModel loginModel)
     {
-        Console.WriteLine(loginModel.ToJson());
         var result = await _connection.Read("user",
             new Dictionary<string, dynamic>() { { "username", loginModel.Username } });
         if (result.Count == 0) return StatusCode(StatusCodes.Status406NotAcceptable, "User not found!");
