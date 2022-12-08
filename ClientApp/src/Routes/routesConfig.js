@@ -6,6 +6,7 @@ export const routesConfigPublic = {
     favoritesRoute: 'favorites',
     settingsRoute: 'setting',
     playlist__title__pid:'playlist/:title/:pid',
+    library__playlist:'library/playlist',
     library__playlist__title__pid: 'library/playlist/:title/:pid',
     
     STAR: '*',

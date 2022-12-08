@@ -35,7 +35,7 @@ function Modal() {
         <div className="h-full w-full">
             <div className="fixed top-0 right-0 bottom-0 left-0 z-40 bg-[#000] opacity-30"></div>
 
-            <div className="fixed top-[50%] left-[50%] z-50 w-[300px] translate-x-[-50%] translate-y-[-50%] bg-[#fff] px-[15px]">
+            <div className="fixed top-[50%] left-[50%] z-50 w-[300px] translate-x-[-50%] translate-y-[-50%] bg-[#fff] px-[15px] rounded-md">
                 <span className="mr-[-15px] flex cursor-pointer justify-end" onClick={() => setIsOpenModal(false)}>
                     <AiFillCloseCircle />
                 </span>

@@ -1,4 +1,11 @@
-import { AiFillCloseCircle, AiOutlineCloudUpload, AiOutlineDownload, AiOutlinePlusCircle } from 'react-icons/ai';
+import {
+    AiFillCloseCircle,
+    AiOutlineCloudUpload,
+    AiOutlineDownload,
+    AiOutlinePlusCircle,
+    AiOutlineClose,
+    AiOutlinePlus
+} from 'react-icons/ai';
 import { BsFillPlayFill, BsMusicNoteBeamed, BsMusicNoteList, BsPauseFill, BsThreeDots } from 'react-icons/bs';
 import { CiRepeat, CiShuffle } from 'react-icons/ci';
 import { FaRegComment } from 'react-icons/fa';
@@ -33,4 +40,6 @@ export const icons = {
     RiShareForwardLine,
     FaRegTimesCircle,
     ImSpinner2,
+    AiOutlineClose,
+    AiOutlinePlus,
 };
