@@ -64,7 +64,7 @@ namespace tourmaline.Controllers
 
         [Route("get")]
         [HttpGet]
-        public async Task<ActionResult> GetFavorite()
+        public async Task<ActionResult<Favorites>> GetFavorite()
         {
             var username = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
             var result = await _database.Read("favorites", new Dictionary<string, dynamic>()

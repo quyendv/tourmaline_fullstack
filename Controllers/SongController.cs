@@ -64,7 +64,7 @@ public class SongController : ControllerBase
 
             var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             var file = new FileStream($"{homeDir}/storage/media/{songPath}", FileMode.Open, FileAccess.Read,
-                FileShare.None, 2048,
+                FileShare.ReadWrite, 2048,
                 true);
 
             await _connection.Add("recents", new Dictionary<string, dynamic>()
@@ -115,6 +115,7 @@ public class SongController : ControllerBase
         var filePath = Path.Combine($"{homeDir}/storage/media", fileName);
         var imageName = $"{id}.jpg";
         var imagePath = Path.Combine($"{homeDir}/storage/cover", imageName);
+        
         await using (var stream = new FileStream(filePath, FileMode.Create))
         {
             await media.CopyToAsync(stream);
@@ -187,9 +188,9 @@ public class SongController : ControllerBase
 
     [HttpDelete]
     [Route("delete")]
-    public async Task<ActionResult> DeleteSong(string id)
+    public async Task<ActionResult> DeleteSong(long id)
     {
-        var idConditions = new Dictionary<string, dynamic>() { { "id", long.Parse(id) } };
+        var idConditions = new Dictionary<string, dynamic>() { { "id", id } };
         var songObjects = await _connection.Read("song", idConditions);
         var isSongExist = songObjects.Count != 0;
 
@@ -197,19 +198,17 @@ public class SongController : ControllerBase
         {
             return StatusCode(StatusCodes.Status400BadRequest, "Song not found to delete!");
         }
-        else
-        {
-            // Check song ownership
-            if (!CanCurrentUserModifySong(songObjects[0]["uploader"]))
-                return StatusCode(StatusCodes.Status403Forbidden,
-                    "The current user does not have the required permission to delete the song!");
 
-            var result = await _connection.Delete("song", idConditions);
-            var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            System.IO.File.Delete($"{homeDir}/storage/media/{id}.mp3");
-            System.IO.File.Delete($"{homeDir}/storage/cover/{id}.jpg");
-            return result ? Ok() : StatusCode(StatusCodes.Status500InternalServerError);
-        }
+        // Check song ownership
+        if (!CanCurrentUserModifySong(songObjects[0]["uploader"]))
+            return StatusCode(StatusCodes.Status403Forbidden,
+                "The current user does not have the required permission to delete the song!");
+
+        var result = await _connection.Delete("song", idConditions);
+        var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        System.IO.File.Delete($"{homeDir}/storage/media/{id}.mp3");
+        System.IO.File.Delete($"{homeDir}/storage/cover/{id}.jpg");
+        return result ? Ok() : StatusCode(StatusCodes.Status500InternalServerError);
     }
 
     [HttpGet]
