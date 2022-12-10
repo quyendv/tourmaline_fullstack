@@ -10,7 +10,7 @@ import moment from 'moment';
 import { useEffect, useState } from 'react';
 
 const {AiFillCloseCircle, BsMusicNoteBeamed} = icons
-function List({ songData }) {
+function List({ songData, setSongsUploaded }) {
     const dispatch = useDispatch();
     const { curSongId, isPlaying } = useSelector((state) => state.music);
     const {token} = useSelector(state => state.auth)
@@ -25,8 +25,9 @@ function List({ songData }) {
     },[])
     const handleDelete = async (e) => {
         e.stopPropagation()
+        const index = songData.id
         const response = await deleteSong(songData.id, token)
-        console.log(response)
+        setSongsUploaded(prev => prev.filter(item => item.id != index))
     }
     return (    
         <div
@@ -46,10 +47,10 @@ function List({ songData }) {
                 
             </div>
             
-{/* 
+
             <span className='border border-white p-2' onClick={handleDelete}>
                 <AiFillCloseCircle/>
-            </span> */}
+            </span>
             <span>
 
             </span>

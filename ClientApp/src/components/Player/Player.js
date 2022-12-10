@@ -7,7 +7,6 @@ import * as actions from '../../store/actions';
 import { getInfoSong } from '../../services/music';
 import { BASE_URL } from '../../utils/constant';
 
-import avatarSong from '../../assets/images/Pop.svg';
 const {
     BsFillPlayFill,
     CiShuffle,
@@ -26,10 +25,10 @@ function Player({ setIsShowSidebar }) {
     const { curSongId, isPlaying } = useSelector((state) => state.music);
     const { token } = useSelector((state) => state.auth);
     const [volume, setVolume] = useState(100);
-    const [songInfo, setSongInfo] = useState(null);
+    const [songInfo, setSongInfo] = useState({});
+    const [imageSong, setImageSong] = useState('')
     const audio = useRef();
     const [currentSecond, setCurrentSecond] = useState(0);
-    const [duration, setDuration] = useState(0);
     const [isShuffle, setIsShuffle] = useState(false)
     const [isRepeat, setIsRepeat] = useState(0)
     const dispatch = useDispatch();
@@ -40,19 +39,18 @@ function Player({ setIsShowSidebar }) {
     useEffect(() => {
         const fetchSong = async () => {
             audio.current.src = BASE_URL + `/api/song/getMedia?id=${curSongId}`;    
-            audio.current.onloadedmetadata = (e) => {
-                if (audio.current.readyState > 0) {
-                    setDuration(audio.current.duration);
-                }
-            };
-            
         };
         fetchSong();
-        const fetchInfoSong = () => {
-            const response = getInfoSong(curSongId, token)
-            console.log(response)
+        const fetchInfoSong =  async () => {
+            const response = await getInfoSong(curSongId, token)
+            setSongInfo(response.data)
         }
+        
         fetchInfoSong()
+        const fetchImageSong = async () => {
+            setImageSong(`${BASE_URL}/api/song/getCover?id=${curSongId}`)
+        }
+        fetchImageSong()
 
     }, [curSongId]);
     var intervalId;
@@ -64,7 +62,7 @@ function Player({ setIsShowSidebar }) {
             audio.current.play();
             intervalId = setInterval(() => {
                 setCurrentSecond(audio.current.currentTime);
-                let percent = Math.round((audio.current.currentTime * 10000) / duration) / 100;
+                let percent = Math.round((audio.current.currentTime * 10000) / songInfo.duration) / 100;
                 thumbRef.current.style.cssText = `right:${100 - percent}%`;
             }, 200);
         }
@@ -84,20 +82,39 @@ function Player({ setIsShowSidebar }) {
     useEffect(() => {
         audio.current.volume = volume / 100;
     }, [volume]);
+    const handleRepeatOnce = () => {
+        audio.current.play()
+    }
+    // const handleShuffle = () => {
+    //     const randomIndex = Math.round(Math.random() * songs?.length) - 1;
+    //     dispatch(actions.setCurSongId(songs[randomIndex].id));
+    //     dispatch(actions.play(true));
+    // };
     useEffect(() => {
+        console.log(isRepeat)
+
         const handleEnd = () => {
-            audio.current.pause();
-            dispatch(actions.play(false));
+
+            if(isRepeat == 2) {
+                handleRepeatOnce()
+            } else {
+                audio.current.pause();
+                dispatch(actions.play(false));
+            }
+            if(isShuffle) {
+                // handleShuffle()
+            }
+
         };
         audio.current.addEventListener('ended', handleEnd);
         return () => {
             audio.current && audio.current.removeEventListener('ended', handleEnd);
         };
-    }, [audio]);
+    }, [audio, isRepeat]);
     const handleClickProgressbar = (e) => {
         const trackkRect = trackRef.current.getBoundingClientRect();
         const percent = Math.round(((e.clientX - trackkRect.left) * 10000) / trackkRect.width) / 100;
-        audio.current.currentTime = (percent * duration) / 100;
+        audio.current.currentTime = (percent * songInfo.duration) / 100;
         thumbRef.current.style.cssText = `right: ${100 - percent}%`;
         setCurrentSecond(audio.current.currentTime);
     };
@@ -115,11 +132,11 @@ function Player({ setIsShowSidebar }) {
                     className={`h-[60px] w-[60px] object-cover ${
                         isPlaying ? 'animate-rotate-center rounded-full ' : ''
                     }`}
-                    src={avatarSong}
+                    src={imageSong}
                 />
                 <div>
-                    <h3 className="text-sm">Song</h3>
-                    <span className="text-xs opacity-70">Artist name</span>
+                    <h3 className="text-sm">{songInfo?.name}</h3>
+                    <span className="text-xs opacity-70">{`uploaded by ${songInfo?.uploader}`}</span>
                 </div>
             </div>
 
@@ -159,7 +176,7 @@ function Player({ setIsShowSidebar }) {
                             className="absolute top-0 left-0 bottom-0 rounded-r-full rounded-l-full bg-activecolor"
                         ></div>
                     </div>
-                    <span>{moment.utc((duration || 0) * 1000).format('mm:ss')}</span>
+                    <span>{moment.utc((songInfo?.duration || 0) * 1000).format('mm:ss')}</span>
                 </div>
             </div>
 
