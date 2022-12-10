@@ -1,45 +1,57 @@
 import {
     AiFillCloseCircle,
+    AiFillDelete,
+    AiOutlineClose,
     AiOutlineCloudUpload,
     AiOutlineDownload,
-    AiOutlinePlusCircle,
-    AiOutlineClose,
-    AiOutlinePlus
+    AiOutlineHeart, AiOutlinePlus,
+    AiOutlinePlusCircle, AiTwotoneHeart
 } from 'react-icons/ai';
-import { BsFillPlayFill, BsMusicNoteBeamed, BsMusicNoteList, BsPauseFill, BsThreeDots } from 'react-icons/bs';
+import {
+    BsFillPlayFill,
+    BsLink45Deg,
+    BsMusicNoteBeamed,
+    BsMusicNoteList,
+    BsPauseFill,
+    BsThreeDots
+} from 'react-icons/bs';
 import { CiRepeat, CiShuffle } from 'react-icons/ci';
-import { FaRegComment } from 'react-icons/fa';
-import { MdSkipNext, MdSkipPrevious } from 'react-icons/md';
-import { RiRepeatOneLine } from 'react-icons/ri';
-import { SlVolume1, SlVolume2, SlVolumeOff } from 'react-icons/sl';
-import { BsLink45Deg } from 'react-icons/bs';
-import { RiShareForwardLine } from 'react-icons/ri';
-import { FaRegTimesCircle } from 'react-icons/fa';
+import { FaCaretRight, FaRegComment, FaRegTimesCircle, FaSort } from 'react-icons/fa';
 import { ImSpinner2 } from 'react-icons/im';
+import { MdSkipNext, MdSkipPrevious } from 'react-icons/md';
+import { RiRepeatOneLine, RiShareForwardLine } from 'react-icons/ri';
+import { SlVolume1, SlVolume2, SlVolumeOff } from 'react-icons/sl';
+import { TfiMicrophoneAlt } from 'react-icons/tfi';
 
 export const icons = {
-    CiShuffle,
+    AiFillCloseCircle,
+    AiFillDelete,
+    AiOutlineClose,
+    AiOutlineCloudUpload,
+    AiOutlineDownload,
+    AiOutlineHeart,
+    AiOutlinePlus,
+    AiOutlinePlusCircle,
+    AiTwotoneHeart,
     BsFillPlayFill,
-    BsPauseFill,
-    MdSkipPrevious,
-    MdSkipNext,
-    CiRepeat,
+    BsLink45Deg,
+    BsMusicNoteBeamed,
     BsMusicNoteList,
+    BsPauseFill,
     BsThreeDots,
-    SlVolumeOff,
+    CiRepeat,
+    CiShuffle,
+    FaCaretRight,
+    FaRegComment,
+    FaRegTimesCircle,
+    FaSort,
+    ImSpinner2,
+    MdSkipNext,
+    MdSkipPrevious,
+    RiRepeatOneLine,
+    RiShareForwardLine,
     SlVolume1,
     SlVolume2,
-    AiOutlineCloudUpload,
-    AiOutlinePlusCircle,
-    AiFillCloseCircle,
-    RiRepeatOneLine,
-    BsMusicNoteBeamed,
-    FaRegComment,
-    AiOutlineDownload,
-    BsLink45Deg,
-    RiShareForwardLine,
-    FaRegTimesCircle,
-    ImSpinner2,
-    AiOutlineClose,
-    AiOutlinePlus,
+    SlVolumeOff,
+    TfiMicrophoneAlt,
 };

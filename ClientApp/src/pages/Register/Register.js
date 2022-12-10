@@ -8,6 +8,7 @@ import * as yup from 'yup';
 import * as actions from '../../store/actions';
 import styles from './Register.module.scss';
 
+// TODO: setError user already registered
 const cx = classNames.bind(styles);
 const yupSchema = yup
     .object({

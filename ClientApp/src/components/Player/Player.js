@@ -125,7 +125,7 @@ function Player({ setIsShowSidebar }) {
         
     }
     return (
-        <div className="flex items-center h-full text-white px-4 ">
+        <div className="flex items-center h-full text-white">
             {/* //Songdetai */}
             <div className="flex w-[30%] items-center gap-4 ">
                 <img

@@ -1,29 +1,29 @@
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import PlaylistItem from '~/components/PlaylistItem';
-import {icons} from '../../utils/icons'
+import { icons } from '../../utils/icons';
 
-const {AiOutlinePlusCircle} =icons
+const { AiOutlinePlusCircle } = icons;
 
 function AllPlaylist() {
     const { state } = useLocation();
-    const {setIsOpenModal} = useSelector(state => state.actions)
+    const { setIsOpenModal } = useSelector((state) => state.actions);
     return (
-        <div className="AllplaylistComponent mt-4 flex w-full flex-col text-white">
-            <h2 className="border-b border-gray-300 px-12 text-2xl font-bold">Playlist</h2>
-            <div className="flex w-full flex-wrap items-center px-12">
-                <div onClick={() => setIsOpenModal(prev => !prev)} className='border border-gray-300 w-1/5 h-[254px] flex flex-col items-center justify-center  text-activecolor rounded-md cursor-pointer'>
-                    <span> 
-                        <AiOutlinePlusCircle size={30}/>
-                    </span>
-                    <span>
-                        Tạo playlist mới
-                    </span>
+        <div className="AllplaylistComponent flex w-full flex-col px-14 py-16 text-white">
+            <h2 className="mb-7 border-b border-[color:#ffffff1a] text-2xl font-bold">Playlist</h2>
+            {/* Container */}
+            <div className="grid auto-rows-[minmax(260px,_1fr)] grid-cols-5 gap-3">
+                {/* Create new playlist item */}
+                <div
+                    onClick={() => setIsOpenModal((prev) => !prev)}
+                    className="flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-md border border-[color:#ffffff1a] hover:text-activecolor"
+                >
+                    <AiOutlinePlusCircle size={30} />
+                    <span>Tạo playlist mới</span>
                 </div>
+                {/* PlaylistItem */}
                 {state.map((item, index) => (
-                    <div className='w-1/5 px-2'>
-                        <PlaylistItem key={index} playlistData={item} />
-                    </div>
+                    <PlaylistItem key={index} playlistData={item} />
                 ))}
             </div>
         </div>
