@@ -8,6 +8,8 @@ export const routesConfigPublic = {
     playlist__title__pid:'playlist/:title/:pid',
     library__playlist:'library/playlist',
     library__playlist__title__pid: 'library/playlist/:title/:pid',
+
+    search: 'search',
     
     STAR: '*',
 };

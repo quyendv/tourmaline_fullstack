@@ -8,6 +8,7 @@ import Library from '../pages/Library';
 import { routesConfigPrivate, routesConfigPublic } from './routesConfig';
 import Playlist from '../pages/Playlist'
 import AllPlaylist from '~/pages/AllPlaylist';
+import Search from '../pages/Search'
 
 export const publicRoutes = [
     {
@@ -32,6 +33,10 @@ export const publicRoutes = [
     {
         path: routesConfigPublic.library__playlist__title__pid,
         page: Playlist
+    },
+    {
+        path: routesConfigPublic.search,
+        page: Search
     },
 
     {
