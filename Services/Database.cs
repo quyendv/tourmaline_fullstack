@@ -48,6 +48,32 @@ public class Database
         return Task.FromResult(result);
     }
 
+    public Task<List<Dictionary<string, dynamic>>> Call(string query)
+    {
+        var result = new List<Dictionary<string, dynamic>>();
+        var connection = new MySqlConnection(ConnectionString);
+        connection.Open();
+        try
+        {
+            Console.WriteLine($"Query: {query}");
+            var reader = new MySqlCommand(query, connection).ExecuteReader();
+            if (reader.HasRows)
+                while (reader.Read())
+                {
+                    var record = new Dictionary<string, dynamic>();
+                    for (var i = 0; i < reader.FieldCount; i++) record.Add(reader.GetName(i), reader.GetValue(i));
+                    result.Add(record);
+                }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+
+        connection.Close();
+        return Task.FromResult(result);
+    }
+
     public Task<bool> Add(string table, IDictionary<string, dynamic> values)
     {
         var connection = new MySqlConnection(ConnectionString);
