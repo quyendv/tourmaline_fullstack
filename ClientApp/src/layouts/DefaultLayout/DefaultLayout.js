@@ -46,7 +46,7 @@ function DefaultLayout() {
                 <div className="w-[243px] flex-none">
                     <Sidebar />
                 </div>
-                <div className="flex-1 ">
+                <div className="flex-1">
                     <Header />
                     <Outlet />
                 </div>
@@ -59,7 +59,8 @@ function DefaultLayout() {
                 </div>
             </div>
 
-            <div className="absolute bottom-5 z-30 h-[70px] w-full bg-gradient-to-b from-player-from to-player-to rounded-t-3xl">
+            {/* Sửa: k dùng màu trong suốt, lúc scroll nhìn thấy phần phía sau */}
+            <div className="absolute bottom-0 z-30 w-full bg-[color:#130c1c] py-3 px-4">
                 <Player setIsShowSidebar={setIsShowSidebar} />
             </div>
         </div>

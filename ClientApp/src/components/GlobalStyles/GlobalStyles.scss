@@ -32,7 +32,7 @@ html {
 // Scrollbar
 html *::-webkit-scrollbar {
     border-radius: 0;
-    width: 8px;
+    width: 4px;
     opacity: 0;
 }
 
@@ -82,4 +82,10 @@ a {
   font-family: ProximaNovaSemiBold;
   src: url('../../assets/fonts/ProximaNova-Semibold.woff2');
   font-weight: 600;
+}
+
+@layer base {
+    svg {
+        display: inline-block;
+    }
 }

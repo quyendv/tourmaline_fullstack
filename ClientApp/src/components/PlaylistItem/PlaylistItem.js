@@ -1,13 +1,11 @@
-import { useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import PlaylistPlaceHolder from '../../assets/images/playlistplaceholder.png';
-import { icons } from '../../utils/icons';
 import { deletePlaylist } from '../../services/music';
-import { useSelector } from 'react-redux';
+import { icons } from '../../utils/icons';
 import { DefaultMenu as PlaylistMenu } from '../Popper';
 
 const {
-    AiFillCloseCircle,
     BsFillPlayFill,
     BsThreeDots,
     FaRegComment,
@@ -15,6 +13,7 @@ const {
     BsLink45Deg,
     RiShareForwardLine,
     AiOutlineClose,
+    AiFillDelete
 } = icons;
 
 const playlistMenu = [
@@ -38,27 +37,21 @@ const playlistMenu = [
         title: 'Share',
         to: '',
     },
+    {
+        icon: <AiFillDelete />,
+        title: 'Delete',
+        to: '',
+    },
 ];
 
-function PlaylistItem({ playlistData }) {
-    const imgRef = useRef();
+function PlaylistItem({ playlistData, className }) {
     const navigate = useNavigate();
     const location = useLocation()
     
     const path = `${playlistData.name.replaceAll(' ', '-')}/${playlistData.id}`;
-    const link = (location.pathname == '/library' ? '/playlist' : '') + path
-    const [isHover, setIsHover] = useState(false);
+    const link = (location.pathname === '/library' ? '/playlist' : '') + path
     const { token } = useSelector((state) => state.auth);
-    const handleHover = (e) => {
-        setIsHover(true);
-        imgRef.current.classList.add('animate-scale-up-image');
-        imgRef.current.classList.remove('animate-scale-down-image');
-    };
-    const handleLeave = (e) => {
-        setIsHover(false);
-        imgRef.current.classList.add('animate-scale-down-image');
-        imgRef.current.classList.remove('animate-scale-up-image');
-    };
+    
     const handleDeletePlaylist = async (e) => {
         e.stopPropagation();
         const response = await deletePlaylist(playlistData.id, token);
@@ -70,38 +63,39 @@ function PlaylistItem({ playlistData }) {
     };
 
     return (
-        <div className="flex w-full flex-col gap-2 py-2">
+        <div className={`flex flex-col gap-2 ${className}`}>
             <div
-                className="relative w-full overflow-hidden rounded-md"
+                className="group relative w-full overflow-hidden rounded-md"
                 onClick={() =>
                     navigate(link, {
                         state: playlistData,
                     })
                 }
-                onMouseEnter={handleHover}
-                onMouseLeave={handleLeave}
             >
-                {isHover && (
-                    <div className="absolute top-0 right-0 left-0 bottom-0 z-20 flex cursor-pointer items-center justify-center gap-3 rounded-md  bg-overlay-30 ">
-                        <span className="inline-block rounded-full bg-[#00000033] p-1" onClick={handleDeletePlaylist}>
-                            <AiOutlineClose size={24} />
+                <div className="absolute inset-0 z-20 hidden cursor-pointer items-center justify-center gap-3 rounded-md bg-overlay-30  group-hover:flex ">
+                    <span
+                        className="grid h-6 w-6 place-content-center rounded-full bg-[#00000033] p-0.5"
+                        onClick={handleDeletePlaylist}
+                    >
+                        <AiOutlineClose />
+                    </span>
+                    <span
+                        className="grid h-6 w-6 place-content-center rounded-full bg-[#00000033] p-0.5"
+                        onClick={handleClickPlay}
+                    >
+                        <BsFillPlayFill />
+                    </span>
+                    <PlaylistMenu menuList={playlistMenu} placement="bottom-start">
+                        <span
+                            className="grid h-6 w-6 place-content-center rounded-full bg-[#00000033] p-0.5"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <BsThreeDots />
                         </span>
-                        <span className="inline-block rounded-full bg-[#00000033] p-1" onClick={handleClickPlay}>
-                            <BsFillPlayFill size={24} />
-                        </span>
-                        <PlaylistMenu menuList={playlistMenu} placement="bottom-start">
-                            <span
-                                className="inline-block rounded-full bg-[#00000033] p-1"
-                                onClick={(e) => e.stopPropagation()}
-                            >
-                                <BsThreeDots size={24} />
-                            </span>
-                        </PlaylistMenu>
-                    </div>
-                )}
+                    </PlaylistMenu>
+                </div>
                 <img
-                    ref={imgRef}
-                    className="w-full rounded-md object-contain"
+                    className="w-full rounded-md object-contain transition-all duration-500 group-hover:scale-125"
                     src={PlaylistPlaceHolder}
                     alt="playlist-cover"
                 />
@@ -117,7 +111,7 @@ function PlaylistItem({ playlistData }) {
                 >
                     {playlistData.name}
                 </span>
-                <span className="text-xs font-semibold text-gray-300">{playlistData.username}</span>
+                <span className="text-[color:#7a7581] text-xs font-semibold">{playlistData.username}</span>
             </span>
         </div>
     );
