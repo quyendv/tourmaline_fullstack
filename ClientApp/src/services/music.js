@@ -41,7 +41,7 @@ export const deleteSong = (id, token) => new Promise(async (resolve, reject) => 
             method: 'delete',  
             params: {id},
             headers: {
-                "Authorization":`Beaer ${token}`
+                "Authorization":`Bearer ${token}`
             }
         })
         resolve(response)
