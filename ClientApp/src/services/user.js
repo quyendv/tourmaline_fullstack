@@ -30,3 +30,38 @@ export const setProfile =  (payload, token) => new Promise(async(resolve, reject
         reject(error)
     }
 })
+
+export const searchUser = (keyword) => new Promise(async(resolve, reject) => {
+    try {
+        const response = await axiosConfig({
+            url:'api/user/find',
+            method:'get',
+            params:{
+                keyword
+            },
+            // headers: {
+            //     'Authorization': `Bearer ${token}`
+            // }
+        }) 
+        resolve(response)
+    } catch(err) {
+        reject(err)
+    }
+})
+export const searchSong = (keyword) => new Promise(async(resolve, reject) => {
+    try {
+        const response = await axiosConfig({
+            url:'api/song/find',
+            method:'get',
+            params:{
+                keyword
+            },
+            // headers: {
+            //     'Authorization': `Bearer ${token}`
+            // }
+        }) 
+        resolve(response)
+    } catch(err) {
+        reject(err)
+    }
+})
