@@ -59,12 +59,13 @@ public class SongController : ControllerBase
         })).Count;
 
         song.Favorites = favorites;
-        
+
         return Ok(song);
     }
 
     [HttpGet]
     [Route("getMedia")]
+    [AllowAnonymous]
     public async Task<ActionResult> GetMedia(long id)
     {
         var idConds = new Dictionary<string, dynamic>() { { "id", id } };
@@ -91,6 +92,7 @@ public class SongController : ControllerBase
                 { "id", id }
             });
 
+            if (HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) == null) return File(file, "audio/mpeg", true);
             try
             {
                 await _connection.Add("recents", new Dictionary<string, dynamic>()
@@ -122,6 +124,7 @@ public class SongController : ControllerBase
 
     [HttpGet]
     [Route("getCover")]
+    [AllowAnonymous]
     public async Task<ActionResult> GetCover(long id)
     {
         var idConds = new Dictionary<string, dynamic>() { { "id", id } };
@@ -129,7 +132,7 @@ public class SongController : ControllerBase
         var isSongExist = songObjects.Count != 0;
 
         if (!isSongExist) return StatusCode(StatusCodes.Status400BadRequest, "Song not found!");
-        string coverPath = $"{id}.jpg";
+        var coverPath = $"{id}.jpg";
 
         var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         var file = new FileStream($"{homeDir}/storage/cover/{coverPath}", FileMode.Open, FileAccess.Read,
