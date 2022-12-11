@@ -93,5 +93,13 @@ namespace tourmaline.Controllers
 
             return Ok(favorite);
         }
+
+        [Route("getTop")]
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<JsonResult> GetTopFavorites()
+        {
+            return new JsonResult(await _database.CallReadProcedure("ListTopFavorites", new Dictionary<string, dynamic>()));
+        }
     }
 }

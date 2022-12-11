@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Differencing;
 using Microsoft.IdentityModel.Tokens;
 using NuGet.Protocol;
 using tourmaline.Models;
@@ -61,10 +62,33 @@ public class UserController : ControllerBase
         return StatusCode(StatusCodes.Status404NotFound);
     }
 
+    [HttpGet]
+    [Route("getAvatar/{username}")]
+    [AllowAnonymous]
+    public async Task<ActionResult> GetAvatar(string username)
+    {
+        var userNameMatchCond = new Dictionary<string, dynamic>() { { "username", username } };
+        var doesUserExist = (await _connection.Read("user", userNameMatchCond)).Count != 0;
+
+        if (!doesUserExist)
+        {
+            return StatusCode(StatusCodes.Status406NotAcceptable, "User not found!");
+        }
+
+        var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        var file = new FileStream($"{homeDir}/storage/avatar/{username}.png", FileMode.Open, FileAccess.Read,
+            FileShare.Read, 2048,
+            true);
+
+        return File(file, "image/jpeg", true);
+    }
+
     [HttpPost]
     [Route("signup")]
     [AllowAnonymous]
-    public async Task<ActionResult> SignUp([FromForm] string username, [FromForm] string password)
+    public async Task<ActionResult> SignUp([FromForm] string username, [FromForm] string password,
+        [FromForm] string fullname, [FromForm] bool gender, [FromForm] string email,
+        [FromForm] IFormFile avatar)
     {
         var isUsernameExist = (await _connection.Read(
                 "user",
@@ -73,7 +97,13 @@ public class UserController : ControllerBase
             ).Count != 0;
         if (isUsernameExist) return StatusCode(StatusCodes.Status406NotAcceptable, "User is already exist!");
 
-        var user = new User(username);
+        var user = new User(username)
+        {
+            Email = email,
+            Gender = gender,
+            Name = fullname
+        };
+
         var hasher = new PasswordHasher<User>();
         password = hasher.HashPassword(user, password);
         var result = await _connection.Add("user", new Dictionary<string, dynamic>()
@@ -88,6 +118,27 @@ public class UserController : ControllerBase
             { "gender", user.Gender ? 1 : 0 },
             { "email", user.Email }
         });
+
+        if (result)
+        {
+            var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            Directory.CreateDirectory($"{homeDir}/storage/avatar");
+
+            var avatarFilename = $"{username}.png";
+            var avatarFilePath = Path.Combine($"{homeDir}/storage/avatar", avatarFilename);
+
+            try
+            {
+                await using (var stream = new FileStream(avatarFilePath, FileMode.Create))
+                {
+                    await avatar.CopyToAsync(stream);
+                }
+            } catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
+
         return result ? StatusCode(StatusCodes.Status201Created, user) : StatusCode(StatusCodes.Status400BadRequest, "Cannot create user!");
     }
 
