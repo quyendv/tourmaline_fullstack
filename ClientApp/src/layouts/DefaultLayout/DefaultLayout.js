@@ -1,8 +1,6 @@
-import classNames from 'classnames/bind';
-import styles from './DefaultLayout.module.scss';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 
 import Header from '../../components/Header';
 import Sidebar from '../../components/Sidebar';
@@ -10,24 +8,22 @@ import Player from '../../components/Player';
 import SidebarRight from '../../components/SidebarRight';
 import * as actions from '../../store/actions';
 import { crePlaylist } from '../../services/music';
-import uploadImage from '../../assets/images';
-import CommentModal from '../../components/CommentModal'
+import CommentModal from '../../components/CommentModal';
 import Modal from '../../components/Modal';
-const cx = classNames.bind(styles);
 
 function DefaultLayout() {
     const [isShowSidebar, setIsShowSidebar] = useState(false);
     const [isOpenCrePlaylistModal, setIsOpenCrePlaylistModal] = useState(false);
-    const [isOpenCommentModal, setIsOpenCommentModal] = useState(false)
+    const [isOpenCommentModal, setIsOpenCommentModal] = useState(false);
 
     const { token } = useSelector((state) => state.auth);
     const [title, setTitle] = useState('');
     const dispatch = useDispatch();
-    const navigate = useNavigate();
+
     useEffect(() => {
-        dispatch(actions.setIsOpenCrePlaylistModal(setIsOpenCrePlaylistModal))
-        dispatch(actions.setIsOpenCommentModal(setIsOpenCommentModal))
-    }, [])
+        dispatch(actions.setIsOpenCrePlaylistModal(setIsOpenCrePlaylistModal));
+        dispatch(actions.setIsOpenCommentModal(setIsOpenCommentModal));
+    }, []);
 
     const file = useRef();
     const onChange = (e) => {
@@ -51,7 +47,7 @@ function DefaultLayout() {
                 <div className="w-[243px] flex-none">
                     <Sidebar />
                 </div>
-                <div className="flex-1">
+                <div className="w-[calc(100vw-var(--sidebar-width))]">
                     <Header />
                     <Outlet />
                 </div>

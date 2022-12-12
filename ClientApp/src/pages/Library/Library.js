@@ -5,8 +5,8 @@ import { useState } from 'react';
 import { icons } from '../../utils/icons';
 import { getPlaylist, getCover, getSongs, getAllPlaylist } from '../../services/music';
 import Song from '../../components/Song';
-import PlaylistItem from '../../components/PlaylistItem'
-import * as actions from '../../store/actions'
+import PlaylistItem from '../../components/PlaylistItem';
+import * as actions from '../../store/actions';
 import { useNavigate } from 'react-router-dom';
 
 const { BsFillPlayFill, AiOutlinePlusCircle, FaCaretRight } = icons;
@@ -16,14 +16,14 @@ function Library() {
     const { token } = useSelector((state) => state.auth);
     const { username } = useSelector((state) => state.user);
     const [songsUploaded, setSongsUploaded] = useState([]);
-    const [playlistCreated, setPlaylistCreated] = useState([])
-    const dispatch = useDispatch()
+    const [playlistCreated, setPlaylistCreated] = useState([]);
+    const dispatch = useDispatch();
     const navigate = useNavigate();
 
     useEffect(() => {
         const fetchAllPlaylist = async () => {
-            const response = await getAllPlaylist(token)
-            setPlaylistCreated(response.data.playlists)
+            const response = await getAllPlaylist(token);
+            setPlaylistCreated(response.data.playlists);
         };
         const fetchSongs = async () => {
             const response = await getSongs(username, token);
@@ -33,12 +33,12 @@ function Library() {
         fetchSongs();
     }, []);
     useEffect(() => {
-        dispatch(actions.createPlaylist(setPlaylistCreated))
-    }, [])
-    console.log(playlistCreated)
-    
+        dispatch(actions.createPlaylist(setPlaylistCreated));
+    }, []);
+    console.log(playlistCreated);
+
     return (
-        <div className="px-14 py-16 text-white">
+        <div className="h-[calc(100vh-var(--header-height))] w-full overflow-y-auto px-14 pt-16 pb-24 text-white">
             {/* Title Library*/}
             <div className="flex items-center gap-4">
                 <h2 className="text-3xl font-bold">Library</h2>
@@ -67,20 +67,20 @@ function Library() {
                 </span>
             </div>
             {/* List Playlist Item */}
-            <div className="-mx-2 mt-4 flex items-center overflow-x-hidden">
+            <div className="mt-4 grid auto-cols-[minmax(220px,300px)] grid-flow-col gap-3 overflow-x-scroll w-full [scroll-snap-type:x_mandatory]">
                 {playlistCreated.length > 0 &&
                     playlistCreated
-                        .filter((item, index) => index <= 4) // limit 5 items
-                        .map((item, index) => <PlaylistItem playlistData={item} key={index} className="w-1/5 px-2" />)}
+                        // .filter((item, index) => index <= 4) // k cần giới hạn nữa, vuốt sang
+                        .map((item, index) => <PlaylistItem playlistData={item} key={index} className='snap-start snap-always' />)}
             </div>
             {/* Songs */}
             <div className="mt-8 flex items-center gap-4">
-                <h3 className="text-xl font-semibold">Bài hát</h3>
+                <h3 className="text-xl font-semibold">Uploaded Songs</h3>
                 <span className="cursor-pointer">
                     <AiOutlinePlusCircle size={20} />
                 </span>
             </div>
-            <div className='flex flex-col gap-2'>
+            <div className="flex flex-col gap-2 mt-4 max-h-96 overflow-y-auto">
                 {songsUploaded?.map((item) => (
                     <Song key={item.id} songData={item} />
                 ))}
