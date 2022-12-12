@@ -24,7 +24,7 @@ public class Database
                 foreach (var entry in conditions)
                 {
                     if (entry.Value is string) conditions[entry.Key] = $"'{entry.Value}'";
-                    else if (entry.Value is DateTime) conditions[entry.Key] = (DateTime)(entry.Value).ToString("yyyy-MM-dd H:mm:ss");
+                    else if (entry.Value is DateTime) conditions[entry.Key] = $"'{((DateTime)(entry.Value)).ToString("yyyy-MM-dd H:mm:ss")}'";
 
                     cons.Add($"{entry.Key} = {conditions[entry.Key]}");
                 }
@@ -84,7 +84,7 @@ public class Database
             if (entry.Value is string)
                 values[entry.Key] = $"'{entry.Value}'";
             else if (entry.Value is DateTime)
-                values[entry.Key] = (DateTime)(entry.Value).ToString("yyyy-MM-dd H:mm:ss");
+                values[entry.Key] = $"'{((DateTime)(entry.Value)).ToString("yyyy-MM-dd H:mm:ss")}'";
 
         var queryString =
             $"INSERT INTO {table} ({string.Join(", ", values.Keys)}) VALUES ({string.Join(", ", values.Values)})";
@@ -109,7 +109,7 @@ public class Database
         foreach (var entry in values)
         {
             if (entry.Value is string) values[entry.Key] = $"'{entry.Value}'";
-            else if (entry.Value is DateTime) values[entry.Key] = (DateTime)(entry.Value).ToString("yyyy-MM-dd H:mm:ss");
+            else if (entry.Value is DateTime) values[entry.Key] = $"'{((DateTime)(entry.Value)).ToString("yyyy-MM-dd H:mm:ss")}'";
             vals.Add($"{entry.Key} = {values[entry.Key]}");
         }
 
@@ -117,8 +117,9 @@ public class Database
         foreach (var entry in conditions)
         {
             if (entry.Value is string) conditions[entry.Key] = $"'{entry.Value}'";
-            else if (entry.Value is DateTime) conditions[entry.Key] = (DateTime)(entry.Value).ToString("yyyy-MM-dd H:mm:ss");
-            
+            else if (entry.Value is DateTime) conditions[entry.Key] = $"'{((DateTime)(entry.Value)).ToString("yyyy-MM-dd H:mm:ss")}'";
+
+
             cons.Add($"{entry.Key} = {conditions[entry.Key]}");
         }
 
@@ -147,7 +148,7 @@ public class Database
         foreach (var entry in conditions)
         {
             if (entry.Value is string) conditions[entry.Key] = $"'{entry.Value}'";
-            else if (entry.Value is DateTime) conditions[entry.Key] = (DateTime)(entry.Value).ToString("yyyy-MM-dd H:mm:ss");
+            else if (entry.Value is DateTime) conditions[entry.Key] = $"'{((DateTime)(entry.Value)).ToString("yyyy-MM-dd H:mm:ss")}'";
 
             cons.Add($"{entry.Key} = {conditions[entry.Key]}");
         }

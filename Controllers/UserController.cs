@@ -22,12 +22,19 @@ public class UserController : ControllerBase
 
     public static readonly string IsAdminClaimName = "IsAdmin";
 
-    private bool CanCurrentUserModifyThisUser(string username)
+    private string CurrentSessionUsername => HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
+
+    private bool CanCurrentUserModifyThisUser(string username, bool requestToBeAdmin = false)
     {
         var isAdminClaim = HttpContext.User.FindFirst(UserController.IsAdminClaimName);
         if (isAdminClaim != null && bool.Parse(isAdminClaim.Value)) return true;
 
-        return username == HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
+        if (username == CurrentSessionUsername)
+        {
+            return !requestToBeAdmin;
+        }
+
+        return false;
     }
 
     public UserController(Database connection, IConfiguration configuration)
@@ -52,7 +59,7 @@ public class UserController : ControllerBase
                 Bio = result[0]["bio"],
                 CreateTime = result[0]["createTime"],
                 Birth = result[0]["birth"],
-                Gender = result[0]["gender"] == 0,
+                Gender = (result[0]["gender"] == 1),
                 Email = result[0]["email"]
             };
         }
@@ -76,7 +83,15 @@ public class UserController : ControllerBase
         }
 
         var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-        var file = new FileStream($"{homeDir}/storage/avatar/{username}.png", FileMode.Open, FileAccess.Read,
+        var filePath = $"{homeDir}/storage/avatar/{username}.png";
+
+        if (!System.IO.File.Exists(filePath))
+        {
+            // Returns default file
+            filePath = "Assets/defaultAvatar.png";
+        }
+
+        var file = new FileStream(filePath, FileMode.Open, FileAccess.Read,
             FileShare.Read, 2048,
             true);
 
@@ -87,8 +102,7 @@ public class UserController : ControllerBase
     [Route("signup")]
     [AllowAnonymous]
     public async Task<ActionResult> SignUp([FromForm] string username, [FromForm] string password,
-        [FromForm] string fullname, [FromForm] bool gender, [FromForm] string email,
-        [FromForm] IFormFile avatar)
+        [FromForm] string fullname, [FromForm] bool gender, [FromForm] string email)
     {
         var isUsernameExist = (await _connection.Read(
                 "user",
@@ -119,7 +133,52 @@ public class UserController : ControllerBase
             { "email", user.Email }
         });
 
-        if (result)
+        return result ? StatusCode(StatusCodes.Status201Created, user) : StatusCode(StatusCodes.Status400BadRequest, "Cannot create user!");
+    }
+
+    [HttpPut]
+    [Route("edit")]
+    public async Task<ActionResult> EditProfile([FromForm] string username, [FromForm] string name,
+        [FromForm] string? bio, [FromForm] DateTime birth, [FromForm] bool gender, [FromForm] string email,
+        [FromForm] bool isAdmin, [FromForm] IFormFile? avatar)
+    {
+        bool permissionModifyGranted = false;
+        if (username == null)
+        {
+            username = CurrentSessionUsername;
+            permissionModifyGranted = true;
+        } else
+        {
+            var userNameMatchCond = new Dictionary<string, dynamic>() { { "username", username } };
+            var doesUserExist = (await _connection.Read("user", userNameMatchCond)).Count != 0;
+
+            if (!doesUserExist)
+            {
+                return StatusCode(StatusCodes.Status406NotAcceptable, "User not found!");
+            }
+        }
+
+        if (!permissionModifyGranted)
+        {
+            if (!CanCurrentUserModifyThisUser(username, isAdmin))
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, "Current user does not have the required permission to edit the targeted user's profile!");
+            }
+        }
+
+        var result = await _connection.CallUpdateProcedure("EditUserProfile", new Dictionary<string, dynamic>()
+        {
+            { "username", username },
+            { "newName", name },
+            { "newBio", bio ?? "" },
+            { "newBirth", birth },
+            { "newGender", gender },
+            { "newEmail", email },
+            { "newIsAdmin", isAdmin }
+        });
+
+
+        if (result && (avatar != null))
         {
             var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             Directory.CreateDirectory($"{homeDir}/storage/avatar");
@@ -129,46 +188,21 @@ public class UserController : ControllerBase
 
             try
             {
+                if (System.IO.File.Exists(avatarFilePath))
+                {
+                    System.IO.File.Delete(avatarFilePath);
+                }
+
                 await using (var stream = new FileStream(avatarFilePath, FileMode.Create))
                 {
                     await avatar.CopyToAsync(stream);
                 }
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine(ex);
             }
         }
-
-        return result ? StatusCode(StatusCodes.Status201Created, user) : StatusCode(StatusCodes.Status400BadRequest, "Cannot create user!");
-    }
-
-    [HttpPut]
-    [Route("edit")]
-    public async Task<ActionResult> EditProfile([FromBody] User info)
-    {
-        var userNameMatchCond = new Dictionary<string, dynamic>() { { "username", info.Username } };
-        var doesUserExist = (await _connection.Read("user", userNameMatchCond)).Count != 0;
-
-        if (!doesUserExist)
-        {
-            return StatusCode(StatusCodes.Status406NotAcceptable, "User not found!");
-        }
-
-        if (!CanCurrentUserModifyThisUser(info.Username))
-        {
-            return StatusCode(StatusCodes.Status403Forbidden, "Current user does not have the required permission to edit the targeted user's profile!");
-        }
-
-        var result = await _connection.CallUpdateProcedure("EditUserProfile", new Dictionary<string, dynamic>()
-        {
-            { "username", info.Username },
-            { "newName", info.Name },
-            { "newBio", info.Bio },
-            { "newBirth", info.Birth },
-            { "newGender", info.Gender },
-            { "newEmail", info.Email },
-            { "newIsAdmin", info.IsAdmin }
-        });
 
         if (!result)
         {

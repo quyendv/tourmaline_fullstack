@@ -420,8 +420,16 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ListTopFavorites`()
 BEGIN
-	SELECT songid, COUNT(songid) AS favoriteCount FROM favorites
-	GROUP BY songid
+	SELECT 
+		favorites.songid as id,
+        song.uploadTime,
+        song.uploader, song.name, song.description,
+        song.duration,
+        song.listen_times as listenTime,
+        COUNT(songid) AS favoriteCount
+	FROM favorites
+    INNER JOIN song
+	GROUP BY id
 	ORDER by favoriteCount DESC;
 END ;;
 DELIMITER ;
