@@ -49,7 +49,7 @@ function PlaylistItem({ playlistData, className }) {
     const location = useLocation()
     
     const path = `${playlistData.name.replaceAll(' ', '-')}/${playlistData.id}`;
-    const link = (location.pathname === '/library' ? '/playlist' : '') + path
+    const link = (location.pathname === '/library' ? '/playlist/' : '') + path
     const { token } = useSelector((state) => state.auth);
     
     const handleDeletePlaylist = async (e) => {

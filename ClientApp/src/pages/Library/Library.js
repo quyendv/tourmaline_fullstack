@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom';
 const { BsFillPlayFill, AiOutlinePlusCircle, FaCaretRight } = icons;
 
 function Library() {
-    const { setIsOpenModal } = useSelector((state) => state.actions);
+    const { setIsOpenCrePlaylistModal } = useSelector((state) => state.actions);
     const { token } = useSelector((state) => state.auth);
     const { username } = useSelector((state) => state.user);
     const [songsUploaded, setSongsUploaded] = useState([]);
@@ -50,7 +50,7 @@ function Library() {
             <div className="mt-8 flex items-center justify-between">
                 <span className="flex items-center gap-4">
                     <h3 className="text-xl font-semibold">Playlist</h3>
-                    <span onClick={() => setIsOpenModal((prev) => !prev)} className="cursor-pointer">
+                    <span onClick={() => setIsOpenCrePlaylistModal((prev) => !prev)} className="cursor-pointer">
                         <AiOutlinePlusCircle size={20} />
                     </span>
                 </span>

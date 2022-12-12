@@ -93,10 +93,10 @@ function Song({ songData, setSongsUploaded }) {
     return (
         <div
             className="group -mx-2 flex w-full cursor-pointer items-center border-b border-solid border-[#ffffff0d] p-[10px] text-[#ffffff80] [&>*]:px-2"
-            // onClick={() => {
-            //     songData.id !== curSongId && dispatch(actions.setCurSongId(songData.id));
-            //     dispatch(actions.play(true));
-            // }}
+            onClick={() => {
+                songData.id !== curSongId && dispatch(actions.setCurSongId(songData.id));
+                dispatch(actions.play(true));
+            }}
         >
             {/* Left Part */}
             <div className="flex w-1/2 items-center gap-2">
@@ -104,7 +104,7 @@ function Song({ songData, setSongsUploaded }) {
                     <BsMusicNoteBeamed />
                 </div>
                 <div>
-                    <img className="h-10 w-10 object-cover" src={/* src */ defaultSrc} alt="song-cover" />
+                    <img className="h-10 w-10 object-cover" src={src} alt="song-cover" />
                 </div>
                 <div className="flex flex-col gap-[3px]">
                     <span className="text-sm text-white">{songData.name}</span>
@@ -133,13 +133,13 @@ function Song({ songData, setSongsUploaded }) {
                     )}
                 </span>
                 {/* </div> */}
-                <SongMenu menuList={songMenu}>
-                    <span className="hidden rounded-full px-1.5 py-0.5 text-xl hover:bg-[#ffffff1a] group-hover:block">
+                <SongMenu menuList={songMenu} songId = {songData.id}>
+                    <span onClick={(e) => {e.stopPropagation()}} className="hidden rounded-full px-1.5 py-0.5 text-xl hover:bg-[#ffffff1a] group-hover:block">
                         <BsThreeDots />
                     </span>
                 </SongMenu>
-                {/* <span>{moment.utc((songData.duration || 0) * 1000).format('mm:ss')}</span> */}
-                <div className="block group-hover:hidden">02:29</div> {/* hardcode */}
+                <span className="block group-hover:hidden">{moment.utc((songData.duration || 0) * 1000).format('mm:ss')}</span>
+                {/* <div ">02:29</div> hardcode */}
             </div>
         </div>
     );

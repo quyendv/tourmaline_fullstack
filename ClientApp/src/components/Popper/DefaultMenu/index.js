@@ -5,7 +5,7 @@ import styles from './DefaultMenu.module.scss';
 
 const cx = classNames.bind(styles);
 
-function Menu({ children, menuList, placement }) {
+function Menu({ children, menuList, placement, songId }) {
     return (
         <HeadlessTippy
             // visible="true"
@@ -17,7 +17,7 @@ function Menu({ children, menuList, placement }) {
             render={(attrs) => (
                 <div className={cx('popper-wrapper')} tabIndex="-1" {...attrs} onClick={(e) => e.stopPropagation()}>
                     {menuList.map((menuItem, index) => (
-                        <MenuItem key={index} data={menuItem} />
+                        <MenuItem songId={songId} key={index} data={menuItem} />
                     ))}
                 </div>
             )}

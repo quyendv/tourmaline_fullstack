@@ -4,7 +4,7 @@ import moment from 'moment';
 
 import { icons } from '../../utils/icons';
 import * as actions from '../../store/actions';
-import { getInfoSong } from '../../services/music';
+import { getInfoSong,getSong } from '../../services/music';
 import { BASE_URL } from '../../utils/constant';
 
 const {
@@ -38,8 +38,15 @@ function Player({ setIsShowSidebar }) {
 
     useEffect(() => {
         const fetchSong = async () => {
-            audio.current.src = BASE_URL + `/api/song/getMedia?id=${curSongId}`;    
-        };
+            const response = await getSong(curSongId, token)
+            console.log(response)
+            
+            const blob = new Blob([response.data], {type:"audio/mpeg"})
+            const url = URL.createObjectURL(blob)
+            console.log(blob)
+            audio.current.src = url
+            console.log(url)
+        }; 
         fetchSong();
         const fetchInfoSong =  async () => {
             const response = await getInfoSong(curSongId, token)
@@ -59,6 +66,7 @@ function Player({ setIsShowSidebar }) {
 
         if (isPlaying && thumbRef.current) {
             audio.current.pause();
+            // audio.current.load();
             audio.current.play();
             intervalId = setInterval(() => {
                 setCurrentSecond(audio.current.currentTime);
