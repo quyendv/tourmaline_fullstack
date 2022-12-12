@@ -10,12 +10,15 @@
   --sidebar-background-color: #1e1e1e;
   --border-radius: 20px;
   --search-btn-width: 46px;
+  --header-height: 64px;
+  --sidebar-width: 243px;
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  scroll-behavior: smooth;
 }
 
 html {

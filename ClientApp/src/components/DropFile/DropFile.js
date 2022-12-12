@@ -146,7 +146,7 @@ function DropFile({ onFileChange }) {
                 <div className={cx('song-details')} ref={songDetailsRef}>
                     <h3 className="text-2xl font-semibold">The song's information</h3>
                     <button className={cx('add')} onClick={handleAddToPreview}>
-                        Add
+                        Upload
                     </button>
 
                     <div className={cx('song-info')}>
@@ -201,7 +201,7 @@ function DropFile({ onFileChange }) {
             {/* Preview */}
             {fileList.length > 0 && (
                 <div className={cx('preview')}>
-                    <h3 className="text-2xl font-semibold">Ready to upload</h3>
+                    <h3 className="text-2xl font-semibold">Preview to uploaded files</h3>
                     <div className={cx('preview-container')}>
                         {fileList.map((dataItem, index) => (
                             <FileItem

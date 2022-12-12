@@ -4,6 +4,39 @@ import { BASE_URL } from '../../utils/constant';
 import * as actions from '../../store/actions';
 import { useDispatch } from 'react-redux';
 import moment from 'moment';
+import { DefaultMenu as MediaMenu } from '../Popper';
+import { icons } from '~/utils/icons';
+const { BsFillPlayFill, BsThreeDots, FaRegComment, AiOutlineDownload, BsLink45Deg, RiShareForwardLine, AiFillDelete } =
+    icons;
+
+// TODO: Media list sửa sau
+const songMenu = [
+    {
+        icon: <FaRegComment />,
+        title: 'Comments',
+        to: '',
+    },
+    {
+        icon: <AiOutlineDownload />,
+        title: 'Download',
+        to: '',
+    },
+    {
+        icon: <BsLink45Deg />,
+        title: 'Copy link',
+        to: '',
+    },
+    {
+        icon: <RiShareForwardLine />,
+        title: 'Share',
+        to: '',
+    },
+    {
+        icon: <AiFillDelete />,
+        title: 'Delete',
+        to: '',
+    },
+];
 
 function MediaItem({ songData }) {
     const [mediaSrc, setMediasrc] = useState('');
@@ -17,18 +50,39 @@ function MediaItem({ songData }) {
     }, []);
     return (
         <div
-            onClick={() => {
-                dispatch(actions.setCurSongId(songData.id));
-                dispatch(actions.play(true));
-            }}
-            className="mediaItem flex"
+            // onClick={() => {
+            //     dispatch(actions.setCurSongId(songData.id));
+            //     dispatch(actions.play(true));
+            // }}
+            className="mediaItem group flex items-center gap-3 rounded-md p-2 hover:bg-[#ffffff1a]"
         >
-            <img className="w-[60px] w-[60px] object-cover" src={mediaSrc}></img>
-            <div className="flex flex-col">
-                <span>{songData.name}</span>
-                <span>{songData.uploader}</span>
-                <span>{moment(songData.uploadTime).fromNow()}</span>
+            <div className="relative after:inset-0 after:bg-overlay-30 group-hover:after:absolute">
+                <span
+                    className="absolute top-1/2 left-1/2 z-10 hidden -translate-x-1/2 -translate-y-1/2 cursor-pointer  p-1 group-hover:block"
+                    onClick={() => {
+                        dispatch(actions.setCurSongId(songData.id));
+                        dispatch(actions.play(true));
+                    }}
+                >
+                    <BsFillPlayFill size={26} />
+                </span>
+                <img className="h-[60px] w-[60px] object-cover" src={mediaSrc} alt="media-cover" />
             </div>
+            <div className="flex flex-1 flex-col text-left">
+                <span className="text-base font-medium">{songData.name}</span>
+                <span className="text-sm text-[#ffffff80]">{songData.uploader}</span>
+                <span className="text-sm text-[#ffffff80]">{moment(songData.uploadTime).fromNow()}</span>
+            </div>
+            <MediaMenu menuList={songMenu} songId="" placement="right-start">
+                <span
+                    onClick={(e) => {
+                        e.stopPropagation();
+                    }}
+                    className="hidden items-center justify-center rounded-full p-1.5 text-xl hover:bg-[#ffffff1a] group-hover:flex"
+                >
+                    <BsThreeDots />
+                </span>
+            </MediaMenu>
         </div>
     );
 }
