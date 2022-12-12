@@ -7,66 +7,108 @@ import moment from 'moment';
 
 import {getProfile, setProfile} from '../../services/user'
 import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import { BASE_URL } from '../../utils/constant';
 
 const cx = classNames.bind(styles);
 
 function Profile() {
     const [userInfo, setUserInfo] = useState({});
+    const [avatarLink, setAvatarLink] = useState('');
+    const [displayUserInfo, setDisplayUserInfo] = useState({})
     const newUserInfo = useRef({});
     const {token} = useSelector(state => state.auth)
-    const {username} = useSelector(state => state.user)
+    const { username } = useSelector(state => state.user)
+    const avatarFile = useRef();
+
     useEffect(() => {
+        const getUserInfo = async () => {
+            // Fetch API to get account information: username, email, password (?), phone number, address. (JSON)
+            // Hardcode for now
+            // const info = {
+            //     username: 'username.demo', // read only
+            //     name: 'Full Name',
+            //     bio: "I'm ... . Full Stack Designer I enjoy creating user-centric, delightful and human experiences.",
+            //     birth: '2002-12-12', // yyyy-mm-dd
+            //     gender: true, // int 1:male, 2:female
+            //     // avatar: 'https://www.bootdey.com/img/Content/avatar/avatar7.png',
+            //     email: 'admin@tourmaline.com',
+            //     // phone: '0987654321',
+            //     // address: '123, ABC Street, XYZ City, 12345',
+            //     createTime: '09 Dec 2017',
+            //     isAdmin: false,
+            // };
+            const response = await getProfile(username, token)
+            const finalInfo = {
+                ...response.data,
+                createTime: response.data.createTime.split('T')[0],
+                birth: response.data.birth.split('T')[0]
+            }
+
+            setUserInfo(finalInfo);
+            setDisplayUserInfo({
+                name: newUserInfo.current.name,
+                bio: newUserInfo.current.bio
+            })
+
+            newUserInfo.current = finalInfo;
+        };
+
         getUserInfo();
+
+        const fetchAvatar = async () => {
+            setAvatarLink(`${BASE_URL}/api/user/getAvatar/${username}`);
+        };
+
+        fetchAvatar();
     }, []);
+
+    const handleChangeAvatarFileInput = (e) => {
+        avatarFile.current = e.target.files[0];
+        const avatarLocalLink = URL.createObjectURL(avatarFile.current);
+
+        setAvatarLink(avatarLocalLink);
+
+        return () => URL.revokeObjectUrl(avatarLocalLink)
+    };
 
     const updateUserInfo = async (e) => {
         e.preventDefault();
         // TODO: update user info in database through API
         // setUserInfo by newUserInfo.current
        
-       const createTime = moment().format().split('+')[0]
-       const birth = moment().format().split('+')[0]
         const finalPayload = {
             ...userInfo,
             username: username,
-            createTime,
-            birth
+            avatar: avatarFile.current
         }
         const response = await setProfile(finalPayload,token)
         console.log(response)
-        // console.log(userInfo);
-    };
 
-    const getUserInfo = async () => {
-        // Fetch API to get account information: username, email, password (?), phone number, address. (JSON)
-        // Hardcode for now
-        // const info = {
-        //     username: 'username.demo', // read only
-        //     name: 'Full Name',
-        //     bio: "I'm ... . Full Stack Designer I enjoy creating user-centric, delightful and human experiences.",
-        //     birth: '2002-12-12', // yyyy-mm-dd
-        //     gender: true, // int 1:male, 2:female
-        //     // avatar: 'https://www.bootdey.com/img/Content/avatar/avatar7.png',
-        //     email: 'admin@tourmaline.com',
-        //     // phone: '0987654321',
-        //     // address: '123, ABC Street, XYZ City, 12345',
-        //     createTime: '09 Dec 2017',
-        //     isAdmin: false,
-        // };
-        const response = await getProfile(username, token)
-        const finalInfo = {
-            ...response.data,
-            createTime: response.data.createTime.split('T')[0],
-            birth: response.data.birth.split('T')[0]
-        }
-        setUserInfo(finalInfo);
-        newUserInfo.current = finalInfo;
+        // console.log(userInfo);
+        // Update bio text when profile is successfully updated
+        setDisplayUserInfo({
+            name: newUserInfo.current.name,
+            bio: newUserInfo.current.bio
+        })
+
+        // Show toast
+        toast.success(`Profile updated successfully!`, {
+            position: 'top-right',
+            autoClose: 1600,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'dark',
+        });
     };
 
     // TODO: update useRef()
     const handleChangeInput = (e) => {
         if (e.target.matches('input[type="radio"]')) {
-            newUserInfo.current.gender = e.target.value;
+            newUserInfo.current.gender = (e.target.value != 0);
         } else {
             newUserInfo.current[e.target.name] = e.target.value;
         }
@@ -88,11 +130,11 @@ function Profile() {
             {/* Avatar + About */}
             <div className={cx('profile-item1')}>
                 <div className={cx('profile__avatar', 'mb-4')}>
-                    <img src={userInfo.avatar} alt="" className="mx-auto h-[90px] w-[90px] rounded-full object-cover" />
+                    <img src={avatarLink} alt="" className="mx-auto h-[90px] w-[90px] rounded-full object-cover" />
                 </div>
 
                 <div className={cx('profile__name', 'flex flex-col items-center justify-center')}>
-                    <h3 className="mb-2 text-xl font-semibold">{userInfo.name}</h3>
+                    <h3 className="mb-2 text-xl font-semibold">{displayUserInfo.name}</h3>
                     <h5 className="text-sm text-slate-400">{userInfo.username}</h5>
                 </div>
 
@@ -106,7 +148,7 @@ function Profile() {
                         <FontAwesomeIcon icon={faCameraRetro} />
                         <span>Change Photos</span>
                     </div>
-                    <input type="file" className="absolute inset-0 cursor-pointer opacity-0" />
+                    <input type="file" className="absolute inset-0 cursor-pointer opacity-0" accept="image/*" onChange={handleChangeAvatarFileInput} />
                 </div>
 
                 {/* {userInfo.createTime && (
@@ -125,7 +167,7 @@ function Profile() {
 
                 <div className={cx('profile__bio', 'mt-8 text-center')}>
                     <h2 className="mb-4 text-2xl font-bold text-[color:var(--active-color)]">About</h2>
-                    <p>{userInfo.bio}</p>
+                    <p>{displayUserInfo.bio}</p>
                 </div>
             </div>
             {/* Info Update */}
@@ -159,19 +201,6 @@ function Profile() {
                             />
                         </div>
                     </div>
-                    {/* Phone */}
-                    <div className="col-span-2 md:col-span-1">
-                        <div className={cx('form-group')}>
-                            <label className={cx('form-label')}>Phone</label>
-                            <input
-                                type="tel"
-                                className={cx('form-control')}
-                                name="phone"
-                                defaultValue={userInfo.phone}
-                                onChange={handleChangeInput}
-                            />
-                        </div>
-                    </div>
                     {/* Birth */}
                     <div className="col-span-2 md:col-span-1">
                         <div className={cx('form-group')}>
@@ -182,19 +211,6 @@ function Profile() {
                                 name="birth"
                                 max={getMaxToday()}
                                 defaultValue={userInfo.birth}
-                                onChange={handleChangeInput}
-                            />
-                        </div>
-                    </div>
-                    {/* Address */}
-                    <div className="col-span-2 md:col-span-1">
-                        <div className={cx('form-group')}>
-                            <label className={cx('form-label')}>Address</label>
-                            <input
-                                type="text"
-                                className={cx('form-control')}
-                                name="address"
-                                defaultValue={userInfo.address}
                                 onChange={handleChangeInput}
                             />
                         </div>
@@ -235,9 +251,8 @@ function Profile() {
                                 className={cx('form-control')}
                                 name="bio"
                                 rows="4"
-                                defaultChecked={userInfo.bio}
-                                onChange={handleChangeInput}
-                            />
+                                defaultValue={userInfo.bio}
+                                onChange={handleChangeInput} />
                         </div>
                     </div>
                 </div>

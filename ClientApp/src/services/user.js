@@ -22,7 +22,8 @@ export const setProfile =  (payload, token) => new Promise(async(resolve, reject
             method: 'put',
             data: payload,
             headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'multipart/form-data'
             }
         })
         resolve(response)
