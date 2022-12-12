@@ -33,13 +33,14 @@ const yupSchema = yup
 function Register() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const {isRegisterSuccess, msg} = useSelector(state => state.auth)
-
+    const { isRegisterSuccess, msg } = useSelector((state) => state.auth);
 
     // Validate resolver
     const {
         register,
         handleSubmit,
+        setError,
+        clearErrors,
         formState: { errors },
     } = useForm({
         resolver: yupResolver(yupSchema),
@@ -48,20 +49,21 @@ function Register() {
     const handleRegister = (data) => {
         // e.preventDefault();
         // console.log(data); // contains confirm password
-        dispatch(actions.logout())
-        const payload = {...data};
+        dispatch(actions.logout());
+        const payload = { ...data };
         delete payload.confirmPassword;
         dispatch(actions.register(payload));
-        
     };
 
     useEffect(() => {
-        isRegisterSuccess && navigate('/login');
-    }, [isRegisterSuccess])
-    useEffect(() => {
-        //wền sửa ở đây
-        console.log(msg)
-    }, [msg])
+        if (msg) {
+            setError('username', { type: 'custom', message: msg }, { shouldFocus: true });
+        } else {
+            clearErrors('password');
+            if (isRegisterSuccess) navigate('/login');
+        }
+    }, [isRegisterSuccess, msg]);
+
     return (
         <div className={cx('register-page')}>
             <div className={cx('register-form')}>

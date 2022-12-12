@@ -74,11 +74,12 @@ function Song({ songData, setSongsUploaded }) {
         setSongsUploaded((prev) => prev.filter((item) => item.id !== index));
     };
     const handleAddFavorite = (e) => {
+        const prevState = favorite;
         setFavorite((prev) => !prev);
         // Gọi API lưu thông tin favorite song vào db ...
 
         // Show toast
-        toast.success(`${favorite ? 'Added to' : 'Removed form'} favorites`, {
+        toast.success(`${!prevState ? 'Added to' : 'Removed form'} favorites`, {
             position: 'top-left',
             autoClose: 1000,
             hideProgressBar: false,
