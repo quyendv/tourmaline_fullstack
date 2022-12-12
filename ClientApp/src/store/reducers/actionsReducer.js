@@ -1,7 +1,10 @@
-import { actionTypes } from "../actions/actionTypes";
+import { actionTypes } from '../actions/actionTypes';
 
 const initState = {
-    setIsOpenModal: function () {
+    setIsOpenCrePlaylistModal: function () {
+        return 0;
+    },
+    setIsOpenCommentModal: function () {
         return 0;
     },
     createPlaylist: function () {
@@ -11,16 +14,22 @@ const initState = {
 
 const actionsReducer = (state = initState, action) => {
     switch (action.type) {
-        case actionTypes.SET_IS_OPEN_MODAL:
+        case actionTypes.SET_IS_OPEN_CREPLAYLIST_MODAL:
             return {
                 ...state,
-                setIsOpenModal: action.setIsOpenModal,
+                setIsOpenCrePlaylistModal: action.setIsOpenCrePlaylistModal,
             };
 
         case actionTypes.CREATE_PLAYLIST:
             return {
                 ...state,
                 createPlaylist: action.createPlaylist,
+            };
+
+        case actionTypes.SET_IS_OPEN_COMMENT_MODAL:
+            return {
+                ...state,
+                setIsOpenCommentModal: action.setIsOpenCommentModal,
             };
         default:
             return state;

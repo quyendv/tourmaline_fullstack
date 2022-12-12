@@ -34,10 +34,10 @@ export const publicRoutes = [
         path: routesConfigPublic.search,
         page: Search
     },
-    {
-        path: routesConfigPublic.STAR,
-        page: MainScreen,
-    },
+    // {
+    //     path: routesConfigPublic.STAR,
+    //     page: MainScreen,
+    // },
 ];
 export const privateRoute = [
     {

@@ -10,7 +10,9 @@ export const getSong = (id, token) => new Promise(async (resolve, reject) => {
             },
             headers: {
                 "Authorization" : `Bearer ${token}`,
-            }
+
+            },
+            responseType:'blob'
         })
         resolve(response)
     } catch (error) {

@@ -13,3 +13,8 @@ export const setRecent = (data) => ({
     type: actionTypes.SET_RECENT,
     data
 })
+
+export const setCommentSongId = (id) => ({
+    type: actionTypes.SET_COMMENT_SONG_ID,
+    id
+})
