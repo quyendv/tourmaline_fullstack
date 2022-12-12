@@ -137,7 +137,7 @@ export const getCover = (id, token) => new Promise(async(resolve, reject) => {
             },
             headers: {
                 "Authorization": `Bearer ${token}`,
-            }
+            },
         })
         resolve(response)
     } catch (error) {
@@ -179,3 +179,17 @@ export const getSongs = (username, token) => new Promise(async(resolve, reject) 
     }
 })
 
+export const getSuggestion = (token) => new Promise(async(resolve, reject) => {
+    try {
+        const response = await axiosConfig({
+            url: '/api/suggestion/get',
+            method: 'get',
+            headers: {
+                'Authorization' : `Bearer ${token}`,
+            }
+        })
+        resolve(response)
+    } catch (error) {
+        reject(error)
+    }
+})

@@ -39,13 +39,10 @@ function Player({ setIsShowSidebar }) {
     useEffect(() => {
         const fetchSong = async () => {
             const response = await getSong(curSongId, token)
-            console.log(response)
             
             const blob = new Blob([response.data], {type:"audio/mpeg"})
             const url = URL.createObjectURL(blob)
-            console.log(blob)
             audio.current.src = url
-            console.log(url)
         }; 
         fetchSong();
         const fetchInfoSong =  async () => {
