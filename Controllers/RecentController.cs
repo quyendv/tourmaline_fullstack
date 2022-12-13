@@ -10,27 +10,22 @@ namespace tourmaline.Controllers;
 [ApiController]
 public class RecentController : ControllerBase
 {
-    public RecentController(Database database)
+    public RecentController(RecentServices services)
     {
-        _database = database;
+        _services = services;
     }
 
-    private readonly Database _database;
+    private readonly RecentServices _services;
 
+    private string? CurrentSessionUsername => HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+    [HttpGet]
     [Route("api/[controller]/recents")]
     public async Task<ActionResult<Recents>> GetRecentSongs()
     {
-        var username = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
-        var songIDs = await _database.Read("recents", new Dictionary<string, dynamic>() { { "username", username } },
-            new List<string>() { "song" }, "added_date");
-        var recents = new Recents();
-        var songController = new SongController(_database);
-        foreach (int song in songIDs.First()["song"])
+        return Ok(new Recents
         {
-            var result = (await songController.GetSongInfo(song)).Value!;
-            recents.RecentSongs.Add(result);
-        }
-
-        return Ok(recents);
+            RecentSongs = await _services.GetRecent(CurrentSessionUsername!),
+        });
     }
 }

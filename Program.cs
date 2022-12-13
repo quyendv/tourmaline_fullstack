@@ -29,13 +29,19 @@ var connString = configuration["ConnectionStrings:DefaultConnection"];
 var connHostNameEnv = Environment.GetEnvironmentVariable("MYSQL_SERVICE_HOST");
 var connHostPortEnv = Environment.GetEnvironmentVariable("MYSQL_SERVICE_PORT");
 
-if ((connHostNameEnv != null) && (connHostPortEnv != null))
+if (connHostNameEnv != null && connHostPortEnv != null)
 {
     connString =
-        $"Server={connHostNameEnv};User ID=root;Password=qwertyuiop;Port={connHostPortEnv};Database=tourmaline;TlsCipherSuites=TLS_DHE_RSA_WITH_AES_256_GCM_SHA384";
+        $"Server={connHostNameEnv};User ID=root;Password=password;Port={connHostPortEnv};Database=tourmaline;TlsCipherSuites=TLS_DHE_RSA_WITH_AES_256_GCM_SHA384";
 }
 
-services.AddSingleton(_ => new Database(connString));
+var database = new Database(connString);
+services.AddSingleton(_ => database);
+services.AddSingleton<SongServices>(_ => new SongServices(database));
+services.AddSingleton<UserServices>(_ => new UserServices(database));
+services.AddSingleton<RecentServices>(_ => new RecentServices(database));
+services.AddSingleton<FavoriteServices>(_ => new FavoriteServices(database));
+services.AddSingleton<PlaylistServices>(_ => new PlaylistServices(database));
 
 #endregion
 
