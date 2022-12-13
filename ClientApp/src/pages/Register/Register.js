@@ -13,7 +13,7 @@ const cx = classNames.bind(styles);
 const yupSchema = yup
     .object({
         username: yup.string().required('Username is required'),
-        name: yup.string().required('Name is required'),
+        fullname: yup.string().required('Name is required'),
         password: yup
             .string()
             .required('Password is required')
@@ -48,7 +48,7 @@ function Register() {
 
     const handleRegister = (data) => {
         // e.preventDefault();
-        // console.log(data); // contains confirm password
+        console.log(data); // contains confirm password
         dispatch(actions.logout());
         const payload = { ...data };
         delete payload.confirmPassword;
@@ -80,13 +80,13 @@ function Register() {
                         <label>Username</label>
                         {errors.username && <p className={cx('form-msg')}>{errors.username.message}</p>}
                     </div>
-                    {/* name */}
+                    {/* fullname */}
                     <div className={cx('user-box')}>
                         <input
                             type="text"
                             className={cx('register-input')}
                             placeholder="&nbsp;"
-                            {...register('name')}
+                            {...register('fullname')}
                         />
                         <label>Name</label>
                         {errors.name && <p className={cx('form-msg')}>{errors.name.message}</p>}
@@ -130,7 +130,7 @@ function Register() {
                             <div className="flex items-center gap-2">
                                 <input
                                     type="radio"
-                                    value="1"
+                                    value={true}
                                     className={cx('radio')}
                                     id="radio-male"
                                     {...register('gender')}
@@ -142,7 +142,7 @@ function Register() {
                             <div className="flex items-center gap-2">
                                 <input
                                     type="radio"
-                                    value="0"
+                                    value={false}
                                     className={cx('radio')}
                                     id="radio-female"
                                     {...register('gender')}
