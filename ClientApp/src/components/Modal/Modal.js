@@ -4,12 +4,13 @@ import { useSelector } from 'react-redux';
 import { useState, useRef } from 'react';
 
 import Loading from '../Loading';
+import { createAllPlaylist } from '~/store/actions';
 
 const { AiOutlineClose } = icons;
 function Modal() {
     const [isLoading, setIsLoading] = useState(false);
     const { token } = useSelector((state) => state.auth);
-    const { setIsOpenCrePlaylistModal, createPlaylist } = useSelector((state) => state.actions);
+    const { setIsOpenCrePlaylistModal, createPlaylist, createAllPlaylist } = useSelector((state) => state.actions);
     const [title, setTitle] = useState('');
 
     const file = useRef();
@@ -27,8 +28,8 @@ function Modal() {
         setIsLoading(false);
         if (response.status) {
             setIsOpenCrePlaylistModal((prev) => !prev);
-
             createPlaylist((prev) => [response.data, ...prev]);
+            createAllPlaylist(prev => [response.data, ...prev]);
         }
     };
     return (

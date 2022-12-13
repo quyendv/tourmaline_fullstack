@@ -15,3 +15,8 @@ export const createPlaylist = (createPlaylist) => ({
     createPlaylist
 })
 
+
+export const createAllPlaylist = (createAllPlaylist) => ({
+    type : actionTypes.CREATE_ALL_PLAYLIST,
+    createAllPlaylist
+})

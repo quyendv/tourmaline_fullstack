@@ -13,7 +13,7 @@ const {
     BsLink45Deg,
     RiShareForwardLine,
     AiOutlineClose,
-    AiFillDelete
+    AiFillDelete,
 } = icons;
 
 const playlistMenu = [
@@ -46,16 +46,18 @@ const playlistMenu = [
 
 function PlaylistItem({ playlistData, className }) {
     const navigate = useNavigate();
-    const location = useLocation()
-    
+    const location = useLocation();
+
     const path = `${playlistData.name.replaceAll(' ', '-')}/${playlistData.id}`;
-    const link = (location.pathname === '/library' ? '/playlist/' : '') + path
+    const link = (location.pathname === '/library' ? '/playlist/' : '') + path;
     const { token } = useSelector((state) => state.auth);
-    
+    const { createPlaylist, createAllPlaylist } = useSelector((state) => state.actions);
     const handleDeletePlaylist = async (e) => {
         e.stopPropagation();
         const response = await deletePlaylist(playlistData.id, token);
-        console.log(response);
+
+        createPlaylist((prev) => prev.filter((item) => item.id != playlistData.id));
+        createAllPlaylist((prev) => prev.filter((item) => item.id != playlistData.id));
     };
     const handleClickPlay = (e) => {
         e.stopPropagation();
@@ -111,7 +113,7 @@ function PlaylistItem({ playlistData, className }) {
                 >
                     {playlistData.name}
                 </span>
-                <span className="text-[color:#7a7581] text-xs font-semibold">{playlistData.username}</span>
+                <span className="text-xs font-semibold text-[color:#7a7581]">{playlistData.username}</span>
             </span>
         </div>
     );
