@@ -10,6 +10,9 @@ const initState = {
     createPlaylist: function () {
         return 0;
     },
+    createAllPlaylist: function () {
+        return 0;
+    },
 };
 
 const actionsReducer = (state = initState, action) => {
@@ -30,6 +33,11 @@ const actionsReducer = (state = initState, action) => {
             return {
                 ...state,
                 setIsOpenCommentModal: action.setIsOpenCommentModal,
+            };
+        case actionTypes.CREATE_ALL_PLAYLIST:
+            return {
+                ...state,
+                createAllPlaylist: action.createAllPlaylist,
             };
         default:
             return state;

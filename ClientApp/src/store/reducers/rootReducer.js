@@ -6,6 +6,7 @@ import authReducer from './authReducer';
 import musicReducer from './musicReducer';
 import actionsReducer from './actionsReducer';
 import userReducer from './userReducer';
+import favoriteReducer from './favoriteReducer';
 
 const commonConfig = {
     storage,
@@ -27,10 +28,16 @@ const userConfig = {
     key: 'user',
     whitelist: ['username']
 }
+const favoriteConfig = {
+    ...commonConfig,
+    key: 'favorite',
+    whitelist:['favoriteSongs']
+}
 const rootReducer = combineReducers({
     auth: persistReducer(authConfig, authReducer),
     music: persistReducer(musicConfig, musicReducer),
     user: persistReducer(userConfig, userReducer),
+    favorite: persistReducer(favoriteConfig, favoriteReducer),
     actions: actionsReducer
 
 });

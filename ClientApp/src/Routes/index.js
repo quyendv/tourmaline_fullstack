@@ -8,6 +8,7 @@ import { routesConfigPrivate, routesConfigPublic } from './routesConfig';
 import AllPlaylist from '~/pages/AllPlaylist';
 import Search from '../pages/Search'
 import PlaylistDetails from '../pages/PlaylistDetails';
+import Favorite from '../pages/Favorite'
 
 export const publicRoutes = [
     {
@@ -34,6 +35,10 @@ export const publicRoutes = [
         path: routesConfigPublic.search,
         page: Search
     },
+    {
+        path: routesConfigPublic.favoritesRoute,
+        page: Favorite
+    }
     // {
     //     path: routesConfigPublic.STAR,
     //     page: MainScreen,

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteSong } from '../../services/music';
+import * as apis from '../../services'
 import * as actions from '../../store/actions';
 import { BASE_URL } from '../../utils/constant';
 import { icons } from '../../utils/icons';
@@ -8,6 +9,7 @@ import { toast } from 'react-toastify';
 import { DefaultMenu as SongMenu } from '../Popper';
 import Pop from '../../assets/images/Pop.svg';
 import moment from 'moment';
+import { memo } from 'react';
 
 const {
     BsLink45Deg,
@@ -50,16 +52,17 @@ const songMenu = [
     },
 ];
 
-function Song({ songData, setSongsUploaded }) {
+function Song({ songData, setSongsUploaded, isFavorite }) {
     // TODO: hardcode
     const defaultSrc = 'https://taogroup.com/wp-content/uploads/2022/01/Alan-Walker-1.jpg';
-
+    
     const dispatch = useDispatch();
     const { curSongId, isPlaying } = useSelector((state) => state.music);
     const { token } = useSelector((state) => state.auth);
+    const {favoriteSongs} = useSelector(state => state.favorite)
     const [src, setSrc] = useState('');
-    const [favorite, setFavorite] = useState(false); // lấy trạng thái init từ db truyền vào
-
+    const [favorite, setFavorite] = useState(favoriteSongs.indexOf(songData.id) != -1); // lấy trạng thái init từ db truyền vào
+    console.log(favoriteSongs)
     useEffect(() => {
         const fetchCover = async () => {
             setSrc(`${BASE_URL}/api/song/getCover?id=${songData.id}`);
@@ -73,11 +76,19 @@ function Song({ songData, setSongsUploaded }) {
         const response = await deleteSong(songData.id, token);
         setSongsUploaded((prev) => prev.filter((item) => item.id !== index));
     };
-    const handleAddFavorite = (e) => {
+    const handleAddFavorite = async (e) => {
+        e.stopPropagation()
         const prevState = favorite;
         setFavorite((prev) => !prev);
         // Gọi API lưu thông tin favorite song vào db ...
-
+        if(!prevState) {
+            const response = await apis.addToFavorite(songData.id, token)
+            response.status == 200 && dispatch(actions.setFavorite(songData.id))
+        } else {
+            const response = await apis.removeFromFavorite(songData.id, token)
+            response.status == 200 && dispatch(actions.removeFavorite(songData.id))
+        }
+        
         // Show toast
         toast.success(`${!prevState ? 'Added to' : 'Removed form'} favorites`, {
             position: 'top-left',
@@ -143,4 +154,4 @@ function Song({ songData, setSongsUploaded }) {
     );
 }
 
-export default Song;
+export default memo(Song);

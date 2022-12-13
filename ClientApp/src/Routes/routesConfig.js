@@ -11,6 +11,7 @@ export const routesConfigPublic = {
 
     search: 'search',
     
+    
     STAR: '*',
 };
 
