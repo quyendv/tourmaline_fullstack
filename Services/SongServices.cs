@@ -12,7 +12,7 @@ public class SongServices
         _database = database;
     }
 
-    public async Task<Song> GetSong(long id)
+    public async Task<Song> GetSong(int id)
     {
         var result = (await _database.Call($"SELECT * FROM song WHERE id={id}")).First();
         return new Song
@@ -35,25 +35,25 @@ public class SongServices
         $"VALUES ({song.Id}, '{song.UploadTime:yyyy-MM-dd H:mm:ss}', '{song.Uploader}', '{song.Name.Normal()}', '{song.Description.Normal()}', {song.Duration}, {song.ListenTimes})");
     }
     
-    private async Task<int> GetFavorite(long id)
+    private async Task<int> GetFavorite(int id)
     {
         var result = (await _database.Call($"SELECT COUNT(*) as count FROM favorites WHERE songid={id}")).First();
         return result["count"];
     }
 
-    public async Task AddListenTime(long id)
+    public async Task AddListenTime(int id)
     {
         var listenTimes = (await GetSong(id)).ListenTimes + 1;
         await _database.Call($"UPDATE song WHERE id={id} SET listen_times={listenTimes}");
     }
 
-    private async Task<List<string>> GetTags(long id)
+    private async Task<List<string>> GetTags(int id)
     {
         var result = await _database.Call($"SELECT tag FROM songtags WHERE id={id}");
         return result.Select(element => element["tag"]).Cast<string>().ToList();
     }
 
-    private async Task SetTags(long id, List<string> tags)
+    private async Task SetTags(int id, List<string> tags)
     {
         await _database.Call($"DELETE FROM songtags WHERE id={id}");
         foreach (var tag in tags)
@@ -63,12 +63,12 @@ public class SongServices
         }
     }
 
-    public async Task DeleteSong(long id)
+    public async Task DeleteSong(int id)
     {
         await _database.Call($"DELETE FROM song WHERE id={id}");
     }
 
-    public async Task UpdateInfo(long id, string? name, string? description, List<string>? tags)
+    public async Task UpdateInfo(int id, string? name, string? description, List<string>? tags)
     {
         await _database.Call($"UPDATE song " +
                              $"WHERE id={id} " +
@@ -76,7 +76,7 @@ public class SongServices
         if (tags != null) await SetTags(id, tags);
     }
 
-    public async Task<bool> IsSongExist(long id)
+    public async Task<bool> IsSongExist(int id)
     {
         return (await _database.Call($"SELECT * FROM song WHERE id={id}")).Count != 0;
     }

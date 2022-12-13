@@ -12,7 +12,7 @@ public class PlaylistServices
         _database = database;
     }
 
-    public async Task<Playlist> GetPlaylist(long id)
+    public async Task<Playlist> GetPlaylist(int id)
     {
         var result = (await _database.Call($"SELECT * FROM playlist WHERE id={id}")).First();
         return new Playlist
@@ -31,22 +31,22 @@ public class PlaylistServices
                        $"VALUES ({playlist.Id}, '{playlist.Username}', '{playlist.Name.Normal()}', '{playlist.Description.Normal()}')");
     }
 
-    public async Task DeletePlaylist(long id)
+    public async Task DeletePlaylist(int id)
     {
         await _database.Call($"DELETE FROM playlist WHERE id={id}");
     }
 
-    public async Task AddSong(long playlistId, long songId)
+    public async Task AddSong(int playlistId, int songId)
     {
         await _database.Call($"INSERT IGNORE INTO playlistsongs (playlistId, songId) VALUES ({playlistId}, {songId})");
     }
 
-    public async Task RemoveSong(long playlistId, long songId)
+    public async Task RemoveSong(int playlistId, int songId)
     {
         await _database.Call($"DELETE FROM playlistsongs WHERE playlistId={playlistId} AND songId={songId}");
     }
 
-    private async Task<List<Song>> GetSongs(long id)
+    private async Task<List<Song>> GetSongs(int id)
     {
         var songServices = new SongServices(_database);
         var result = (await _database.Call($"SELECT songId FROM playlistsongs WHERE playlistId={id}")).Select(e => e["songId"]);
@@ -54,7 +54,7 @@ public class PlaylistServices
         return songs;
     }
 
-    public async Task<bool> IsPlaylistExist(long id)
+    public async Task<bool> IsPlaylistExist(int id)
     {
         return (await _database.Call($"SELECT * FROM playlist WHERE id={id}")).Count != 0;
     }

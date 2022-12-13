@@ -11,12 +11,12 @@ public class FavoriteServices
         _database = database;
     }
     
-    public async Task AddToFavorite(string username, long id)
+    public async Task AddToFavorite(string username, int id)
     {
         await _database.Call($"INSERT INTO favorites (userid, songid) VALUES ('{username}', {id})");
     }
 
-    public async Task RemoveFromFavorite(string username, long id)
+    public async Task RemoveFromFavorite(string username, int id)
     {
         await _database.Call($"DELETE FROM favorites WHERE userid='{username}' AND songid={id}");
     }
