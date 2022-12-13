@@ -1,37 +1,99 @@
 .wrapper {
-  width: 100%;
-  background-color: #191523;
-  height: 100vh;
-  padding: 16px 12px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+    @apply relative flex h-screen w-full flex-col justify-between bg-[#191523] py-4 px-3 transition-all duration-500;
+
+    &:has(.menu-toggle.active) {
+        width: 80px;
+        .logo .app-name,
+        .sidebar-item .text-content {
+            @apply invisible opacity-0;
+        }
+    }
 }
 
 .logo {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  color: var(--active-color);
-
-  .image-logo {
-    width: 54px;
-    height: 42px;
-  }
-
-  .app-name {
-    margin-left: 12px;
-    width: 130px;
-    height: 27px;
-    font-size: 22px;
-    color: var(--white);
-  }
+    @apply relative text-activecolor transition-all duration-500;
+    .image-logo {
+    }
+    .app-name {
+        @apply absolute inline-block px-4 py-1 align-middle text-2xl text-white transition-all duration-500;
+    }
 }
 
-.actions {
-  margin-bottom: 16px;
+.menu-toggle {
+    // note: <= 1132 => show
+    @apply absolute right-0 top-[15%] grid translate-x-1/2 cursor-pointer place-content-center rounded-full bg-[#231c2e] p-5 text-white transition-all duration-500;
+    &.active {
+        @apply rotate-180;
+    }
+}
+
+.content {
+    @apply -mx-3;
 }
 
 .empty {
-  height: 0px;
+    height: 0px;
+}
+
+// SidebarItem
+.sidebar-item {
+    @apply relative flex cursor-pointer items-center rounded-lg text-white [border:8px_solid_transparent] [transition:all_0.25s_linear];
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: -28px;
+        right: -10px;
+        width: 20px;
+        height: 20px;
+        border-bottom-right-radius: 20px;
+        box-shadow: 5px 5px 0 5px var(--bg-main-screen-color);
+        transform: scale(0);
+        transform-origin: bottom right;
+        transition: 0.5s;
+    }
+    &::after {
+        content: '';
+        position: absolute;
+        bottom: -28px;
+        right: -10px;
+        width: 20px;
+        height: 20px;
+        border-top-right-radius: 20px;
+        box-shadow: 5px -5px 0 5px var(--bg-main-screen-color);
+        transform: scale(0);
+        transform-origin: top right;
+        transition: 0.5s;
+        z-index: -1;
+    }
+
+    .text-content {
+        @apply ml-6 text-2xl transition-all duration-500;
+    }
+
+    .icon {
+        @apply grid place-content-center rounded-lg p-3 text-3xl text-current [transition:all_0.25s_linear];
+    }
+
+    &:hover {
+        color: var(--clr);
+    }
+
+    &.active {
+        color: var(--clr);
+        background-color: var(--bg-main-screen-color);
+        transform: translateX(30px);
+
+        &::before,
+        &::after {
+            right: 22px;
+            transform: scale(1);
+        }
+        .icon {
+            @apply bg-[var(--clr)] text-white [filter:drop-shadow(0_0_4px_var(--clr))];
+        }
+        .text-content {
+            @apply [filter:drop-shadow(0_0_4px_var(--clr))];
+        }
+    }
 }

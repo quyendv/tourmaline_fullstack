@@ -40,9 +40,10 @@ function DefaultLayout() {
         }
     };
     return (
-        <div className="relative flex flex-col overflow-x-hidden bg-gradient-to-r from-[#18162c] to-[#16135e]">
+        // Làm effect sidebar cần bg-color cố định, sửa gradient nhé
+        <div className="relative flex flex-col overflow-x-hidden bg-[var(--bg-main-screen-color)]">
             {isOpenCrePlaylistModal && <Modal />}
-            {isOpenCommentModal && <CommentModal/>}
+            {isOpenCommentModal && <CommentModal />}
             <div className="flex w-full">
                 <div className="w-[243px] flex-none">
                     <Sidebar />
