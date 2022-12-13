@@ -1,38 +1,49 @@
 import classNames from 'classnames/bind';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { icons } from '~/utils/icons';
+import * as actions from '../../../store/actions';
 import styles from './DefaultMenu.module.scss';
 
-import * as actions from '../../../store/actions';
-
+const { HiChevronRight } = icons;
 const cx = classNames.bind(styles);
 
-function MenuItem({ data, songId }) {
-    const {setIsOpenCommentModal} = useSelector(state => state.actions)
-    const handleOpenCommentModal = (e) => {
-        e.stopPropagation()
-        setIsOpenCommentModal(prev => !prev)
-        dispatch(actions.setCommentSongId(songId))
-
-    }
+function MenuItem({ data, isParent = 'false', songId, onClick = () => {} }) {
+    const { setIsOpenCommentModal } = useSelector((state) => state.actions);
+    const Component = data.to ? Link : 'div';
     const dispatch = useDispatch();
+
+    const handleOpenCommentModal = (e) => {
+        e.stopPropagation();
+        setIsOpenCommentModal((prev) => !prev);
+        dispatch(actions.setCommentSongId(songId));
+    };
+    const handleClickMenuItem = (e) => {
+        onClick(); // chạy fn truyền vào trước
+        if (data.title === 'Logout') {
+            e.stopPropagation();
+            dispatch(actions.logout());
+        }
+        if (data.title === 'Comments') {
+            handleOpenCommentModal(e);
+        }
+        // e.stopPropagation();
+    };
+
     return (
-        <div
+        <Component
             className={cx('menu-item', { 'separate-top': !!data.separateTop })}
             to={data.to}
-            onClick={(e) => {
-                if (data.title === 'Logout') {
-                    e.stopPropagation();
-                    dispatch(actions.logout());
-                }
-                if(data.title === 'Comments') {
-                    handleOpenCommentModal(e)
-                }
-            }}
+            onClick={handleClickMenuItem}
         >
             {data.icon && <span className={cx('menu-item__icon')}>{data.icon}</span>}
             <span className={cx('menu-item__title')}>{data.title}</span>
-        </div>
+            {isParent && (
+                <span className={cx('menu-item__right-icon')}>
+                    <HiChevronRight />
+                </span>
+            )}
+        </Component>
     );
 }
 
