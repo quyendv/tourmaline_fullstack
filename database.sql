@@ -33,19 +33,10 @@ CREATE TABLE `comment` (
   KEY `FK_USER_idx` (`username`),
   KEY `FK_COMMENT_USER_idx` (`username`),
   KEY `FK_CommentSong_SongId_idx` (`song`),
-  CONSTRAINT `FK_COMMENT_USER` FOREIGN KEY (`username`) REFERENCES `user` (`username`),
+  CONSTRAINT `FK_COMMENT_USER` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_CommentSong_SongId` FOREIGN KEY (`song`) REFERENCES `song` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `comment`
---
-
-LOCK TABLES `comment` WRITE;
-/*!40000 ALTER TABLE `comment` DISABLE KEYS */;
-/*!40000 ALTER TABLE `comment` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `favorites`
@@ -65,15 +56,6 @@ CREATE TABLE `favorites` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `favorites`
---
-
-LOCK TABLES `favorites` WRITE;
-/*!40000 ALTER TABLE `favorites` DISABLE KEYS */;
-/*!40000 ALTER TABLE `favorites` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `follow`
 --
 
@@ -91,15 +73,6 @@ CREATE TABLE `follow` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `follow`
---
-
-LOCK TABLES `follow` WRITE;
-/*!40000 ALTER TABLE `follow` DISABLE KEYS */;
-/*!40000 ALTER TABLE `follow` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `playlist`
 --
 
@@ -110,21 +83,12 @@ CREATE TABLE `playlist` (
   `id` int NOT NULL AUTO_INCREMENT,
   `user` varchar(45) NOT NULL,
   `name` varchar(45) NOT NULL,
-  `cover_url` varchar(255) DEFAULT NULL,
+  `description` varchar(500) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `FK_PLAYLIST_USER_idx` (`user`),
   CONSTRAINT `FK_PLAYLIST_USER` FOREIGN KEY (`user`) REFERENCES `user` (`username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1975350825 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `playlist`
---
-
-LOCK TABLES `playlist` WRITE;
-/*!40000 ALTER TABLE `playlist` DISABLE KEYS */;
-/*!40000 ALTER TABLE `playlist` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `playlistsongs`
@@ -145,15 +109,6 @@ CREATE TABLE `playlistsongs` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `playlistsongs`
---
-
-LOCK TABLES `playlistsongs` WRITE;
-/*!40000 ALTER TABLE `playlistsongs` DISABLE KEYS */;
-/*!40000 ALTER TABLE `playlistsongs` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `recents`
 --
 
@@ -170,15 +125,6 @@ CREATE TABLE `recents` (
   CONSTRAINT `fk_recents_username` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `recents`
---
-
-LOCK TABLES `recents` WRITE;
-/*!40000 ALTER TABLE `recents` DISABLE KEYS */;
-/*!40000 ALTER TABLE `recents` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `song`
@@ -202,15 +148,6 @@ CREATE TABLE `song` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `song`
---
-
-LOCK TABLES `song` WRITE;
-/*!40000 ALTER TABLE `song` DISABLE KEYS */;
-/*!40000 ALTER TABLE `song` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `songtags`
 --
 
@@ -228,15 +165,6 @@ CREATE TABLE `songtags` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `songtags`
---
-
-LOCK TABLES `songtags` WRITE;
-/*!40000 ALTER TABLE `songtags` DISABLE KEYS */;
-/*!40000 ALTER TABLE `songtags` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `tags`
 --
 
@@ -249,16 +177,6 @@ CREATE TABLE `tags` (
   UNIQUE KEY `tag_UNIQUE` (`tag`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `tags`
---
-
-LOCK TABLES `tags` WRITE;
-/*!40000 ALTER TABLE `tags` DISABLE KEYS */;
-INSERT INTO `tags` VALUES ('Dubstep'),('Electronic'),('Funk'),('Future House'),('Hiphop'),('Lofi'),('Rap'),('Synthwave');
-/*!40000 ALTER TABLE `tags` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `user`
@@ -277,21 +195,9 @@ CREATE TABLE `user` (
   `gender` tinyint NOT NULL,
   `email` varchar(120) NOT NULL,
   `isAdmin` tinyint DEFAULT '0',
-  `tag` varchar(500) DEFAULT NULL,
   PRIMARY KEY (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `user`
---
-
-LOCK TABLES `user` WRITE;
-/*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('admin','','','2022-12-09 10:39:53','1970-01-01 00:00:00','AQAAAAEAACcQAAAAEMqfqOyeWp/1UqKo/F4yzgWR981wO3JsP3OO+1Alf/6qWKkjOblYZC6ZJF8H/w3fDQ==',1,'',0,NULL);
-/*!40000 ALTER TABLE `user` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 --
 -- Dumping routines for database 'tourmaline'
@@ -420,16 +326,8 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `ListTopFavorites`()
 BEGIN
-	SELECT 
-		favorites.songid as id,
-        song.uploadTime,
-        song.uploader, song.name, song.description,
-        song.duration,
-        song.listen_times as listenTime,
-        COUNT(songid) AS favoriteCount
-	FROM favorites
-    INNER JOIN song
-	GROUP BY id
+	SELECT songid, COUNT(songid) AS favoriteCount FROM favorites
+	GROUP BY songid
 	ORDER by favoriteCount DESC;
 END ;;
 DELIMITER ;
@@ -447,4 +345,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-12-09 10:41:40
+-- Dump completed on 2022-12-13 20:45:59
