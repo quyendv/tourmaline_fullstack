@@ -2,11 +2,10 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using Newtonsoft.Json;
-using NuGet.Protocol;
 using tourmaline.Models;
 using tourmaline.Services;
 using FFMpegCore;
+using tourmaline.Helpers;
 
 namespace tourmaline.Controllers;
 
@@ -15,52 +14,29 @@ namespace tourmaline.Controllers;
 [Route("api/[controller]")]
 public class SongController : ControllerBase
 {
-    private readonly Database _connection;
+    private readonly SongServices _songServices;
+    private readonly UserServices _userServices;
+    private readonly RecentServices _recentServices;
 
-    public SongController(Database connection)
+    public SongController(SongServices songServices, UserServices userServices, RecentServices recentServices)
     {
-        _connection = connection;
+        _songServices = songServices;
+        _userServices = userServices;
+        _recentServices = recentServices;
     }
 
-    private bool CanCurrentUserModifySong(string songOwnerName)
-    {
-        var isAdminClaim = HttpContext.User.FindFirst(UserController.IsAdminClaimName);
-        if (isAdminClaim != null && bool.Parse(isAdminClaim.Value)) return true;
-
-        return songOwnerName == HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
-    }
-
-    private string CurrentSessionUsername => HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
+    private string? CurrentSessionUsername => HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
     [HttpGet]
     [Route("get")]
-    public async Task<ActionResult<Song>> GetSongInfo(int id)
+    public async Task<ActionResult<Song>> GetSongInfo(long id)
     {
-        var infos = await _connection.Read("song", new Dictionary<string, dynamic>() { { "id", id } });
-        if (infos.Count == 0) return StatusCode(StatusCodes.Status404NotFound, "Song not found!");
-        var tags =
-            (await _connection.Read("songtags", new Dictionary<string, dynamic>() { { "id", id } })).Select((e) =>
-                e["tag"]);
-        var song = new Song
+        if (!await _songServices.IsSongExist(id))
         {
-            Id = infos.First()["id"],
-            Description = infos.First()["description"],
-            Name = infos.First()["name"],
-            Uploader = infos.First()["uploader"],
-            UploadTime = infos.First()["uploadTime"],
-            Duration = infos.First()["duration"],
-            ListenTimes = infos.First()["listen_times"],
-            Tags = tags.Cast<string>().ToList(),
-        };
+            return StatusCode(StatusCodes.Status404NotFound);
+        }
 
-        var favorites = (await _connection.Read("favorites", new Dictionary<string, dynamic>()
-        {
-            { "songid", id }
-        })).Count;
-
-        song.Favorites = favorites;
-
-        return Ok(song);
+        return Ok(await _songServices.GetSong(id));
     }
 
     [HttpGet]
@@ -68,58 +44,21 @@ public class SongController : ControllerBase
     [AllowAnonymous]
     public async Task<ActionResult> GetMedia(long id)
     {
-        var idConds = new Dictionary<string, dynamic>() { { "id", id } };
-        var songObjects = await _connection.Read("song", idConds);
-        var isSongExist = songObjects.Count != 0;
+        if (!await _songServices.IsSongExist(id)) return StatusCode(StatusCodes.Status400BadRequest, "Song not found!");
+        var songPath = $"{id}.mp3";
+        var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        var file = new FileStream($"{homeDir}/storage/media/{songPath}", FileMode.Open, FileAccess.Read,
+            FileShare.ReadWrite, 2048,
+            true);
 
-        if (isSongExist)
+        await _songServices.AddListenTime(id);
+
+        if (CurrentSessionUsername != null)
         {
-            var songPath = $"{id}.mp3";
-
-            var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            var file = new FileStream($"{homeDir}/storage/media/{songPath}", FileMode.Open, FileAccess.Read,
-                FileShare.ReadWrite, 2048,
-                true);
-
-            var listenTimes =
-                (await _connection.Read("song", new Dictionary<string, dynamic>() { { "id", id } })).First()[
-                    "listen_times"];
-            await _connection.Update("song", new Dictionary<string, dynamic>()
-            {
-                { "listen_times", listenTimes + 1 }
-            }, new Dictionary<string, dynamic>()
-            {
-                { "id", id }
-            });
-
-            if (HttpContext.User.FindFirst(ClaimTypes.NameIdentifier) == null) return File(file, "audio/mpeg", true);
-            try
-            {
-                await _connection.Add("recents", new Dictionary<string, dynamic>()
-                {
-                    { "username", HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value },
-                    { "song", id },
-                    { "added_date", DateTime.Now.ToString("yyyy-MM-dd H:mm:ss") }
-                });
-            }
-            catch
-            {
-                await _connection.Update("recent", new Dictionary<string, dynamic>()
-                {
-                    { "added_date", DateTime.Now.ToString("yyyy-MM-dd H:mm:ss") },
-                }, new Dictionary<string, dynamic>()
-                {
-                    { "username", HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value },
-                    { "song", id }
-                });
-            }
-
-            return File(file, "audio/mpeg", true);
+            await _recentServices.AddRecent(CurrentSessionUsername, id);
         }
-        else
-        {
-            return StatusCode(StatusCodes.Status400BadRequest, "Song not found!");
-        }
+
+        return File(file, "audio/mpeg", true);
     }
 
     [HttpGet]
@@ -127,13 +66,9 @@ public class SongController : ControllerBase
     [AllowAnonymous]
     public async Task<ActionResult> GetCover(long id)
     {
-        var idConds = new Dictionary<string, dynamic>() { { "id", id } };
-        var songObjects = await _connection.Read("song", idConds);
-        var isSongExist = songObjects.Count != 0;
+        if (!await _songServices.IsSongExist(id)) return StatusCode(StatusCodes.Status400BadRequest, "Song not found!");
 
-        if (!isSongExist) return StatusCode(StatusCodes.Status400BadRequest, "Song not found!");
         var coverPath = $"{id}.jpg";
-
         var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         var file = new FileStream($"{homeDir}/storage/cover/{coverPath}", FileMode.Open, FileAccess.Read,
             FileShare.Read, 2048,
@@ -150,13 +85,13 @@ public class SongController : ControllerBase
     {
         if (media.Length <= 0 || cover.Length <= 0) return StatusCode(StatusCodes.Status406NotAcceptable);
         var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-        Directory.CreateDirectory($"{homeDir}/storage/media");
-        Directory.CreateDirectory($"{homeDir}/storage/cover");
+        Directory.CreateDirectory($"{homeDir}/storage/song/media");
+        Directory.CreateDirectory($"{homeDir}/storage/song/cover");
         var id = new Random().Next();
         var fileName = $"{id}.mp3";
-        var filePath = Path.Combine($"{homeDir}/storage/media", fileName);
-        var imageName = $"{id}.jpg";
-        var imagePath = Path.Combine($"{homeDir}/storage/cover", imageName);
+        var filePath = Path.Combine($"{homeDir}/storage/song/media", fileName);
+        var imageName = $"{id}.png";
+        var imagePath = Path.Combine($"{homeDir}/storage/song/cover", imageName);
 
         await using (var stream = new FileStream(filePath, FileMode.Create))
         {
@@ -182,52 +117,29 @@ public class SongController : ControllerBase
         name = name.Replace("'", "\'");
         name = name.Replace("\"", "\"");
 
-        await _connection.Add("song", new Dictionary<string, dynamic>
+        var songTags = new List<string>()
         {
-            { "id", id },
-            { "uploadTime", DateTime.Now.ToString("yyyy-MM-dd H:mm:ss") },
-            { "uploader", CurrentSessionUsername },
-            { "name", name },
-            { "description", "" },
-            { "duration", duration.TotalSeconds }
+            "Lofi",
+            "Future House",
+            "Dubstep",
+            "Hiphop",
+            "Rap",
+            "Electronic",
+            "Funk",
+            "Synthwave",
+            "Dance & EDM",
+        };
+        songTags.Shuffle();
+        var tags = songTags.Take(new Random().Next(1, 9)).ToList();
+        await _songServices.AddSong(new Song
+        {
+            Id = id,
+            Name = name,
+            Duration = duration.TotalSeconds,
+            Uploader = CurrentSessionUsername!,
+            UploadTime = DateTime.Now,
+            Tags = tags,
         });
-
-        // var songTags = new List<string>()
-        // {
-        //     "Lofi",
-        //     "Future House",
-        //     "Dubstep",
-        //     "Hiphop",
-        //     "Rap",
-        //     "Electronic",
-        //     "Funk",
-        //     "Synthwave",
-        //     "Dance & EDM",
-        // };
-        // var random = new List<string>();
-        // for (var i = 0; i < new Random().Next(1, 3); i++)
-        // {
-        //     random.Add(songTags[new Random().Next(0, songTags.Count - 1)]);
-        // }
-        // foreach (var tag in random)
-        // {
-        //     var isTagExist = (await _connection.Read("tags", new Dictionary<string, dynamic>()
-        //     {
-        //         { "tag", tag }
-        //     })).Count != 0;
-        //     if (!isTagExist)
-        //     {
-        //         await _connection.Add("tags", new Dictionary<string, dynamic>()
-        //         {
-        //             { "tag", tag }
-        //         });
-        //     }
-        //     await _connection.Add("songtags", new Dictionary<string, dynamic>()
-        //     {
-        //         {"id", id},
-        //         {"tag", tag}
-        //     });
-        // }
 
         return Ok("Upload succeeded!");
     }
@@ -236,56 +148,11 @@ public class SongController : ControllerBase
     [Route("edit")]
     public async Task<ActionResult> EditSong([FromBody] Song info)
     {
-        var queryResult = await _connection.Read("song", new Dictionary<string, dynamic>()
-        {
-            { "id", info.Id }
-        });
-        var isSongExist = queryResult.Count != 0;
-
-        if (!isSongExist) return StatusCode(StatusCodes.Status400BadRequest, "Song not found!");
-        // Check song ownership
-        if (!CanCurrentUserModifySong(queryResult[0]["uploader"]))
-            return StatusCode(StatusCodes.Status403Forbidden,
-                "The current user does not have the required permission to delete the song!");
-
-        var toDictionary = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(info.ToJson())!;
-        toDictionary.Remove("id");
-        var songTags = info.Tags;
-        toDictionary.Remove("tags");
-        toDictionary.Remove("listen_times");
-        await _connection.Update(
-            "song",
-            toDictionary,
-            new Dictionary<string, dynamic>()
-            {
-                { "id", info.Id }
-            }
-        );
-        await _connection.Delete("songtags", new Dictionary<string, dynamic>()
-        {
-            { "id", info.Id }
-        });
-        foreach (var tag in songTags)
-        {
-            var isTagExist = (await _connection.Read("tags", new Dictionary<string, dynamic>()
-            {
-                { "tag", tag }
-            })).Count != 0;
-            if (!isTagExist)
-            {
-                await _connection.Add("tags", new Dictionary<string, dynamic>()
-                {
-                    { "tag", tag }
-                });
-            }
-
-            await _connection.Add("songtags", new Dictionary<string, dynamic>()
-            {
-                { "id", info.Id },
-                { "tag", tag }
-            });
-        }
-
+        if (!await _songServices.IsSongExist(info.Id))
+            return StatusCode(StatusCodes.Status400BadRequest, "Song not found!");
+        if (!await _userServices.IsAdmin(CurrentSessionUsername!) && CurrentSessionUsername != info.Uploader)
+            return StatusCode(StatusCodes.Status403Forbidden);
+        await _songServices.UpdateInfo(id: info.Id, name: info.Name, description: info.Description, tags: info.Tags);
         return Ok();
     }
 
@@ -293,62 +160,42 @@ public class SongController : ControllerBase
     [Route("delete")]
     public async Task<ActionResult> DeleteSong(long id)
     {
-        var idConditions = new Dictionary<string, dynamic>() { { "id", id } };
-        var songObjects = await _connection.Read("song", idConditions);
-        var isSongExist = songObjects.Count != 0;
-
-        if (!isSongExist)
+        if (!await _songServices.IsSongExist(id))
         {
-            return StatusCode(StatusCodes.Status400BadRequest, "Song not found to delete!");
+            return StatusCode(StatusCodes.Status400BadRequest, "Song not found!");
         }
 
-        // Check song ownership
-        if (!CanCurrentUserModifySong(songObjects[0]["uploader"]))
-            return StatusCode(StatusCodes.Status403Forbidden,
-                "The current user does not have the required permission to delete the song!");
+        if (!await _userServices.IsAdmin(CurrentSessionUsername!) && CurrentSessionUsername !=
+            (await _songServices.GetSong(id)).Uploader)
+        {
+            return StatusCode(StatusCodes.Status403Forbidden);
+        }
 
-        var result = await _connection.Delete("song", idConditions);
+        await _songServices.DeleteSong(id);
         var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-        System.IO.File.Delete($"{homeDir}/storage/media/{id}.mp3");
-        System.IO.File.Delete($"{homeDir}/storage/cover/{id}.jpg");
-        return result ? Ok() : StatusCode(StatusCodes.Status500InternalServerError);
+        System.IO.File.Delete($"{homeDir}/storage/song/media/{id}.mp3");
+        System.IO.File.Delete($"{homeDir}/storage/song/cover/{id}.png");
+        return Ok();
     }
 
     [HttpGet]
     [AllowAnonymous]
     [Route("getUploaded")]
-    public async Task<JsonResult> GetSongs(string username)
+    public async Task<ActionResult<UserUploads>> GetSongs(string username)
     {
-        var userNameMatchCond = new Dictionary<string, dynamic>() { { "username", username } };
-        var doesUserExist = (await _connection.Read("user", userNameMatchCond)).Count != 0;
-
-        if (!doesUserExist)
+        if (!await _userServices.IsUserExist(username))
         {
-            return new JsonResult("User not found!")
-            {
-                StatusCode = StatusCodes.Status406NotAcceptable
-            };
+            return StatusCode(StatusCodes.Status404NotFound, "User doesn't exist!");
         }
 
-        var songsInfo = await _connection.Read("song", new Dictionary<string, dynamic>() { { "uploader", username } },
-            new List<string>()
-            {
-                "id",
-                "uploadTime",
-                "name",
-                "description",
-                "duration",
-                "listen_times"
-            });
-
-        return new JsonResult(songsInfo);
+        return Ok(await _songServices.GetUserUploads(username));
     }
 
-    [HttpGet]
-    [AllowAnonymous]
-    [Route("find")]
-    public async Task<JsonResult> FindSongs(string keyword)
-    {
-        return new JsonResult(await _connection.CallFindProcedure("FindSongs", keyword));
-    }
+    // [HttpGet]
+    // [AllowAnonymous]
+    // [Route("find")]
+    // public async Task<JsonResult> FindSongs(string keyword)
+    // {
+    //     return new JsonResult(await _connection.CallFindProcedure("FindSongs", keyword));
+    // }
 }

@@ -17,29 +17,16 @@ namespace tourmaline.Controllers;
 [Route("api/[controller]")]
 public class UserController : ControllerBase
 {
-    private readonly Database _connection;
+    private readonly UserServices _services;
     private readonly IConfiguration _configuration;
 
-    public static readonly string IsAdminClaimName = "IsAdmin";
+    public const string IsAdminClaimName = "IsAdmin";
 
-    private string CurrentSessionUsername => HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
+    private string? CurrentSessionUsername => HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-    private bool CanCurrentUserModifyThisUser(string username, bool requestToBeAdmin = false)
+    public UserController(UserServices services, IConfiguration configuration)
     {
-        var isAdminClaim = HttpContext.User.FindFirst(UserController.IsAdminClaimName);
-        if (isAdminClaim != null && bool.Parse(isAdminClaim.Value)) return true;
-
-        if (username == CurrentSessionUsername)
-        {
-            return !requestToBeAdmin;
-        }
-
-        return false;
-    }
-
-    public UserController(Database connection, IConfiguration configuration)
-    {
-        _connection = connection;
+        _services = services;
         _configuration = configuration;
     }
 
@@ -48,36 +35,20 @@ public class UserController : ControllerBase
     [AllowAnonymous]
     public async Task<ActionResult<User>> GetUser(string username)
     {
-        var result = await _connection.Read("user",
-            new Dictionary<string, dynamic>() { { "username", username } });
-        User? user = null;
-        if (result.Count != 0)
+        if (await _services.IsUserExist(username))
         {
-            user = new User(result[0]["username"], result[0]["isAdmin"] == 1)
-            {
-                Name = result[0]["name"],
-                Bio = result[0]["bio"],
-                CreateTime = result[0]["createTime"],
-                Birth = result[0]["birth"],
-                Gender = (result[0]["gender"] == 1),
-                Email = result[0]["email"]
-            };
+            return await _services.GetUser(username);
         }
-
-        if (user != null)
-            return Ok(user);
+        
         return StatusCode(StatusCodes.Status404NotFound);
     }
 
     [HttpGet]
-    [Route("getAvatar/{username}")]
+    [Route("getAvatar")]
     [AllowAnonymous]
     public async Task<ActionResult> GetAvatar(string username)
     {
-        var userNameMatchCond = new Dictionary<string, dynamic>() { { "username", username } };
-        var doesUserExist = (await _connection.Read("user", userNameMatchCond)).Count != 0;
-
-        if (!doesUserExist)
+        if (!await _services.IsUserExist(username))
         {
             return StatusCode(StatusCodes.Status406NotAcceptable, "User not found!");
         }
@@ -99,17 +70,34 @@ public class UserController : ControllerBase
     }
 
     [HttpPost]
+    [Route("setAvatar")]
+    public async Task<ActionResult> SetAvatar([FromForm] IFormFile file)
+    {
+        try
+        {
+            var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            Directory.CreateDirectory($"{homeDir}/storage/avatar");
+            var fileName = $"{CurrentSessionUsername}.png";
+            var filePath = Path.Combine($"{homeDir}/storage/avatar", fileName);
+            await using var stream = new FileStream(filePath, FileMode.Create);
+            await file.CopyToAsync(stream);
+            return Ok("Upload success!");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+
+        return StatusCode(StatusCodes.Status500InternalServerError);
+    }
+
+    [HttpPost]
     [Route("signup")]
     [AllowAnonymous]
     public async Task<ActionResult> SignUp([FromForm] string username, [FromForm] string password,
         [FromForm] string fullname, [FromForm] bool gender, [FromForm] string email)
     {
-        var isUsernameExist = (await _connection.Read(
-                "user",
-                new Dictionary<string, dynamic>() { { "username", username } },
-                new List<string>() { "username" })
-            ).Count != 0;
-        if (isUsernameExist) return StatusCode(StatusCodes.Status406NotAcceptable, "User is already exist!");
+        if (await _services.IsUserExist(username)) return StatusCode(StatusCodes.Status406NotAcceptable, "User is already exist!");
 
         var user = new User(username)
         {
@@ -120,95 +108,19 @@ public class UserController : ControllerBase
 
         var hasher = new PasswordHasher<User>();
         password = hasher.HashPassword(user, password);
-        var result = await _connection.Add("user", new Dictionary<string, dynamic>()
-        {
-            { "username", user.Username },
-            { "password", password },
-            { "createTime", user.CreateTime.ToString("yyyy-MM-dd H:mm:ss") },
-            { "isAdmin", user.IsAdmin ? 1 : 0 },
-            { "name", user.Name },
-            { "bio", user.Bio },
-            { "birth", user.Birth.ToString("yyyy-MM-dd H:mm:ss") },
-            { "gender", user.Gender ? 1 : 0 },
-            { "email", user.Email }
-        });
-
-        return result ? StatusCode(StatusCodes.Status201Created, user) : StatusCode(StatusCodes.Status400BadRequest, "Cannot create user!");
+        await _services.AddUser(user, password);
+        return StatusCode(StatusCodes.Status201Created, user);
     }
 
     [HttpPut]
     [Route("edit")]
-    public async Task<ActionResult> EditProfile([FromForm] string username, [FromForm] string name,
-        [FromForm] string? bio, [FromForm] DateTime birth, [FromForm] bool gender, [FromForm] string email,
-        [FromForm] bool isAdmin, [FromForm] IFormFile? avatar)
+    public async Task<ActionResult> EditProfile(string username, string? name, string? bio, bool? gender, string? email, DateTime? birth)
     {
-        bool permissionModifyGranted = false;
-        if (username == null)
+        if (!await _services.IsAdmin(CurrentSessionUsername!) && username != CurrentSessionUsername)
         {
-            username = CurrentSessionUsername;
-            permissionModifyGranted = true;
-        } else
-        {
-            var userNameMatchCond = new Dictionary<string, dynamic>() { { "username", username } };
-            var doesUserExist = (await _connection.Read("user", userNameMatchCond)).Count != 0;
-
-            if (!doesUserExist)
-            {
-                return StatusCode(StatusCodes.Status406NotAcceptable, "User not found!");
-            }
+            return StatusCode(StatusCodes.Status403Forbidden);
         }
-
-        if (!permissionModifyGranted)
-        {
-            if (!CanCurrentUserModifyThisUser(username, isAdmin))
-            {
-                return StatusCode(StatusCodes.Status403Forbidden, "Current user does not have the required permission to edit the targeted user's profile!");
-            }
-        }
-
-        var result = await _connection.CallUpdateProcedure("EditUserProfile", new Dictionary<string, dynamic>()
-        {
-            { "username", username },
-            { "newName", name },
-            { "newBio", bio ?? "" },
-            { "newBirth", birth },
-            { "newGender", gender },
-            { "newEmail", email },
-            { "newIsAdmin", isAdmin }
-        });
-
-
-        if (result && (avatar != null))
-        {
-            var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            Directory.CreateDirectory($"{homeDir}/storage/avatar");
-
-            var avatarFilename = $"{username}.png";
-            var avatarFilePath = Path.Combine($"{homeDir}/storage/avatar", avatarFilename);
-
-            try
-            {
-                if (System.IO.File.Exists(avatarFilePath))
-                {
-                    System.IO.File.Delete(avatarFilePath);
-                }
-
-                await using (var stream = new FileStream(avatarFilePath, FileMode.Create))
-                {
-                    await avatar.CopyToAsync(stream);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-            }
-        }
-
-        if (!result)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, "Error occured on server side updating profile!");
-        }
-
+        await _services.EditInfo(username, name, bio, gender, birth);
         return Ok();
     }
 
@@ -217,24 +129,12 @@ public class UserController : ControllerBase
     [AllowAnonymous]
     public async Task<ActionResult> Login([FromForm] LoginModel loginModel)
     {
-        var result = await _connection.Read("user",
-            new Dictionary<string, dynamic>() { { "username", loginModel.Username } });
-        if (result.Count == 0) return StatusCode(StatusCodes.Status406NotAcceptable, "User not found!");
-        var user = new User
-        {
-            Username = result.First()["username"],
-            Bio = result.First()["bio"],
-            Birth = result.First()["birth"],
-            Email = result.First()["email"],
-            Gender = result.First()["gender"] == 1,
-            Name = result.First()["name"],
-            CreateTime = result.First()["createTime"],
-            IsAdmin = result.First()["isAdmin"] == 1
-        };
+        if (!await _services.IsUserExist(loginModel.Username)) return StatusCode(StatusCodes.Status406NotAcceptable, "User not found!");
+        var user = await _services.GetUser(loginModel.Username);
 
         var hasher = new PasswordHasher<User>();
-        PasswordVerificationResult verificationResult =
-            hasher.VerifyHashedPassword(user, result[0]["password"], loginModel.Password);
+        var verificationResult =
+            hasher.VerifyHashedPassword(user, await _services.GetPassword(loginModel.Username), loginModel.Password);
 
         if (verificationResult is PasswordVerificationResult.Success or PasswordVerificationResult.SuccessRehashNeeded)
         {
@@ -245,8 +145,7 @@ public class UserController : ControllerBase
                 {
                     new Claim("Id", Guid.NewGuid().ToString()),
                     new Claim(JwtRegisteredClaimNames.Sub, loginModel.Username),
-                    new Claim(JwtRegisteredClaimNames.Jti,
-                        Guid.NewGuid().ToString()),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                     new Claim(IsAdminClaimName, user.IsAdmin.ToString())
                 }),
                 Issuer = _configuration["Jwt:Issuer"],
@@ -263,13 +162,5 @@ public class UserController : ControllerBase
             return StatusCode(StatusCodes.Status403Forbidden, "User password is incorrect!");
         }
 
-    }
-
-    [HttpGet]
-    [AllowAnonymous]
-    [Route("find")]
-    public async Task<JsonResult> FindUsers(string keyword)
-    {
-        return new JsonResult(await _connection.CallFindProcedure("FindUsers", keyword));
     }
 }

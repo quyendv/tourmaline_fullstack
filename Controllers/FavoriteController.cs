@@ -11,95 +11,58 @@ namespace tourmaline.Controllers
     [ApiController]
     public class FavoriteController : ControllerBase
     {
-        public FavoriteController(Database database)
+        public FavoriteController(FavoriteServices favoriteServices, SongServices songServices)
         {
-            _database = database;
+            _favoriteServices = favoriteServices;
+            _songServices = songServices;
         }
 
-        private readonly Database _database;
+        private readonly FavoriteServices _favoriteServices;
+        private readonly SongServices _songServices;
+        
+        private string? CurrentSessionUsername => HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
         [Route("add")]
         [HttpPut]
-        public async Task<ActionResult> AddToFavorite(int id)
+        public async Task<ActionResult> AddToFavorite(long id)
         {
-            var username = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-            var isSongExist = (await _database.Read("song", new Dictionary<string, dynamic>()
+            if (!await _songServices.IsSongExist(id))
             {
-                { "id", id }
-            })).Count != 0;
-            if (!isSongExist)
-            {
-                return StatusCode(StatusCodes.Status404NotFound, "Song not found!");
+                return StatusCode(StatusCodes.Status404NotFound, "Song doesn't exist!");
             }
 
-            await _database.Add("favorites", new Dictionary<string, dynamic>()
-            {
-                { "userid", username },
-                { "songid", id }
-            });
+            await _favoriteServices.AddToFavorite(CurrentSessionUsername!, id);
             return Ok();
         }
 
         [Route("remove")]
         [HttpDelete]
-        public async Task<ActionResult> RemoveFromFavorite(int id)
+        public async Task<ActionResult> RemoveFromFavorite(long id)
         {
-            var username = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-            var isSongExist = (await _database.Read("song", new Dictionary<string, dynamic>()
+            if (!await _songServices.IsSongExist(id))
             {
-                { "id", id }
-            })).Count != 0;
-            if (!isSongExist)
-            {
-                return StatusCode(StatusCodes.Status404NotFound, "Song not found!");
+                return StatusCode(StatusCodes.Status404NotFound, "Song doesn't exist!");
             }
 
-            await _database.Delete("favorites", new Dictionary<string, dynamic>()
-            {
-                { "userid", username },
-                { "songid", id }
-            });
-            return Ok();
-        }
+            await _favoriteServices.RemoveFromFavorite(CurrentSessionUsername!, id);
+            return Ok();        }
 
         [Route("get")]
         [HttpGet]
         public async Task<ActionResult<Favorites>> GetFavorite()
         {
-            var username = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-            var result = await _database.Read("favorites", new Dictionary<string, dynamic>()
+            return Ok(new Favorites
             {
-                { "userid", username }
-            }, new List<string>()
-            {
-                "songid"
+                Songs = await _favoriteServices.GetFavorites(CurrentSessionUsername!),
             });
-            var favorite = new Favorites(username);
-            foreach (var songId in result.Select(s => s["songid"]))
-            {
-                var songQuery = (await _database.Read("song", new Dictionary<string, dynamic>()
-                {
-                    { "id", songId }
-                })).First();
-                favorite.Songs.Add(new Song
-                {
-                    Id = songId,
-                    Description = songQuery["description"],
-                    Name = songQuery["name"],
-                    UploadTime = songQuery["uploadTime"],
-                    Uploader = songQuery["uploader"]
-                });
-            }
-
-            return Ok(favorite);
         }
 
-        [Route("getTop")]
-        [HttpGet]
-        [AllowAnonymous]
-        public async Task<JsonResult> GetTopFavorites()
-        {
-            return new JsonResult(await _database.CallReadProcedure("ListTopFavorites", new Dictionary<string, dynamic>()));
-        }
+        // [Route("getTop")]
+        // [HttpGet]
+        // [AllowAnonymous]
+        // public async Task<JsonResult> GetTopFavorites()
+        // {
+        //     return new JsonResult(await _database.CallReadProcedure("ListTopFavorites", new Dictionary<string, dynamic>()));
+        // }
     }
 }
