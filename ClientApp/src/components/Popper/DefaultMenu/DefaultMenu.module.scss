@@ -3,19 +3,34 @@
     max-height: min((100vh - 96px) - 60px, 734px);
     min-height: 100px;
     border-radius: 8px;
-    background: hwb(0 100% 0%);
+    background: #614195;
     box-shadow: rgb(0 0 0 / 12%) 0px 2px 12px;
+    .menu-header {
+        position: relative;
+        padding: 8px 20px;
+        color: #fff;
+        span {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            left: 10%;
+        }
+        p {
+            text-align: center;
+            cursor: default;
+        }
+    }
 }
 
 .menu-item {
-    color: #000;
+    color: #fff;
     padding: 8px 20px;
     border-radius: 8px;
     transition: all 0.15s ease-in-out;
     display: flex;
     align-items: center;
     &:hover {
-        background-color: #00000066;
+        background-color: #b400ffba;
     }
     &.separate-top {
         border-top: 1px solid #96949499;
@@ -23,5 +38,9 @@
     .menu-item__icon {
         display: inline-block;
         margin-right: 8px;
+    }
+    .menu-item__right-icon {
+        display: inline-block;
+        margin-left: 8px;
     }
 }

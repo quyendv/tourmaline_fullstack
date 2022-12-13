@@ -5,20 +5,21 @@ import { useEffect, useRef, useState } from 'react';
 import styles from './Profile.module.scss';
 import moment from 'moment';
 
-import {getProfile, setProfile} from '../../services/user'
+import { getProfile, setProfile } from '../../services/user';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { BASE_URL } from '../../utils/constant';
+import { images } from '~/assets/images';
 
 const cx = classNames.bind(styles);
 
 function Profile() {
     const [userInfo, setUserInfo] = useState({});
     const [avatarLink, setAvatarLink] = useState('');
-    const [displayUserInfo, setDisplayUserInfo] = useState({})
+    const [displayUserInfo, setDisplayUserInfo] = useState({});
     const newUserInfo = useRef({});
-    const {token} = useSelector(state => state.auth)
-    const { username } = useSelector(state => state.user)
+    const { token } = useSelector((state) => state.auth);
+    const { username } = useSelector((state) => state.user);
     const avatarFile = useRef();
 
     useEffect(() => {
@@ -38,29 +39,29 @@ function Profile() {
             //     createTime: '09 Dec 2017',
             //     isAdmin: false,
             // };
-            const response = await getProfile(username, token)
+            const response = await getProfile(username, token);
             const finalInfo = {
                 ...response.data,
                 createTime: response.data.createTime.split('T')[0],
-                birth: response.data.birth.split('T')[0]
-            }
+                birth: response.data.birth.split('T')[0],
+            };
 
             setUserInfo(finalInfo);
             setDisplayUserInfo({
                 name: newUserInfo.current.name,
-                bio: newUserInfo.current.bio
-            })
+                bio: newUserInfo.current.bio,
+            });
 
             newUserInfo.current = finalInfo;
         };
 
         getUserInfo();
 
-        const fetchAvatar = async () => {
-            setAvatarLink(`${BASE_URL}/api/user/getAvatar/${username}`);
-        };
-
-        fetchAvatar();
+        // const fetchAvatar = async () => {
+        //     setAvatarLink(`${BASE_URL}/api/user/getAvatar/${username}`);
+        // };
+        // fetchAvatar();
+        setAvatarLink(images.defaultAvatar); // tải ảnh default về cho dễ dùng những chỗ khác nữa, k cần fetAPI đâu
     }, []);
 
     const handleChangeAvatarFileInput = (e) => {
@@ -69,28 +70,28 @@ function Profile() {
 
         setAvatarLink(avatarLocalLink);
 
-        return () => URL.revokeObjectUrl(avatarLocalLink)
+        return () => URL.revokeObjectUrl(avatarLocalLink);
     };
 
     const updateUserInfo = async (e) => {
         e.preventDefault();
         // TODO: update user info in database through API
         // setUserInfo by newUserInfo.current
-       
+
         const finalPayload = {
             ...userInfo,
             username: username,
-            avatar: avatarFile.current
-        }
-        const response = await setProfile(finalPayload,token)
-        console.log(response)
+            avatar: avatarFile.current,
+        };
+        const response = await setProfile(finalPayload, token);
+        console.log(response);
 
         // console.log(userInfo);
         // Update bio text when profile is successfully updated
         setDisplayUserInfo({
             name: newUserInfo.current.name,
-            bio: newUserInfo.current.bio
-        })
+            bio: newUserInfo.current.bio,
+        });
 
         // Show toast
         toast.success(`Profile updated successfully!`, {
@@ -108,7 +109,7 @@ function Profile() {
     // TODO: update useRef()
     const handleChangeInput = (e) => {
         if (e.target.matches('input[type="radio"]')) {
-            newUserInfo.current.gender = (e.target.value != 0);
+            newUserInfo.current.gender = e.target.value != 0;
         } else {
             newUserInfo.current[e.target.name] = e.target.value;
         }
@@ -148,7 +149,12 @@ function Profile() {
                         <FontAwesomeIcon icon={faCameraRetro} />
                         <span>Change Photos</span>
                     </div>
-                    <input type="file" className="absolute inset-0 cursor-pointer opacity-0" accept="image/*" onChange={handleChangeAvatarFileInput} />
+                    <input
+                        type="file"
+                        className="absolute inset-0 cursor-pointer opacity-0"
+                        accept="image/*"
+                        onChange={handleChangeAvatarFileInput}
+                    />
                 </div>
 
                 {/* {userInfo.createTime && (
@@ -252,7 +258,8 @@ function Profile() {
                                 name="bio"
                                 rows="4"
                                 defaultValue={userInfo.bio}
-                                onChange={handleChangeInput} />
+                                onChange={handleChangeInput}
+                            />
                         </div>
                     </div>
                 </div>

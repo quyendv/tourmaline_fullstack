@@ -7,4 +7,10 @@ const uploadImages = {
     png: require('./file-png.png'),
     mpeg: require('./file-music.png'),
 };
+
+export const images = {
+    defaultAvatar: require('./defaultAvatar.png'),
+    defaultCoverPlaylist: require('./playlistplaceholder.png'),
+};
+
 export default uploadImages;

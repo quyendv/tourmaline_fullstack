@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import PlaylistPlaceHolder from '../../assets/images/playlistplaceholder.png';
+import { images } from '~/assets/images';
 import { deletePlaylist } from '../../services/music';
 import { icons } from '../../utils/icons';
 import { DefaultMenu as PlaylistMenu } from '../Popper';
@@ -52,12 +52,13 @@ function PlaylistItem({ playlistData, className }) {
     const link = (location.pathname === '/library' ? '/playlist/' : '') + path;
     const { token } = useSelector((state) => state.auth);
     const { createPlaylist, createAllPlaylist } = useSelector((state) => state.actions);
+
     const handleDeletePlaylist = async (e) => {
         e.stopPropagation();
         const response = await deletePlaylist(playlistData.id, token);
 
-        createPlaylist((prev) => prev.filter((item) => item.id != playlistData.id));
-        createAllPlaylist((prev) => prev.filter((item) => item.id != playlistData.id));
+        createPlaylist((prev) => prev.filter((item) => item.id !== playlistData.id));
+        createAllPlaylist((prev) => prev.filter((item) => item.id !== playlistData.id));
     };
     const handleClickPlay = (e) => {
         e.stopPropagation();
@@ -87,7 +88,7 @@ function PlaylistItem({ playlistData, className }) {
                     >
                         <BsFillPlayFill />
                     </span>
-                    <PlaylistMenu menuList={playlistMenu} placement="bottom-start">
+                    <PlaylistMenu menuList={playlistMenu} placement="bottom-start" appendBody>
                         <span
                             className="grid h-6 w-6 place-content-center rounded-full bg-[#00000033] p-0.5"
                             onClick={(e) => e.stopPropagation()}
@@ -97,8 +98,8 @@ function PlaylistItem({ playlistData, className }) {
                     </PlaylistMenu>
                 </div>
                 <img
-                    className="w-full rounded-md object-contain transition-all duration-500 group-hover:scale-125"
-                    src={PlaylistPlaceHolder}
+                    className="w-full rounded-md object-cover transition-all duration-500 group-hover:scale-125"
+                    src={images.defaultCoverPlaylist}
                     alt="playlist-cover"
                 />
             </div>

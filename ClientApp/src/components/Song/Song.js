@@ -22,6 +22,7 @@ const {
     AiTwotoneHeart,
     RiShareForwardLine,
     AiFillDelete,
+    AiOutlinePlusCircle,
 } = icons;
 // TODO: Song list sửa sau
 const songMenu = [
@@ -34,6 +35,33 @@ const songMenu = [
         icon: <AiOutlineDownload />,
         title: 'Download',
         to: '',
+    },
+    {
+        icon: <AiOutlinePlusCircle />,
+        title: 'Add to Playlist',
+        to: '',
+        // rightIcon: ''
+        children: {
+            title: 'Playlist',
+            data: [
+                // Cái này khả năng đưa vào trong component gọi ra thôi
+                {
+                    icon: '',
+                    title: 'playlist A',
+                    to: '',
+                },
+                {
+                    icon: '',
+                    title: 'playlist A',
+                    to: '',
+                },
+                {
+                    icon: '',
+                    title: 'playlist A',
+                    to: '',
+                },
+            ],
+        },
     },
     {
         icon: <BsLink45Deg />,
@@ -133,22 +161,30 @@ function Song({ songData, setSongsUploaded, isFavorite }) {
 
             {/* Right Part: time and actions */}
             <div className="flex items-center justify-items-end gap-4 text-sm">
-                <span className="items-center justify-center hidden rounded-full p-1.5 text-xl hover:bg-[#ffffff1a] group-hover:flex">
+                <span className="hidden items-center justify-center rounded-full p-1.5 text-xl hover:bg-[#ffffff1a] group-hover:flex">
                     <TfiMicrophoneAlt />
                 </span>
-                <span className="items-center justify-center rounded-full p-1.5 text-xl hover:bg-[#ffffff1a]" onClick={handleAddFavorite}>
+                <span
+                    className="items-center justify-center flex rounded-full p-1.5 text-xl hover:bg-[#ffffff1a]"
+                    onClick={handleAddFavorite}
+                >
                     {!favorite ? (
                         <AiOutlineHeart className="hidden group-hover:block" />
                     ) : (
                         <AiTwotoneHeart className="text-[#9b4de0] [filter:drop-shadow(0_0_10px_currentColor)]" />
                     )}
                 </span>
-                <SongMenu menuList={songMenu} songId = {songData.id}>
-                    <span onClick={(e) => {e.stopPropagation()}} className="hidden rounded-full p-1.5 text-xl hover:bg-[#ffffff1a] group-hover:flex">
+                <SongMenu menuList={songMenu} songId={songData.id}>
+                    <span
+                        onClick={(e) => e.stopPropagation()}
+                        className="hidden rounded-full p-1.5 text-xl hover:bg-[#ffffff1a] group-hover:flex"
+                    >
                         <BsThreeDots />
                     </span>
                 </SongMenu>
-                <span className="items-center justify-center block group-hover:hidden">{moment.utc((songData.duration || 0) * 1000).format('mm:ss')}</span>
+                <span className="block items-center justify-center group-hover:hidden">
+                    {moment.utc((songData.duration || 0) * 1000).format('mm:ss')}
+                </span>
             </div>
         </div>
     );

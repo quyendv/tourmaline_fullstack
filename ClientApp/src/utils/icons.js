@@ -17,8 +17,9 @@ import {
 } from 'react-icons/bs';
 import { CiRepeat, CiShuffle } from 'react-icons/ci';
 import { FaCaretRight, FaRegComment, FaRegTimesCircle, FaSort } from 'react-icons/fa';
+import { HiChevronRight } from 'react-icons/hi';
 import { ImSpinner2 } from 'react-icons/im';
-import { MdSkipNext, MdSkipPrevious } from 'react-icons/md';
+import { MdKeyboardArrowLeft, MdSkipNext, MdSkipPrevious } from 'react-icons/md';
 import { RiRepeatOneLine, RiShareForwardLine } from 'react-icons/ri';
 import { SlVolume1, SlVolume2, SlVolumeOff } from 'react-icons/sl';
 import { TfiMicrophoneAlt } from 'react-icons/tfi';
@@ -45,7 +46,9 @@ export const icons = {
     FaRegComment,
     FaRegTimesCircle,
     FaSort,
+    HiChevronRight,
     ImSpinner2,
+    MdKeyboardArrowLeft,
     MdSkipNext,
     MdSkipPrevious,
     RiRepeatOneLine,

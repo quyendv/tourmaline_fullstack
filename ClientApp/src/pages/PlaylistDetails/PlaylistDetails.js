@@ -1,6 +1,6 @@
 import { useLocation } from 'react-router-dom';
 import { DefaultMenu as PlaylistMenu } from '~/components/Popper';
-import playlistPlaceholder from '../../assets/images/playlistplaceholder.png';
+import { images } from '~/assets/images';
 import Song from '../../components/Song';
 import { icons } from '../../utils/icons';
 
@@ -62,7 +62,7 @@ function Playlist() {
                     {/* img */}
                     <img
                         className="h-full w-full rounded-lg object-cover transition-all duration-1000 group-hover:scale-125"
-                        src={playlistPlaceholder}
+                        src={images.defaultCoverPlaylist}
                         alt="playlist-cover"
                     />
                 </div>

@@ -15,6 +15,7 @@ import { icons } from '../../utils/icons';
 import { DefaultMenu as UserMenu } from '../Popper';
 import Search from '../Search';
 import styles from './Header.module.scss';
+import { images } from '~/assets/images';
 
 const { AiOutlineCloudUpload } = icons;
 
@@ -78,11 +79,7 @@ function Header() {
                     </span>
                     {/* Avatar */}
                     <UserMenu menuList={userMenuList}>
-                        <img
-                            alt="User Avatar"
-                            className={cx('user-avatar')}
-                            src="https://t4.ftcdn.net/jpg/02/51/95/53/360_F_251955356_FAQH0U1y1TZw3ZcdPGybwUkH90a3VAhb.jpg"
-                        />
+                        <img alt="User Avatar" className={cx('user-avatar')} src={images.defaultAvatar} />
                     </UserMenu>
                 </div>
             ) : (

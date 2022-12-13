@@ -54,7 +54,7 @@ function MediaItem({ songData }) {
             //     dispatch(actions.setCurSongId(songData.id));
             //     dispatch(actions.play(true));
             // }}
-            className="mediaItem group flex items-center gap-3 rounded-md p-2 hover:bg-[#ffffff1a]"
+            className="mediaItem relative group flex items-center gap-3 rounded-md p-2 hover:bg-[#ffffff1a]"
         >
             <div className="relative after:inset-0 after:bg-overlay-30 group-hover:after:absolute">
                 <span
@@ -69,16 +69,16 @@ function MediaItem({ songData }) {
                 <img className="h-[60px] w-[60px] object-cover" src={mediaSrc} alt="media-cover" />
             </div>
             <div className="flex flex-1 flex-col text-left">
-                <span className="text-base font-medium">{songData.name}</span>
-                <span className="text-sm text-[#ffffff80]">{songData.uploader}</span>
-                <span className="text-sm text-[#ffffff80]">{moment(songData.uploadTime).fromNow()}</span>
+                <span className="text-sm font-medium">{songData.name}</span>
+                <span className="text-xs text-[#ffffff80]">{songData.uploader}</span>
+                <span className="text-xs text-[#ffffff80]">{moment(songData.uploadTime).fromNow()}</span>
             </div>
             <MediaMenu menuList={songMenu} songId="" placement="right-start">
                 <span
                     onClick={(e) => {
                         e.stopPropagation();
                     }}
-                    className="hidden items-center justify-center rounded-full p-1.5 text-xl hover:bg-[#ffffff1a] group-hover:flex"
+                    className="hidden absolute top-1/2 right-1 -translate-y-1/2 items-center justify-center rounded-full p-1.5 text-xl hover:bg-[#ffffff1a] group-hover:flex"
                 >
                     <BsThreeDots />
                 </span>
