@@ -12,7 +12,6 @@ const cx = classNames.bind(styles);
 function DropFile({ onFileChange }) {
     const [fileList, setFileList] = useState([]); // List Audio File (for preview) with each element is Obj { audioFile: , infos: }
     const [songName, setSongName] = useState('');
-    const [lyric, setLyric] = useState('');
     const [description, setDescription] = useState('');
     const [audioFile, setAudioFile] = useState(); // only use to forceUpdate
 
@@ -54,7 +53,6 @@ function DropFile({ onFileChange }) {
             // ------ add data to file then add file to fileList
             const infos = {
                 songName,
-                lyric,
                 description,
             };
             setFileList([...fileList, { audioFile: audioFileRef.current.file, infos }]);
@@ -79,7 +77,7 @@ function DropFile({ onFileChange }) {
                 throw new Error(`Invalid Audio File, type is ' ${typeof file}`);
             }
         }
-    }, [description, fileList, lyric, songName]);
+    }, [description, fileList, songName]);
 
     const handleUploadAPI = async (finalPayload, token) => {
         const response = await uploadFile(finalPayload, token);
@@ -91,7 +89,6 @@ function DropFile({ onFileChange }) {
         // + clear inputFile (can re-choose prevFile again)
         // + clear class 'invalid' in songDetailsRef.current
         setSongName('');
-        setLyric('');
         setDescription('');
         setAudioFile(null); // clear preview if check by state
         coverImgRef.current.value = null; // clear value input to re-choose prevFile
@@ -144,7 +141,7 @@ function DropFile({ onFileChange }) {
 
                 {/* Info */}
                 <div className={cx('song-details')} ref={songDetailsRef}>
-                    <h3 className="text-2xl font-semibold">The song's information</h3>
+                    <h3 className="text-2xl font-semibold max-[375px]:mb-4">The song's information</h3>
                     <button className={cx('add')} onClick={handleAddToPreview}>
                         Upload
                     </button>
@@ -158,7 +155,7 @@ function DropFile({ onFileChange }) {
                                 className={cx('form-control', 'required')}
                                 id="song-name"
                                 type="text"
-                                placeholder="Enter the name of the uploaded song ..."
+                                placeholder="Enter the name ..."
                                 value={songName}
                                 onChange={(e) => setSongName(e.target.value)}
                             />
@@ -172,16 +169,6 @@ function DropFile({ onFileChange }) {
                                 ref={coverImgRef}
                                 onChange={(e) => (coverImgRef.current.file = e.target.files[0])}
                             />
-                        </div>
-                        <div className={cx('form-group')}>
-                            <label htmlFor="lyric">Lyric</label>
-                            <textarea
-                                className={cx('form-control')}
-                                value={lyric}
-                                id="lyric"
-                                rows="2"
-                                onChange={(e) => setLyric(e.target.value)}
-                            ></textarea>
                         </div>
                         <div className={cx('form-group')}>
                             <label htmlFor="description">Description</label>
@@ -203,9 +190,9 @@ function DropFile({ onFileChange }) {
                 <div className={cx('preview')}>
                     <h3 className="text-2xl font-semibold">Preview to uploaded files</h3>
                     <div className={cx('preview-container')}>
-                        {fileList.map((dataItem, index) => (
+                        {fileList.map((dataItem) => (
                             <FileItem
-                                key={index}
+                                key={dataItem}
                                 data={dataItem}
                                 // handleRemove={() => handleRemoveFile(file)}
                                 handleRemove={handleRemoveFileFromPreview}
