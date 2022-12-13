@@ -6,24 +6,22 @@ $border-color: #4267b2;
         display: flex;
         align-items: center;
         gap: 24px;
+        @apply max-[700px]:flex-col;
     }
 }
 
 // upload-area
 .left-part {
+    @apply max-[700px]:w-[90%];
     .drop-area {
         position: relative;
-        padding: 20px 16px;
         border: 2px dashed $border-color;
         border-radius: 20px;
         background-color: rgba($color: $border-color, $alpha: 0.15);
         text-align: center;
 
         img {
-            display: inline-block;
-            width: 200px;
-            height: 200px;
-            object-fit: cover;
+            @apply mx-auto h-44 w-48 object-cover;
         }
 
         p {
@@ -56,19 +54,7 @@ $border-color: #4267b2;
     font-weight: 400;
 
     .add {
-        position: absolute;
-        font-size: 16px;
-        font-weight: 600;
-        top: 0;
-        right: 20px;
-        padding: 4px 20px;
-        border: 1px solid #ccc;
-        border-radius: 999px;
-        cursor: pointer;
-
-        &:hover {
-            background-color: rgba($color: #000, $alpha: 0.15);
-        }
+        @apply absolute top-5 right-0 cursor-pointer rounded-full px-3 py-1 text-base font-semibold [border:1px_solid_#ccc] hover:bg-[#0000001a] max-[375px]:top-10; 
     }
 
     .song-info {

@@ -63,7 +63,7 @@ function FileItem({ data, handleRemove }) {
             {/* Tạm chỉ xử lý remove + download khỏi preview khi truyền hàm close -> fix sau */}
             {handleRemove && (
                 <>
-                    <span className={cx('down-drop-file-item')} onClick={() => handleDownload(data.audioFile)}>
+                    <span className={cx('down-drop-file-item')} onClick={() => handleDownload(data)}>
                         <FontAwesomeIcon icon={faCircleDown} />
                     </span>
                     <span className={cx('del-drop-file-item')} onClick={handleRemove}>
