@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.Design;
 using System.Security.Claims;
 using tourmaline.Models;
 using tourmaline.Services;
@@ -11,11 +12,14 @@ namespace tourmaline.Controllers
     [Authorize]
     public class CommentController : ControllerBase
     {
-        public CommentController(Database database)
+        public CommentController(CommentServices commentServices, SongServices songServices)
         {
-            _connection = database;
+            _commentServices = commentServices;
+            _songServices = songServices;
         }
-        private readonly Database _connection;
+
+        private readonly CommentServices _commentServices;
+        private readonly SongServices _songServices;
 
         private string CurrentSessionUsername => HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
 
@@ -31,22 +35,24 @@ namespace tourmaline.Controllers
         [HttpPost]
         public async Task<ActionResult> PostComment([FromForm] int id, [FromForm] string content)
         {
-            var idConds = new Dictionary<string, dynamic>() { { "id", id } };
-            var songObjects = await _connection.Read("song", idConds);
-            var doesSongExist = songObjects.Count != 0;
-
-            if (doesSongExist)
+            if (await _songServices.IsSongExist(id))
             {
-                var result = await _connection.Add("comment", new Dictionary<string, dynamic>()
-                {
-                    { "content", content },
-                    { "createTime", DateTime.Now },
-                    { "lastEditedTime", DateTime.Now },
-                    { "song", id },
-                    { "username",  CurrentSessionUsername }
-                });
+                var currentDate = DateTime.Now;
 
-                return result ? Ok("Comment posted OK!") : StatusCode(StatusCodes.Status500InternalServerError, "Error in server side posting comment!");
+                Comment comment = new Comment(-1, content, id, CurrentSessionUsername)
+                {
+                    CreateTime = currentDate,
+                    LastEditedTime = currentDate
+                };
+
+                comment.Id = await _commentServices.Post(comment);
+
+                if (comment.Id >= 0)
+                {
+                    return Ok(comment);
+                }
+                
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error in server side posting comment!");
             }
             else
             {
@@ -58,15 +64,11 @@ namespace tourmaline.Controllers
         [HttpDelete]
         public async Task<ActionResult> DeleteComment(int commentId)
         {
-            var idConds = new Dictionary<string, dynamic>() { { "id", commentId } };
-            var commentObjects = await _connection.Read("comment", idConds);
-            var doesCommentExist = commentObjects.Count != 0;
-
-            if (doesCommentExist)
+            if (await _commentServices.DoesCommentExist(commentId))
             {
-                if (CanCurrentUserModifyComment(CurrentSessionUsername))
+                if (CanCurrentUserModifyComment(await _commentServices.GetCommenter(commentId)))
                 {
-                    var result = await _connection.Delete("comment", idConds);
+                    var result = await _commentServices.DeleteComment(commentId);
                     return result ? Ok("Comment deleted OK!") : StatusCode(StatusCodes.Status500InternalServerError, "Error in server side deleting comment!");
                 } 
                 else
@@ -84,22 +86,23 @@ namespace tourmaline.Controllers
         [HttpPut]
         public async Task<ActionResult> EditComment([FromForm] int id, [FromForm] string content)
         {
-            var idConds = new Dictionary<string, dynamic>() { { "id", id } };
-            var commentObjects = await _connection.Read("comment", idConds);
-            var doesCommentExist = commentObjects.Count != 0;
-
-            if (doesCommentExist)
+            if (await _commentServices.DoesCommentExist(id))
             {
-                if (CanCurrentUserModifyComment(CurrentSessionUsername))
-                {
-                    var result = await _connection.CallUpdateProcedure("EditComment", new Dictionary<string, dynamic>()
-                    {
-                        { "commentId", id },
-                        { "newContent", content },
-                        { "editTime", DateTime.Now }
-                    });
+                Comment comment = await _commentServices.GetComment(id);
 
-                    return result ? Ok("Comment edited OK!") : StatusCode(StatusCodes.Status500InternalServerError, "Error in server side editing comment!");
+                if (CanCurrentUserModifyComment(comment.UserName))
+                {
+                    comment.LastEditedTime = DateTime.Now;
+                    comment.Content = content;
+
+                    var result = await _commentServices.UpdateComment(id, content, comment.LastEditedTime);
+
+                    if (result)
+                    {
+                        return Ok(comment);
+                    }
+
+                    return StatusCode(StatusCodes.Status500InternalServerError, "Error in server side editing comment!");
                 } else
                 {
                     return StatusCode(StatusCodes.Status403Forbidden, "No permission to delete this comment!");
@@ -116,16 +119,9 @@ namespace tourmaline.Controllers
         [AllowAnonymous]
         public async Task<JsonResult> GetAllCommentsOnSong(int songId)
         {
-            var idConds = new Dictionary<string, dynamic>() { { "id", songId } };
-            var songObjects = await _connection.Read("song", idConds);
-            var doesSongExist = songObjects.Count != 0;
-
-            if (doesSongExist)
+            if (await _songServices.IsSongExist(songId))
             {
-                return new JsonResult(await _connection.CallReadProcedure("ListCommentsOfSong", new Dictionary<string, dynamic>()
-                {
-                    { "id", songId }
-                }));
+                return new JsonResult(await _commentServices.ListAllCommentsOnSong(songId));
             }
             else
             {

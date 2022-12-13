@@ -76,7 +76,7 @@ public class Database
         return Task.FromResult(result);
     }
 
-    public Task<bool> Add(string table, IDictionary<string, dynamic> values)
+    private MySqlDataReader? AddDetail(string table, IDictionary<string, dynamic> values, string extraQuery = "")
     {
         var connection = new MySqlConnection(ConnectionString);
         connection.Open();
@@ -88,19 +88,55 @@ public class Database
 
         var queryString =
             $"INSERT INTO {table} ({string.Join(", ", values.Keys)}) VALUES ({string.Join(", ", values.Values)})";
+        if (extraQuery != "")
+        {
+            queryString += $"; {extraQuery}";
+        }
         Console.WriteLine($"Query: {queryString}");
         try
         {
-            new MySqlCommand(queryString, connection).ExecuteReader();
+            return new MySqlCommand(queryString, connection).ExecuteReader();
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            return Task.FromResult(false);
+            return null;
         }
 
         connection.Close();
-        return Task.FromResult(true);
+        return null;
+    }
+
+    public Task<bool> Add(string table, IDictionary<string, dynamic> values)
+    {
+        return Task.FromResult(AddDetail(table, values) != null);
+    }
+
+    public Task<bool> AddAndGetObjectId(string table, IDictionary<string, dynamic> values, out int objId)
+    {
+        objId = -1;
+
+        var reader = AddDetail(table, values, "SELECT LAST_INSERT_ID();");
+        if (reader == null)
+        {
+            return Task.FromResult(false);
+        }
+
+        try
+        {
+            if (reader.Read())
+            {
+                objId = reader.GetFieldValue<int>(0);
+            }
+
+            return Task.FromResult(true);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+
+        return Task.FromResult(false);
     }
 
     public Task<bool> Update(string table, IDictionary<string, dynamic> values, IDictionary<string, dynamic> conditions)
