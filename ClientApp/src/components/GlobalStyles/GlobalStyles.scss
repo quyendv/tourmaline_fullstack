@@ -15,6 +15,8 @@
   --search-btn-width: 46px;
   --header-height: 64px;
   --sidebar-width: 243px;
+//   --bg-main-screen-color: linear-gradient(to right, #18162c, #16135e);
+  --bg-main-screen-color: #16135e;
 }
 
 * {
@@ -44,7 +46,8 @@ html *::-webkit-scrollbar {
 
 html *::-webkit-scrollbar-thumb {
     border-radius: 4px;
-    background-color: rgba(22, 24, 35, 0.06);
+    // background-color: rgba(22, 24, 35, 0.06);
+    background-color: var(--second-color);
 }
 
 html *::-webkit-scrollbar-track {
