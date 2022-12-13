@@ -64,7 +64,7 @@ public class SuggestionController : ControllerBase
         var result = new List<Song>();
         var ids = (await _database.Call(
                 $"SELECT song FROM recents WHERE username='{Username}' ORDER BY added_date DESC LIMIT 15"))
-            .Select<dynamic, long>(e => e["song"]);
+            .Select<dynamic, int>(e => e["song"]);
         foreach (var id in ids)
         {
             var song = (await _database.Call($"SELECT * FROM song WHERE id={id}")).First();

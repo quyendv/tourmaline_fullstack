@@ -29,7 +29,7 @@ public class SongController : ControllerBase
 
     [HttpGet]
     [Route("get")]
-    public async Task<ActionResult<Song>> GetSongInfo(long id)
+    public async Task<ActionResult<Song>> GetSongInfo(int id)
     {
         if (!await _songServices.IsSongExist(id))
         {
@@ -42,7 +42,7 @@ public class SongController : ControllerBase
     [HttpGet]
     [Route("getMedia")]
     [AllowAnonymous]
-    public async Task<ActionResult> GetMedia(long id)
+    public async Task<ActionResult> GetMedia(int id)
     {
         if (!await _songServices.IsSongExist(id)) return StatusCode(StatusCodes.Status400BadRequest, "Song not found!");
         var songPath = $"{id}.mp3";
@@ -64,7 +64,7 @@ public class SongController : ControllerBase
     [HttpGet]
     [Route("getCover")]
     [AllowAnonymous]
-    public async Task<ActionResult> GetCover(long id)
+    public async Task<ActionResult> GetCover(int id)
     {
         if (!await _songServices.IsSongExist(id)) return StatusCode(StatusCodes.Status400BadRequest, "Song not found!");
 
@@ -158,7 +158,7 @@ public class SongController : ControllerBase
 
     [HttpDelete]
     [Route("delete")]
-    public async Task<ActionResult> DeleteSong(long id)
+    public async Task<ActionResult> DeleteSong(int id)
     {
         if (!await _songServices.IsSongExist(id))
         {

@@ -24,7 +24,7 @@ namespace tourmaline.Controllers
 
         [Route("add")]
         [HttpPut]
-        public async Task<ActionResult> AddToFavorite(long id)
+        public async Task<ActionResult> AddToFavorite(int id)
         {
             if (!await _songServices.IsSongExist(id))
             {
@@ -37,7 +37,7 @@ namespace tourmaline.Controllers
 
         [Route("remove")]
         [HttpDelete]
-        public async Task<ActionResult> RemoveFromFavorite(long id)
+        public async Task<ActionResult> RemoveFromFavorite(int id)
         {
             if (!await _songServices.IsSongExist(id))
             {
