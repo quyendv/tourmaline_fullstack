@@ -61,7 +61,7 @@ public class PlaylistServices
 
     public async Task<UserPlaylist> GetUserPlaylists(string username)
     {
-        var playlists = (await _database.Call($"SELECT id FROM playlist WHERE user={username}")).Select(e => e["id"]);
+        var playlists = (await _database.Call($"SELECT id FROM playlist WHERE user='{username}'")).Select(e => e["id"]);
         var userPlaylist = new UserPlaylist();
         foreach (var playlist in playlists)
         {
