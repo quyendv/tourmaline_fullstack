@@ -23,8 +23,12 @@ public class Database
             if (conditions != null)
                 foreach (var entry in conditions)
                 {
-                    if (entry.Value is string) conditions[entry.Key] = $"'{entry.Value}'";
-                    else if (entry.Value is DateTime) conditions[entry.Key] = $"'{((DateTime)(entry.Value)).ToString("yyyy-MM-dd H:mm:ss")}'";
+                    conditions[entry.Key] = entry.Value switch
+                    {
+                        string => $"'{entry.Value}'",
+                        DateTime time => $"'{time:yyyy-MM-dd H:mm:ss}'",
+                        _ => conditions[entry.Key]
+                    };
 
                     cons.Add($"{entry.Key} = {conditions[entry.Key]}");
                 }

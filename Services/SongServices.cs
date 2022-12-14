@@ -33,6 +33,7 @@ public class SongServices
     {
         await _database.Call($"INSERT INTO song (id, uploadTime, uploader, name, description, duration, listen_times) " +
         $"VALUES ({song.Id}, '{song.UploadTime:yyyy-MM-dd H:mm:ss}', '{song.Uploader}', '{song.Name.Normal()}', '{song.Description.Normal()}', {song.Duration}, {song.ListenTimes})");
+        await SetTags(song.Id, song.Tags);
     }
     
     private async Task<int> GetFavorite(int id)
