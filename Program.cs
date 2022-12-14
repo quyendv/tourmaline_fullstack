@@ -43,6 +43,7 @@ services.AddSingleton<RecentServices>(_ => new RecentServices(database));
 services.AddSingleton<FavoriteServices>(_ => new FavoriteServices(database));
 services.AddSingleton<PlaylistServices>(_ => new PlaylistServices(database));
 services.AddSingleton<CommentServices>(_ => new CommentServices(database));
+services.AddSingleton<SearchServices>(_ => new SearchServices(database, new PlaylistServices(database), new UserServices(database), new SongServices(database)));
 
 #endregion
 

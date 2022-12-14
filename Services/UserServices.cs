@@ -32,7 +32,7 @@ public class UserServices
     {
         await _database.Call(
             $"INSERT INTO user (username, name, bio, createTime, birth, password, gender, email, isAdmin) " +
-            $"VALUES ('{user.Username}', '{user.Name.Normal()}', '{user.Bio.Normal()}', {user.CreateTime:yyyy-MM-dd H:mm:ss}, {user.Birth:yyyy-MM-dd H:mm:ss}, " +
+            $"VALUES ('{user.Username}', '{user.Name.Normal()}', '{user.Bio.Normal()}', '{user.CreateTime:yyyy-MM-dd H:mm:ss}', '{user.Birth:yyyy-MM-dd H:mm:ss}', " +
             $"'{password}', {(user.Gender ? "1" : "0")}, '{user.Email}', {(user.IsAdmin ? "1" : "0")})");
     }
 
@@ -49,7 +49,7 @@ public class UserServices
                              $"{(name != null ? $"name='{name}'" : "")}, " +
                              $"{(bio != null ? $"bio='{bio}'" : "")}, " +
                              $"{(gender != null ? gender == true ? "gender=1" : "gender=0" : "")}, " +
-                             $"{(birth != null ? $"birth={birth:yyyy-MM-dd H:mm:ss}" : "")}");
+                             $"{(birth != null ? $"birth='{birth:yyyy-MM-dd H:mm:ss}'" : "")}");
     }
 
     public async Task<bool> IsUserExist(string username)
