@@ -73,12 +73,12 @@ public class SuggestionController : ControllerBase
                 .Select<dynamic, string>(e => e["tag"]).ToList();
             result.Add(new Song
             {
-                Id = song["id"],
+                Id = (int)song["id"],
                 Name = song["name"],
                 Duration = song["duration"],
                 Description = song["description"],
                 Favorites = favorites,
-                ListenTimes = song["listen_times"],
+                ListenTimes = (int)song["listen_times"],
                 Tags = tags,
                 Uploader = song["uploader"],
                 UploadTime = song["uploadTime"]
@@ -91,25 +91,26 @@ public class SuggestionController : ControllerBase
     private async Task<List<Song>> GetTop50()
     {
         var result = new List<Song>();
-        var ids = await _database.Call(
-            $"SELECT songid, COUNT(songid) AS favorites FROM favorites GROUP BY songid ORDER by favorites DESC LIMIT 50");
-        foreach (var row in ids)
+        var songs = await _database.Call(
+            $@"SELECT favorites.songid AS songid, song.name, song.duration, song.description, COUNT(favorites.songid) AS favorites,
+            song.listen_times, GROUP_CONCAT(songtags.tag SEPARATOR ';') as tags, song.uploader, song.uploadTime FROM favorites 
+            INNER JOIN song ON song.id = songid
+            LEFT JOIN songtags ON songtags.id = songid
+            GROUP BY songid ORDER by favorites DESC LIMIT 50");
+        foreach (var songInfo in songs)
         {
-            var song = (await _database.Call($"SELECT * FROM song WHERE id={row["songid"]}")).First();
-            var favorites = row["favorites"];
-            var tags = (await _database.Call($"SELECT * FROM songtags WHERE id={song["id"]}"))
-                .Select<dynamic, string>(e => e["tag"]).ToList();
             result.Add(new Song
             {
-                Id = song["id"],
-                Name = song["name"],
-                Duration = song["duration"],
-                Description = song["description"],
-                Favorites = favorites,
-                ListenTimes = song["listen_times"],
-                Tags = tags,
-                Uploader = song["uploader"],
-                UploadTime = song["uploadTime"]
+                Id = (int)songInfo["songid"],
+                Name = songInfo["name"],
+                Duration = songInfo["duration"],
+                Description = songInfo["description"],
+                Favorites = (int)songInfo["favorites"],
+                ListenTimes = (int)songInfo["listen_times"],
+                Tags = (songInfo["tags"] is DBNull) ? new List<string>() :
+                    ((string)songInfo["tags"]).Split(';').ToList(),
+                Uploader = songInfo["uploader"],
+                UploadTime = songInfo["uploadTime"]
             });
         }
 

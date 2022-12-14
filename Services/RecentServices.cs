@@ -27,7 +27,7 @@ public class RecentServices
     public async Task AddRecent(string username, int id)
     {
         await _database.Call($"INSERT INTO recents (username, song, added_date) " +
-                             $"VALUES ('{username}', {id}, {DateTime.Now:yyyy-MM-dd H:mm:ss}) " +
-                             $"ON DUPLICATE KEY UPDATE added_date={DateTime.Now:yyyy-MM-dd H:mm:ss}");
+                             $"VALUES ('{username}', {id}, '{DateTime.Now:yyyy-MM-dd H:mm:ss}') " +
+                             $"ON DUPLICATE KEY UPDATE added_date='{DateTime.Now:yyyy-MM-dd H:mm:ss}'");
     }
 }

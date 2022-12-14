@@ -17,14 +17,14 @@ public class SongServices
         var result = (await _database.Call($"SELECT * FROM song WHERE id={id}")).First();
         return new Song
         {
-            Id = result["id"],
+            Id = id,
             Name = result["name"],
             Uploader = result["uploader"],
             UploadTime = result["uploadTime"],
             Description = result["description"],
             Duration = result["duration"],
             Favorites = await GetFavorite(id),
-            ListenTimes = result["listen_times"],
+            ListenTimes = (int)result["listen_times"],
             Tags = await GetTags(id),
         };
     }
@@ -38,13 +38,13 @@ public class SongServices
     private async Task<int> GetFavorite(int id)
     {
         var result = (await _database.Call($"SELECT COUNT(*) as count FROM favorites WHERE songid={id}")).First();
-        return result["count"];
+        return (int)result["count"];
     }
 
     public async Task AddListenTime(int id)
     {
         var listenTimes = (await GetSong(id)).ListenTimes + 1;
-        await _database.Call($"UPDATE song WHERE id={id} SET listen_times={listenTimes}");
+        await _database.Call($"UPDATE song SET listen_times={listenTimes} WHERE id={id}");
     }
 
     private async Task<List<string>> GetTags(int id)
@@ -89,15 +89,15 @@ public class SongServices
         {
             songs.Add(new Song
             {
-                Id = song["id"],
+                Id = (int)song["id"],
                 Name = song["name"],
                 Uploader = song["uploader"],
                 UploadTime = song["uploadTime"],
                 Description = song["description"],
                 Duration = song["duration"],
-                Favorites = await GetFavorite(song["id"]),
+                Favorites = await GetFavorite((int)song["id"]),
                 ListenTimes = song["listen_times"],
-                Tags = await GetTags(song["id"]),
+                Tags = await GetTags((int)song["id"]),
             });
         }
 

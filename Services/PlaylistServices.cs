@@ -17,7 +17,7 @@ public class PlaylistServices
         var result = (await _database.Call($"SELECT * FROM playlist WHERE id={id}")).First();
         return new Playlist
         {
-            Id = result["id"],
+            Id = id,
             Username = result["user"],
             Name = result["name"],
             Description = result["description"],

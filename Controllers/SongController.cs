@@ -47,7 +47,7 @@ public class SongController : ControllerBase
         if (!await _songServices.IsSongExist(id)) return StatusCode(StatusCodes.Status400BadRequest, "Song not found!");
         var songPath = $"{id}.mp3";
         var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-        var file = new FileStream($"{homeDir}/storage/media/{songPath}", FileMode.Open, FileAccess.Read,
+        var file = new FileStream($"{homeDir}/storage/song/media/{songPath}", FileMode.Open, FileAccess.Read,
             FileShare.ReadWrite, 2048,
             true);
 
@@ -68,13 +68,13 @@ public class SongController : ControllerBase
     {
         if (!await _songServices.IsSongExist(id)) return StatusCode(StatusCodes.Status400BadRequest, "Song not found!");
 
-        var coverPath = $"{id}.jpg";
+        var coverPath = $"{id}.png";
         var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-        var file = new FileStream($"{homeDir}/storage/cover/{coverPath}", FileMode.Open, FileAccess.Read,
+        var file = new FileStream($"{homeDir}/storage/song/cover/{coverPath}", FileMode.Open, FileAccess.Read,
             FileShare.Read, 2048,
             true);
 
-        return File(file, "image/jpeg", true);
+        return File(file, "image/png", true);
     }
 
     [HttpPost("FileUpload")]
