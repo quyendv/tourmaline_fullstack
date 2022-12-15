@@ -27,16 +27,19 @@ const {
 // TODO: Song list sửa sau
 const songMenu = [
     {
+        type:'',
         icon: <FaRegComment />,
         title: 'Comments',
         to: '',
     },
     {
+        type:'',
         icon: <AiOutlineDownload />,
         title: 'Download',
         to: '',
     },
     {
+        type:'',
         icon: <AiOutlinePlusCircle />,
         title: 'Add to Playlist',
         to: '',
@@ -46,16 +49,19 @@ const songMenu = [
             data: [
                 // Cái này khả năng đưa vào trong component gọi ra thôi
                 {
+                    type: 'playlist',
                     icon: '',
                     title: 'playlist A',
                     to: '',
                 },
                 {
+                    type: 'playlist',
                     icon: '',
                     title: 'playlist A',
                     to: '',
                 },
                 {
+                    type: 'playlist',
                     icon: '',
                     title: 'playlist A',
                     to: '',
@@ -80,7 +86,7 @@ const songMenu = [
     },
 ];
 
-function Song({ songData, setSongsUploaded, isFavorite }) {
+function Song({ songData, setSongsUploaded, listPlaylist }) {
     // TODO: hardcode
     const defaultSrc = 'https://taogroup.com/wp-content/uploads/2022/01/Alan-Walker-1.jpg';
     
@@ -96,6 +102,7 @@ function Song({ songData, setSongsUploaded, isFavorite }) {
             setSrc(`${BASE_URL}/api/song/getCover?id=${songData.id}`);
         };
         fetchCover();
+
     }, []);
     // Đoạn delete này đưa vào cái songMenu ấy, có phần delete
     const handleDelete = async (e) => {

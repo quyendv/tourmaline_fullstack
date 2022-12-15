@@ -19,6 +19,7 @@ function MenuItem({ data, isParent = 'false', songId, onClick = () => {} }) {
         dispatch(actions.setCommentSongId(songId));
     };
     const handleClickMenuItem = (e) => {
+        e.stopPropagation()
         onClick(); // chạy fn truyền vào trước
         if (data.title === 'Logout') {
             e.stopPropagation();
@@ -26,6 +27,9 @@ function MenuItem({ data, isParent = 'false', songId, onClick = () => {} }) {
         }
         if (data.title === 'Comments') {
             handleOpenCommentModal(e);
+        }
+        if(data.type == 'playlist') {
+            console.log('test')
         }
         // e.stopPropagation();
     };

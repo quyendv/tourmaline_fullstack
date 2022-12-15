@@ -14,6 +14,11 @@ function Favorite() {
             setFavoriteSongs(response.data.songs)
         }
         fetchFavoriteSongs()
+        const fetchListPlaylist = async () => {
+            const response = await apis.getAllPlaylist(token)
+            console.log(response)
+        }
+        fetchListPlaylist()
     }, [])
 
     return (

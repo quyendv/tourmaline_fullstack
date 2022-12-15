@@ -182,11 +182,82 @@ export const getSongs = (username, token) => new Promise(async(resolve, reject) 
 export const getSuggestion = (token) => new Promise(async(resolve, reject) => {
     try {
         const response = await axiosConfig({
-            url: '/api/suggestion/get',
+            url: '/api/suggestion/getSuggestion',
             method: 'get',
             headers: {
                 'Authorization' : `Bearer ${token}`,
             }
+        })
+        resolve(response)
+    } catch (error) {
+        reject(error)
+    }
+})
+
+export const getRelatedArtist = (token) => new Promise(async(resolve, reject) => {
+    try {
+        const response = await axiosConfig({
+            url: '/api/suggestion/getRelatedArtist',
+            method: 'get',
+            headers: {
+                'Authorization' : `Bearer ${token}`,
+            }
+        })
+        resolve(response)
+    } catch (error) {
+        reject(error)
+    }
+})
+
+export const getRecentlyUploaded = (token) => new Promise(async(resolve, reject) => {
+    try {
+        const response = await axiosConfig({
+            url:'/api/suggestion/getRecentlyUploaded',
+            method: 'get',
+            headers: {
+                'Authorization' : `Bearer ${token}`,
+            }
+        })
+        resolve(response)
+    } catch (error) {
+        reject(error)
+    }
+})
+
+export const getRecentPlays = (token) => new Promise(async(resolve, reject) => {
+    try {
+        const response = await axiosConfig({
+            url:'/api/suggestion/getRecentPlays',
+            method: 'get',
+            headers: {
+                'Authorization' : `Bearer ${token}`,
+            }
+        })
+        resolve(response)
+    } catch (error) {
+        reject(error)
+    }
+})
+
+export const getTop50 = () => new Promise(async(resolve, reject) => {
+    try {
+        const response = await axiosConfig({
+            url:'/api/suggestion/getTop50',
+            method: 'get',
+
+        })
+        resolve(response)
+    } catch (error) {
+        reject(error)
+    }
+})
+
+export const getNew = () => new Promise(async(resolve, reject) => {
+    try {
+        const response = await axiosConfig({
+            url:'/api/suggestion/getNew',
+            method: 'get',
+
         })
         resolve(response)
     } catch (error) {
