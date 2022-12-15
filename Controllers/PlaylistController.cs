@@ -45,11 +45,22 @@ public class PlaylistController : ControllerBase
 
         var fileName = $"{id}.png";
         var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-        var file = new FileStream($"{homeDir}/storage/playlist/{fileName}", FileMode.Open, FileAccess.Read,
-            FileShare.None, 2048,
-            true);
+        try
+        {
+            var file = new FileStream($"{homeDir}/storage/playlist/{fileName}", FileMode.Open, FileAccess.Read,
+                FileShare.None, 2048,
+                true);
 
-        return File(file, "image/jpeg", true);
+            return File(file, "image/jpeg", true);
+        }
+        catch (Exception e)
+        {
+            var file = new FileStream($"Assets/defaultPlaylist.png", FileMode.Open, FileAccess.Read,
+                FileShare.None, 2048,
+                true);
+
+            return File(file, "image/jpeg", true);
+        }
     }
 
     [Route("create")]
