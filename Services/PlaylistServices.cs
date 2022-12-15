@@ -50,7 +50,11 @@ public class PlaylistServices
     {
         var songServices = new SongServices(_database);
         var result = (await _database.Call($"SELECT songId FROM playlistsongs WHERE playlistId={id} ORDER BY added_date DESC")).Select(e => e["songId"]);
-        var songs = result.Select(songId => songServices.GetSong(songId)).Cast<Song>().ToList();
+        var songs = new List<Song>();
+        foreach (var song in result)
+        {
+            songs.Add(await songServices.GetSong(song));
+        }
         return songs;
     }
 
