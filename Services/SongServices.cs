@@ -71,9 +71,12 @@ public class SongServices
 
     public async Task UpdateInfo(int id, string? name, string? description, List<string>? tags)
     {
-        await _database.Call($"UPDATE song " +
-                             $"WHERE id={id} " +
-                             $"SET {(name != null ? $"name='{name}'" : "")}, {(description != null ? $"description='{description}'" : "")}");
+        if (name != null || description != null)
+        {
+            await _database.Call($"UPDATE song " +
+                                 $"WHERE id={id} " +
+                                 $"SET {(name != null ? $"name='{name}'," : "")} {(description != null ? $"description='{description}'," : "")}");
+        }
         if (tags != null) await SetTags(id, tags);
     }
 
