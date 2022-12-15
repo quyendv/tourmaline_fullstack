@@ -284,7 +284,7 @@ CREATE TABLE `user` (
   `gender` tinyint NOT NULL,
   `email` varchar(120) NOT NULL,
   `isAdmin` tinyint DEFAULT '0',
-  PRIMARY KEY (`username`)
+  PRIMARY KEY (`username`),
   FULLTEXT KEY `Idx_FullTextUser` (`username`,`name`,`bio`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
