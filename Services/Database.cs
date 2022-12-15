@@ -225,7 +225,7 @@ public class Database
 
     public Task<List<Dictionary<string, dynamic>>> CallFindProcedure(string procedureName, string match)
     {
-        return CallReadProcedure(procedureName, new Dictionary<string, dynamic>() { { "keyword", '%' + match + '%' } });
+        return CallReadProcedure(procedureName, new Dictionary<string, dynamic>() { { "keyword", match } });
     }
 
     public Task<bool> CallUpdateProcedure(string procedureName, Dictionary<string, dynamic> parameters)

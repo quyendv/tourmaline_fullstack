@@ -114,6 +114,7 @@ CREATE TABLE `playlist` (
   `description` varchar(500) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `FK_PLAYLIST_USER_idx` (`user`),
+  FULLTEXT KEY `Idx_FullTextPlaylist` (`user`,`name`,`description`),
   CONSTRAINT `FK_PLAYLIST_USER` FOREIGN KEY (`user`) REFERENCES `user` (`username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1975350825 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -200,6 +201,7 @@ CREATE TABLE `song` (
   `listen_times` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `FK_USER_idx` (`uploader`),
+  FULLTEXT KEY `name` (`name`,`description`,`uploader`),
   CONSTRAINT `FK_SONG_USER` FOREIGN KEY (`uploader`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2146263886 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -283,6 +285,7 @@ CREATE TABLE `user` (
   `email` varchar(120) NOT NULL,
   `isAdmin` tinyint DEFAULT '0',
   PRIMARY KEY (`username`)
+  FULLTEXT KEY `Idx_FullTextUser` (`username`,`name`,`bio`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -360,11 +363,9 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `FindPlaylists`(IN keyword VARCHAR(100))
 BEGIN
-	DECLARE keywordLowered VARCHAR(100);
-    SET keywordLowered = lower(keyword);
-
-	SELECT * FROM playlist
-    WHERE (LOWER(user) LIKE keywordLowered) OR (LOWER(name) LIKE keywordLowered);
+    SELECT *, MATCH(user, name, description) AGAINST (keyword IN NATURAL LANGUAGE MODE) as score FROM playlist
+    WHERE MATCH(user, name, description) AGAINST (keyword IN NATURAL LANGUAGE MODE) >= 0.03
+    ORDER BY score DESC;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -383,12 +384,14 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `FindSongs`(IN keyword VARCHAR(100))
 BEGIN
-	DECLARE keywordLowered VARCHAR(100);
+    DECLARE keywordLowered VARCHAR(100);
     SET keywordLowered = lower(keyword);
 
-	SELECT id, uploadTime, uploader, name, description FROM song
-    WHERE (LOWER(name) LIKE keywordLowered)
-	OR (LOWER(description) LIKE keywordLowered);
+	SELECT 
+		id, uploadTime, uploader, name, description, 
+		MATCH (name, description, uploader) AGAINST (keywordLowered IN NATURAL LANGUAGE MODE) as score FROM song
+	WHERE MATCH (name, description, uploader) AGAINST (keywordLowered IN NATURAL LANGUAGE MODE) >= 0.03
+    ORDER BY score DESC;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -407,8 +410,11 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `FindUsers`(IN keyword VARCHAR(100))
 BEGIN
-	SELECT username, name, bio, createTime, birth, gender, isAdmin FROM user
-    WHERE (lower(username) LIKE lower(keyword) OR lower(name) = lower(keyword));
+    SELECT
+		username, name, bio, createTime, birth, gender, isAdmin,
+		MATCH(username, name, bio) AGAINST (keyword IN NATURAL LANGUAGE MODE) as score FROM user
+    WHERE MATCH(username, name, bio) AGAINST (keyword IN NATURAL LANGUAGE MODE) >= 0.03
+    ORDER BY score DESC;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
