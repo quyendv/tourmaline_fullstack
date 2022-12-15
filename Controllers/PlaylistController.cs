@@ -104,7 +104,15 @@ public class PlaylistController : ControllerBase
         
         await _playlistServices.DeletePlaylist(id);
         var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-        System.IO.File.Delete($"{homeDir}/storage/playlist/{id}.png");
+        try
+        {
+            System.IO.File.Delete($"{homeDir}/storage/playlist/{id}.png");
+        }
+        catch (Exception _)
+        {
+            // ignored
+        }
+
         return Ok();
     }
 
