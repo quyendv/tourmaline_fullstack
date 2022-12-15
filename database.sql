@@ -50,8 +50,8 @@ CREATE TABLE `favorites` (
   `songid` int NOT NULL,
   KEY `FK_FAVORITE_USER_idx` (`userid`),
   KEY `FK_FAVORITE_SONG_idx` (`songid`),
-  CONSTRAINT `FK_FAVORITE_SONG` FOREIGN KEY (`songid`) REFERENCES `song` (`id`),
-  CONSTRAINT `FK_FAVORITE_USER` FOREIGN KEY (`userid`) REFERENCES `user` (`username`)
+  CONSTRAINT `FK_FAVORITE_SONG` FOREIGN KEY (`songid`) REFERENCES `song` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_FAVORITE_USER` FOREIGN KEY (`userid`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -282,15 +282,15 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8mb4 */ ;
 /*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `FindSongs`(IN keyword VARCHAR(100))
 BEGIN
 	DECLARE keywordLowered VARCHAR(100);
     SET keywordLowered = lower(keyword);
 
-	SELECT id, uploadTime, uploader, name, lyrics, description, album FROM song
-    WHERE (LOWER(name) LIKE keywordLowered) OR (LOWER(lyrics) LIKE keywordLowered) OR (LOWER(album) LIKE keywordLowered)
+	SELECT id, uploadTime, uploader, name, description FROM song
+    WHERE (LOWER(name) LIKE keywordLowered)
 	OR (LOWER(description) LIKE keywordLowered);
 END ;;
 DELIMITER ;
@@ -368,4 +368,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-12-14 18:43:41
+-- Dump completed on 2022-12-15 17:34:34
