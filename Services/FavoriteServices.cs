@@ -13,7 +13,7 @@ public class FavoriteServices
     
     public async Task AddToFavorite(string username, int id)
     {
-        await _database.Call($"INSERT INTO favorites (userid, songid) VALUES ('{username}', {id})");
+        await _database.Call($"INSERT INTO favorites (userid, songid, added_date) VALUES ('{username}', {id}, '{DateTime.Now:yyyy-MM-dd H:mm:ss}')");
     }
 
     public async Task RemoveFromFavorite(string username, int id)
@@ -25,7 +25,7 @@ public class FavoriteServices
     {
         var songServices = new SongServices(_database);
         var songs = new List<Song>();
-        var result = (await _database.Call($"SELECT songid FROM favorites WHERE userid='{username}'")).Select(e => e["songid"]);
+        var result = (await _database.Call($"SELECT songid FROM favorites WHERE userid='{username}' ORDER BY added_date DESC")).Select(e => e["songid"]);
         foreach (var id in result)
         {
             songs.Add(await songServices.GetSong(id));
