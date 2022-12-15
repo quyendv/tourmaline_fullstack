@@ -81,7 +81,7 @@ public class SongController : ControllerBase
     [Route("upload")]
     [DataType("multipart/formdata")]
     public async Task<ActionResult> UploadSong([FromForm] IFormFile media, [FromForm] IFormFile cover,
-        [FromForm] string name)
+        [FromForm] string name, [FromForm] string? description, [FromForm] string? tags)
     {
         if (media.Length <= 0 || cover.Length <= 0) return StatusCode(StatusCodes.Status406NotAcceptable);
         var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
@@ -114,23 +114,20 @@ public class SongController : ControllerBase
             Console.WriteLine(ex);
         }
 
-        name = name.Replace("'", "\'");
-        name = name.Replace("\"", "\"");
-
-        var songTags = new List<string>()
-        {
-            "Lofi",
-            "Future House",
-            "Dubstep",
-            "Hiphop",
-            "Rap",
-            "Electronic",
-            "Funk",
-            "Synthwave",
-            "Dance & EDM",
-        };
-        songTags.Shuffle();
-        var tags = songTags.Take(new Random().Next(1, 9)).ToList();
+        // var songTags = new List<string>()
+        // {
+        //     "Lofi",
+        //     "Future House",
+        //     "Dubstep",
+        //     "Hiphop",
+        //     "Rap",
+        //     "Electronic",
+        //     "Funk",
+        //     "Synthwave",
+        //     "Dance & EDM",
+        // };
+        // songTags.Shuffle();
+        // var tags = songTags.Take(new Random().Next(1, 9)).ToList();
         await _songServices.AddSong(new Song
         {
             Id = id,
@@ -138,7 +135,8 @@ public class SongController : ControllerBase
             Duration = duration.TotalSeconds,
             Uploader = CurrentSessionUsername!,
             UploadTime = DateTime.Now,
-            Tags = tags,
+            Description = description ?? "",
+            Tags = tags?.Split(";").Select(e => e.Trim()).ToList() ?? new List<string>(),
         });
 
         return Ok("Upload succeeded!");
@@ -146,13 +144,14 @@ public class SongController : ControllerBase
 
     [HttpPut]
     [Route("edit")]
-    public async Task<ActionResult> EditSong([FromBody] Song info)
+    public async Task<ActionResult> EditSong(int id, string? name, string? description, string? tags)
     {
-        if (!await _songServices.IsSongExist(info.Id))
+        if (!await _songServices.IsSongExist(id))
             return StatusCode(StatusCodes.Status400BadRequest, "Song not found!");
-        if (!await _userServices.IsAdmin(CurrentSessionUsername!) && CurrentSessionUsername != info.Uploader)
+        var song = await _songServices.GetSong(id);
+        if (!await _userServices.IsAdmin(CurrentSessionUsername!) && CurrentSessionUsername != song.Uploader)
             return StatusCode(StatusCodes.Status403Forbidden);
-        await _songServices.UpdateInfo(id: info.Id, name: info.Name, description: info.Description, tags: info.Tags);
+        await _songServices.UpdateInfo(id: id, name: name, description: description, tags: tags?.Split(";").Select(e => e.Trim()).ToList());
         return Ok();
     }
 
