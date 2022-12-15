@@ -25,10 +25,10 @@ namespace tourmaline.Controllers
         
         [HttpGet]
         [Route("")]
-        public async Task<string> Search(string query)
+        public async Task<Dictionary<string, dynamic>> Search(string query)
         {
             var result = await _searchServices.Search(query);
-            return new JsonResult(result).ToJson();
+            return new Dictionary<string, dynamic>() {{"result", result}};
         }
     }
 }

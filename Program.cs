@@ -18,7 +18,7 @@ services.AddCors(o => o.AddPolicy("AllowLocalDebug",
         b.WithOrigins("https://localhost:3000", "http://w42g13.int3306.freeddns.org")
             .AllowAnyMethod()
             .AllowAnyHeader()
-            .SetIsOriginAllowed((host) => true)
+            .SetIsOriginAllowed(host => true)
             .AllowCredentials();
     }));
 
@@ -30,10 +30,8 @@ var connHostNameEnv = Environment.GetEnvironmentVariable("MYSQL_SERVICE_HOST");
 var connHostPortEnv = Environment.GetEnvironmentVariable("MYSQL_SERVICE_PORT");
 
 if (connHostNameEnv != null && connHostPortEnv != null)
-{
     connString =
         $"Server={connHostNameEnv};User ID=root;Password=password;Port={connHostPortEnv};Database=tourmaline;TlsCipherSuites=TLS_DHE_RSA_WITH_AES_256_GCM_SHA384";
-}
 
 var database = new Database(connString);
 services.AddSingleton(_ => database);
@@ -43,11 +41,13 @@ services.AddSingleton<RecentServices>(_ => new RecentServices(database));
 services.AddSingleton<FavoriteServices>(_ => new FavoriteServices(database));
 services.AddSingleton<PlaylistServices>(_ => new PlaylistServices(database));
 services.AddSingleton<CommentServices>(_ => new CommentServices(database));
-services.AddSingleton<SearchServices>(_ => new SearchServices(database, new PlaylistServices(database), new UserServices(database), new SongServices(database)));
+services.AddSingleton<SearchServices>(_ => new SearchServices(database));
+services.AddSingleton<FollowServices>(_ => new FollowServices(database));
+services.AddSingleton<SuggestionServices>(_ => new SuggestionServices(database));
 
 #endregion
 
-services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer((o) =>
+services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(o =>
 {
     o.TokenValidationParameters = new TokenValidationParameters
     {
@@ -66,14 +66,10 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
-{
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
-}
 else
-{
     app.UseHttpsRedirection();
-}
 
 app.UseStaticFiles();
 app.UseRouting();
@@ -81,8 +77,8 @@ app.UseCors("AllowLocalDebug");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller}/{action=Index}/{id?}");
+    "default",
+    "{controller}/{action=Index}/{id?}");
 
 app.MapFallbackToFile("index.html");
 
