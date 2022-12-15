@@ -84,7 +84,7 @@ public class SongServices
 
     public async Task<List<Song>> GetUserUploads(string username)
     {
-        var result = await _database.Call($"SELECT * FROM song WHERE uploader='{username}' SORT BY uploadTime DESC");
+        var result = await _database.Call($"SELECT * FROM song WHERE uploader='{username}' ORDER BY uploadTime DESC");
         var songs = new List<Song>();
         foreach (var song in result)
         {
