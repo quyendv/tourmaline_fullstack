@@ -9,12 +9,12 @@ public class SearchServices
     private readonly UserServices _userServices;
     private readonly PlaylistServices _playlistServices;
 
-    public SearchServices(Database database, PlaylistServices playlistServices, UserServices userServices, SongServices songServices)
+    public SearchServices(Database database)
     {
         _database = database;
-        _playlistServices = playlistServices;
-        _userServices = userServices;
-        _songServices = songServices;
+        _playlistServices = new PlaylistServices(database);
+        _userServices = new UserServices(database);
+        _songServices = new SongServices(database);
     }
 
     public async Task<List<SearchResult>> Search(string query)
