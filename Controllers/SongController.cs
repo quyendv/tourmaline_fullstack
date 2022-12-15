@@ -29,6 +29,7 @@ public class SongController : ControllerBase
 
     [HttpGet]
     [Route("get")]
+    [AllowAnonymous]
     public async Task<ActionResult<Song>> GetSongInfo(int id)
     {
         if (!await _songServices.IsSongExist(id))
