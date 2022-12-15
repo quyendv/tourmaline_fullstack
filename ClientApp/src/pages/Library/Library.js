@@ -15,6 +15,7 @@ function Library() {
     const { setIsOpenCrePlaylistModal } = useSelector((state) => state.actions);
     const { token } = useSelector((state) => state.auth);
     const { username } = useSelector((state) => state.user);
+    // const {curPlaylist} = useSelector(state => state.music);
     const [songsUploaded, setSongsUploaded] = useState([]);
     const [playlistCreated, setPlaylistCreated] = useState([]);
     const dispatch = useDispatch();
@@ -24,6 +25,7 @@ function Library() {
         const fetchAllPlaylist = async () => {
             const response = await getAllPlaylist(token);
             setPlaylistCreated(response.data.playlists);
+            dispatch(actions.setCurPlaylist(response.data.playlists))
         };
         const fetchSongs = async () => {
             const response = await getSongs(username, token);
@@ -35,7 +37,6 @@ function Library() {
     useEffect(() => {
         dispatch(actions.createPlaylist(setPlaylistCreated));
     }, []);
-    console.log(playlistCreated);
 
     return (
         <div className="h-[calc(100vh-var(--header-height))] w-full overflow-y-auto px-14 pt-16 pb-24 text-white">
@@ -82,7 +83,7 @@ function Library() {
             </div>
             <div className="flex flex-col gap-2 mt-4 max-h-96 overflow-y-auto">
                 {songsUploaded?.map((item) => (
-                    <Song key={item.id} songData={item} />
+                    <Song key={item.id} songData={item} curPlaylist={playlistCreated} />
                 ))}
             </div>
         </div>

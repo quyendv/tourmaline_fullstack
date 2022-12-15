@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteSong } from '../../services/music';
-import * as apis from '../../services'
+import * as apis from '../../services';
 import * as actions from '../../store/actions';
 import { BASE_URL } from '../../utils/constant';
 import { icons } from '../../utils/icons';
@@ -27,19 +27,20 @@ const {
 // TODO: Song list sửa sau
 const songMenu = [
     {
-        type:'',
+        type: '',
         icon: <FaRegComment />,
         title: 'Comments',
         to: '',
     },
     {
-        type:'',
+        type: '',
         icon: <AiOutlineDownload />,
         title: 'Download',
         to: '',
     },
     {
-        type:'',
+        type: 'addtoplaylist',
+
         icon: <AiOutlinePlusCircle />,
         title: 'Add to Playlist',
         to: '',
@@ -48,24 +49,6 @@ const songMenu = [
             title: 'Playlist',
             data: [
                 // Cái này khả năng đưa vào trong component gọi ra thôi
-                {
-                    type: 'playlist',
-                    icon: '',
-                    title: 'playlist A',
-                    to: '',
-                },
-                {
-                    type: 'playlist',
-                    icon: '',
-                    title: 'playlist A',
-                    to: '',
-                },
-                {
-                    type: 'playlist',
-                    icon: '',
-                    title: 'playlist A',
-                    to: '',
-                },
             ],
         },
     },
@@ -86,24 +69,35 @@ const songMenu = [
     },
 ];
 
-function Song({ songData, setSongsUploaded, listPlaylist }) {
+function Song({ songData, setSongsUploaded}) {
     // TODO: hardcode
     const defaultSrc = 'https://taogroup.com/wp-content/uploads/2022/01/Alan-Walker-1.jpg';
-    
+
     const dispatch = useDispatch();
-    const { curSongId, isPlaying } = useSelector((state) => state.music);
+    const { curSongId, isPlaying, curPlaylist } = useSelector((state) => state.music);
     const { token } = useSelector((state) => state.auth);
-    const {favoriteSongs} = useSelector(state => state.favorite)
+    const { favoriteSongs } = useSelector((state) => state.favorite);
     const [src, setSrc] = useState('');
     const [favorite, setFavorite] = useState(favoriteSongs.indexOf(songData.id) != -1); // lấy trạng thái init từ db truyền vào
-    console.log(favoriteSongs)
     useEffect(() => {
         const fetchCover = async () => {
             setSrc(`${BASE_URL}/api/song/getCover?id=${songData.id}`);
         };
         fetchCover();
-
     }, []);
+    useEffect(() => {
+        curPlaylist.forEach((item) => {
+            const obj = {
+                id: item.id,
+                type: 'playlist',
+                to: '',
+                icon: '',
+                title: item.name,
+            };
+            !songMenu[2].children.data.some((item) => item.id == obj.id) && songMenu[2].children.data.push(obj);
+        });
+    }, [curPlaylist]);
+    console.log(curPlaylist);
     // Đoạn delete này đưa vào cái songMenu ấy, có phần delete
     const handleDelete = async (e) => {
         e.stopPropagation();
@@ -112,18 +106,18 @@ function Song({ songData, setSongsUploaded, listPlaylist }) {
         setSongsUploaded((prev) => prev.filter((item) => item.id !== index));
     };
     const handleAddFavorite = async (e) => {
-        e.stopPropagation()
+        e.stopPropagation();
         const prevState = favorite;
         setFavorite((prev) => !prev);
         // Gọi API lưu thông tin favorite song vào db ...
-        if(!prevState) {
-            const response = await apis.addToFavorite(songData.id, token)
-            response.status == 200 && dispatch(actions.setFavorite(songData.id))
+        if (!prevState) {
+            const response = await apis.addToFavorite(songData.id, token);
+            response.status == 200 && dispatch(actions.setFavorite(songData.id));
         } else {
-            const response = await apis.removeFromFavorite(songData.id, token)
-            response.status == 200 && dispatch(actions.removeFavorite(songData.id))
+            const response = await apis.removeFromFavorite(songData.id, token);
+            response.status == 200 && dispatch(actions.removeFavorite(songData.id));
         }
-        
+
         // Show toast
         toast.success(`${!prevState ? 'Added to' : 'Removed form'} favorites`, {
             position: 'top-left',
@@ -160,7 +154,7 @@ function Song({ songData, setSongsUploaded, listPlaylist }) {
             </div>
             {/* Content Part */}
             <div className="flex-1 text-sm">
-                <p>{songData.name} (Single)</p>
+                <p>{songData.description} (Single)</p>
             </div>
             {/* <span className='border border-white p-2' onClick={handleDelete}>
                 <AiFillCloseCircle/>
@@ -172,7 +166,7 @@ function Song({ songData, setSongsUploaded, listPlaylist }) {
                     <TfiMicrophoneAlt />
                 </span>
                 <span
-                    className="items-center justify-center flex rounded-full p-1.5 text-xl hover:bg-[#ffffff1a]"
+                    className="flex items-center justify-center rounded-full p-1.5 text-xl hover:bg-[#ffffff1a]"
                     onClick={handleAddFavorite}
                 >
                     {!favorite ? (

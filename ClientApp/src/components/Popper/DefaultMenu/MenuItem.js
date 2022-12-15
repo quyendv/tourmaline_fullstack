@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { icons } from '~/utils/icons';
 import * as actions from '../../../store/actions';
+import * as apis from '../../../services'
 import styles from './DefaultMenu.module.scss';
 
 const { HiChevronRight } = icons;
@@ -10,6 +11,7 @@ const cx = classNames.bind(styles);
 
 function MenuItem({ data, isParent = 'false', songId, onClick = () => {} }) {
     const { setIsOpenCommentModal } = useSelector((state) => state.actions);
+    const {token} = useSelector(state => state.auth)
     const Component = data.to ? Link : 'div';
     const dispatch = useDispatch();
 
@@ -29,7 +31,11 @@ function MenuItem({ data, isParent = 'false', songId, onClick = () => {} }) {
             handleOpenCommentModal(e);
         }
         if(data.type == 'playlist') {
-            console.log('test')
+            const addToPlaylist = async () => {
+                const response = await apis.addToPlaylist(songId, data.id, token)
+                console.log(response)
+            }
+            addToPlaylist()
         }
         // e.stopPropagation();
     };

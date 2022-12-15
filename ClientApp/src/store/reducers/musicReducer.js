@@ -5,6 +5,7 @@ const initState = {
     isPlaying: false,
     recentSong: [],
     commentSongId: null,
+    curPlaylist: [],
 };
 
 //TODOS
@@ -28,6 +29,18 @@ const musicReducer = (state = initState, action) => {
             return {
                 ...state,
                 commentSongId: action.id,
+            };
+
+        case actionTypes.SET_CURPLAYLIST:
+            return {
+                ...state,
+                curPlaylist: action.data,
+            };
+
+        case actionTypes.ADD_PLAYLIST:
+            return {
+                ...state,
+                curPlaylist: [...state.curPlaylist, action.data],
             };
         default:
             return state;

@@ -1,8 +1,11 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { DefaultMenu as PlaylistMenu } from '~/components/Popper';
 import { images } from '~/assets/images';
 import Song from '../../components/Song';
 import { icons } from '../../utils/icons';
+import { useEffect, useState } from 'react';
+import * as apis from '../../services';
+import { useSelector } from 'react-redux';
 
 const {
     BsThreeDots,
@@ -45,8 +48,17 @@ const playlistMenu = [
 function Playlist() {
     // const { state } = useLocation();
     const state = { name: 'playlistName', username: 'username' }; // hard code
+    const { token } = useSelector((state) => state.auth);
     console.log(state);
-
+    const { pid } = useParams();
+    const [songs, setSongs] = useState([]);
+    useEffect(() => {
+        const fetchSongs = async () => {
+            const response = await apis.getPlaylist(pid, token);
+            setSongs(response.data.songs);
+        };
+        fetchSongs();
+    }, []);
     return (
         <div className="flex max-h-[calc(100vh-120px)] w-full gap-4 overflow-y-auto px-14 py-10 text-white">
             {/* Playlist Info */}
@@ -98,25 +110,9 @@ function Playlist() {
                 </div>
                 <div className="flex  flex-col">
                     {/* ...render playlist: hardcode */}
-                    <Song songData={{ name: 'Song name', id: 123 }} />
-                    <Song songData={{ name: 'Song name', id: 123 }} />
-                    <Song songData={{ name: 'Song name', id: 123 }} />
-                    <Song songData={{ name: 'Song name', id: 123 }} />
-                    <Song songData={{ name: 'Song name', id: 123 }} />
-                    <Song songData={{ name: 'Song name', id: 123 }} />
-                    <Song songData={{ name: 'Song name', id: 123 }} />
-                    <Song songData={{ name: 'Song name', id: 123 }} />
-                    <Song songData={{ name: 'Song name', id: 123 }} />
-                    <Song songData={{ name: 'Song name', id: 123 }} />
-                    <Song songData={{ name: 'Song name', id: 123 }} />
-                    <Song songData={{ name: 'Song name', id: 123 }} />
-                    <Song songData={{ name: 'Song name', id: 123 }} />
-                    <Song songData={{ name: 'Song name', id: 123 }} />
-                    <Song songData={{ name: 'Song name', id: 123 }} />
-                    <Song songData={{ name: 'Song name', id: 123 }} />
-                    <Song songData={{ name: 'Song name', id: 123 }} />
-                    <Song songData={{ name: 'Song name', id: 123 }} />
-                    <Song songData={{ name: 'Song name', id: 123 }} />
+                    {songs.map((item, index) => (
+                        <Song songData={item} />
+                    ))}
                 </div>
             </div>
         </div>

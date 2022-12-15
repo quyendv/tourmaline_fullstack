@@ -1,9 +1,11 @@
 import { useSelector } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { images } from '~/assets/images';
 import { deletePlaylist } from '../../services/music';
 import { icons } from '../../utils/icons';
 import { DefaultMenu as PlaylistMenu } from '../Popper';
+import * as apis from '../../services'
+import { useEffect } from 'react';
 
 const {
     BsFillPlayFill,
