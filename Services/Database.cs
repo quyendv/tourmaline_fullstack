@@ -61,7 +61,6 @@ public class Database
         connection.Open();
         try
         {
-            Console.WriteLine($"Query: {query}");
             var reader = new MySqlCommand(query, connection).ExecuteReader();
             if (reader.HasRows)
                 while (reader.Read())
