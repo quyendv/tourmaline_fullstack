@@ -38,7 +38,7 @@ public class PlaylistServices
 
     public async Task AddSong(int playlistId, int songId)
     {
-        await _database.Call($"INSERT IGNORE INTO playlistsongs (playlistId, songId) VALUES ({playlistId}, {songId})");
+        await _database.Call($"INSERT IGNORE INTO playlistsongs (playlistId, songId, added_date) VALUES ({playlistId}, {songId}, '{DateTime.Now:yyyy-MM-dd H:mm:ss}')");
     }
 
     public async Task RemoveSong(int playlistId, int songId)
@@ -49,7 +49,7 @@ public class PlaylistServices
     private async Task<List<Song>> GetSongs(int id)
     {
         var songServices = new SongServices(_database);
-        var result = (await _database.Call($"SELECT songId FROM playlistsongs WHERE playlistId={id}")).Select(e => e["songId"]);
+        var result = (await _database.Call($"SELECT songId FROM playlistsongs WHERE playlistId={id} ORDER BY added_date DESC")).Select(e => e["songId"]);
         var songs = result.Select(songId => songServices.GetSong(songId)).Cast<Song>().ToList();
         return songs;
     }
