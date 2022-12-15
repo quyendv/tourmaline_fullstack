@@ -66,6 +66,7 @@ function DropFile({ onFileChange }) {
                 media: audioFileRef.current.file,
                 cover: coverImgRef.current.file,
                 name: infos.songName,
+                description: infos.description
             };
             handleUploadAPI(finalPayload, token);
 

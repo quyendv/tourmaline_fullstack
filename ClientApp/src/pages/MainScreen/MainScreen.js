@@ -17,12 +17,49 @@ function MainScreen() {
         const fetchSuggestion = async () => {
             const response = await apis.getSuggestion(token);
             if (response.status === 200) {
-                setRecentlyPlayed(response.data.recentlyPlayed);
-                setRecentlyUploaded(response.data.recentlyUploaded);
+                // setRecentlyPlayed(response.data.recentlyPlayed);
+                // setRecentlyUploaded(response.data.recentlyUploaded);
                 console.log(response);
             }
         };
         fetchSuggestion();
+
+        const fetchNew = async () => {
+            const response = await apis.getNew() 
+            if(response.status === 200) {
+                //TODOS
+                console.log(response)
+            }
+        }
+        fetchNew()
+        const fetchTop50 = async() => {
+            const response = await apis.getTop50()
+            if(response.status === 200) {
+                console.log(response)
+            }
+        }
+        fetchTop50()
+        const fetchRecentlyPlays = async() => {
+            const response = await apis.getRecentPlays(token)
+            if(response.status === 200) {
+                console.log(response)
+            }
+        }
+        fetchRecentlyPlays()
+        const fetchRecentlyUploaded = async () => {
+            const response = await apis.getRecentlyUploaded(token)
+            if(response.status === 200) {
+                console.log(response)
+            }
+        }
+        fetchRecentlyUploaded()
+        const fetchAllPlaylist = async () => {
+            const response = await apis.getAllPlaylist(token)
+            if(response.status == 200) {
+                console.log(response)
+            }
+        }
+        fetchAllPlaylist()
     }, []);
     return (
         <div className="h-[calc(100vh-var(--header-height))] w-full overflow-y-auto px-14 pt-16 pb-24 text-white">

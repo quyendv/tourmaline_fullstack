@@ -22,8 +22,9 @@ function Menu({ children, menuList = [], placement = 'bottom-end', songId = 1, a
                     data={item}
                     songId={songId}
                     isParent={isParent}
-                    onClick={() => {
+                    onClick={(e) => {
                         if (isParent) {
+                            
                             setHistory((prev) => [...prev, item.children]);
                             // console.log(isParent);
                         }
@@ -55,6 +56,7 @@ function Menu({ children, menuList = [], placement = 'bottom-end', songId = 1, a
                 <div
                     className={cx('popper-wrapper')}
                     tabIndex="-1"
+                    onClick={e => e.stopPropagation()}
                     {...attrs}
                     // onClick={(e) => {
                     //     e.stopPropagation();
