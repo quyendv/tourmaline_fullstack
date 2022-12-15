@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Pop from '../../assets/images/Pop.svg';
 import * as apis from '../../services';
+import * as actions from '../../store/actions'
 import Song from '../../components/Song';
 import MediaItem from '../../components/MediaItem';
 function MainScreen() {
     const navigate = useNavigate();
+    const dispatch = useDispatch()
     const { token } = useSelector((state) => state.auth);
     const [recentlyPlayed, setRecentlyPlayed] = useState([]);
     const [recentlyUploaded, setRecentlyUploaded] = useState([]);
@@ -56,7 +58,8 @@ function MainScreen() {
         const fetchAllPlaylist = async () => {
             const response = await apis.getAllPlaylist(token)
             if(response.status == 200) {
-                console.log(response)
+                // console.log(response)
+                dispatch(actions.setCurPlaylist(response.data.playlists))
             }
         }
         fetchAllPlaylist()

@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import * as apis from '../../services'
+import * as actions from '../../store/actions'
 
 import Song from '../../components/Song'
 
 function Favorite() {
     const [favoriteSongs, setFavoriteSongs] = useState([])
     const {token} = useSelector(state => state.auth)
+    const dispatch = useDispatch()
     useEffect(() => {
         const fetchFavoriteSongs = async() => {
             const response = await apis.getFavorite(token)
@@ -16,7 +18,9 @@ function Favorite() {
         fetchFavoriteSongs()
         const fetchListPlaylist = async () => {
             const response = await apis.getAllPlaylist(token)
-            console.log(response)
+            if(response.status == 200) {
+                dispatch(actions.setCurPlaylist(response.data.playlists))
+            }
         }
         fetchListPlaylist()
     }, [])

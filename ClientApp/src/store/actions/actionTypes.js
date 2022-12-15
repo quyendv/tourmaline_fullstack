@@ -16,6 +16,8 @@ const actionTypes = {
     PLAY: 'PLAY',
     SET_RECENT:'SET_RECENT',
     SET_COMMENT_SONG_ID:'SET_COMMENT_SONG_ID',
+    SET_CURPLAYLIST:'SET_CURPLAYLIST',
+    ADD_PLAYLIST:'ADD_PLAYLIST',
 
 
     // actions

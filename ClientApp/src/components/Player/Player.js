@@ -42,7 +42,7 @@ function Player({ setIsShowSidebar }) {
             
             const blob = new Blob([response.data], {type:"audio/mpeg"})
             const url = URL.createObjectURL(blob)
-            audio.current.src = url
+            if(audio.current) audio.current.src = url
         }; 
         fetchSong();
         const fetchInfoSong =  async () => {
