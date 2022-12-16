@@ -3,15 +3,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { icons } from '~/utils/icons';
 import * as actions from '../../../store/actions';
-import * as apis from '../../../services'
+import * as apis from '../../../services';
 import styles from './DefaultMenu.module.scss';
 
 const { HiChevronRight } = icons;
 const cx = classNames.bind(styles);
 
 function MenuItem({ data, isParent = 'false', songId, onClick = () => {} }) {
-    const { setIsOpenCommentModal, setSongUploaded, setIsOpenDeleteModal } = useSelector((state) => state.actions);
-    const {token} = useSelector(state => state.auth)
+    const { setIsOpenCommentModal, setSongUploaded, setIsOpenDeleteModal, setIsOpenDeletePlaylistModal } = useSelector(
+        (state) => state.actions,
+    );
+    const { token } = useSelector((state) => state.auth);
     const Component = data.to ? Link : 'div';
     const dispatch = useDispatch();
 
@@ -21,7 +23,7 @@ function MenuItem({ data, isParent = 'false', songId, onClick = () => {} }) {
         dispatch(actions.setCommentSongId(songId));
     };
     const handleClickMenuItem = (e) => {
-        e.stopPropagation()
+        e.stopPropagation();
         onClick(); // chạy fn truyền vào trước
         if (data.title === 'Logout') {
             e.stopPropagation();
@@ -30,29 +32,31 @@ function MenuItem({ data, isParent = 'false', songId, onClick = () => {} }) {
         if (data.title === 'Comments') {
             handleOpenCommentModal(e);
         }
-        if(data.type == 'playlist') {
+        if (data.type == 'playlist') {
             const addToPlaylist = async () => {
-                const response = await apis.addToPlaylist(songId, data.id, token)
-                console.log(response)
-            }
-            addToPlaylist()
+                const response = await apis.addToPlaylist(songId, data.id, token);
+                console.log(response);
+            };
+            addToPlaylist();
         }
-        if(data.type == 'addToNext') {
+        if (data.type == 'addToNext') {
             const fetchSong = async () => {
-                const response = await apis.getInfoSong(songId, token)
-                dispatch(actions.addToNextUp(response.data))
-            }
-            fetchSong()
-
-
+                const response = await apis.getInfoSong(songId, token);
+                dispatch(actions.addToNextUp(response.data));
+            };
+            fetchSong();
         }
-        if(data.type == 'deleteSong') {
-            console.log('test')
-            setIsOpenDeleteModal(prev => !prev)
-            dispatch(actions.deleteSongId(data.id))
+        if (data.type == 'deleteSong') {
+            setIsOpenDeleteModal((prev) => !prev);
+            dispatch(actions.deleteSongId(data.id));
             // handleDelete()
         }
         // e.stopPropagation();
+        if (data.type == 'deletePlaylist') {
+            setIsOpenDeletePlaylistModal(prev => !prev)
+            dispatch(actions.deletePlaylistId(data.id))
+            console.log(data.id)
+        }
     };
 
     return (

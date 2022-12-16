@@ -10,6 +10,9 @@ const initState = {
     setIsOpenDeleteModal: function () {
         return 0;
     },
+    setIsOpenDeletePlaylistModal: function () {
+        return 0;
+    },
     createPlaylist: function () {
         return 0;
     },
@@ -54,8 +57,13 @@ const actionsReducer = (state = initState, action) => {
         case actionTypes.SET_IS_OPEN_DELETE_MODAL:
             return {
                 ...state,
-                setIsOpenDeleteModal: action.setIsOpenDeleteModal
-            }
+                setIsOpenDeleteModal: action.setIsOpenDeleteModal,
+            };
+        case actionTypes.SET_IS_OPEN_DELETE_PLAYLIST_MODAL:
+            return {
+                ...state,
+                setIsOpenDeletePlaylistModal: action.setIsOpenDeletePlaylistModal,
+            };
         default:
             return state;
     }

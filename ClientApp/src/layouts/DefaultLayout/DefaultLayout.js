@@ -8,15 +8,14 @@ import Player from '../../components/Player';
 import SidebarRight from '../../components/SidebarRight';
 import * as actions from '../../store/actions';
 import { crePlaylist } from '../../services/music';
-import CommentModal from '../../components/CommentModal';
-import Modal from '../../components/Modal';
-import DeleteModal from '../../components/DeleteModal';
+import { CommentModal, CrePlaylistModal, DeleteModal, DeletePlaylistModal } from '../../components/Modal';
 
 function DefaultLayout() {
     const [isShowSidebar, setIsShowSidebar] = useState(false);
     const [isOpenCrePlaylistModal, setIsOpenCrePlaylistModal] = useState(false);
     const [isOpenCommentModal, setIsOpenCommentModal] = useState(false);
     const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
+    const [isOpenDeletePlaylistModal, setIsOpenDeletePlaylistModal] = useState(false);
 
     const { token } = useSelector((state) => state.auth);
     const [title, setTitle] = useState('');
@@ -25,7 +24,8 @@ function DefaultLayout() {
     useEffect(() => {
         dispatch(actions.setIsOpenCrePlaylistModal(setIsOpenCrePlaylistModal));
         dispatch(actions.setIsOpenCommentModal(setIsOpenCommentModal));
-        dispatch(actions.setIsOpenDeleteModal(setIsOpenDeleteModal))
+        dispatch(actions.setIsOpenDeleteModal(setIsOpenDeleteModal));
+        dispatch(actions.setIsOpenDeletePlaylistModal(setIsOpenDeletePlaylistModal));
     }, []);
 
     const file = useRef();
@@ -45,9 +45,10 @@ function DefaultLayout() {
     return (
         // Làm effect sidebar cần bg-color cố định, sửa gradient nhé
         <div className="relative flex flex-col overflow-x-hidden bg-[var(--bg-main-screen-color)]">
-            {isOpenCrePlaylistModal && <Modal />}
+            {isOpenCrePlaylistModal && <CrePlaylistModal />}
             {isOpenCommentModal && <CommentModal />}
-            {isOpenDeleteModal && <DeleteModal/>}
+            {isOpenDeleteModal && <DeleteModal />}
+            {isOpenDeletePlaylistModal && <DeletePlaylistModal />}
             <div className="flex w-full">
                 <div className="w-[243px] flex-none">
                     <Sidebar />

@@ -38,15 +38,11 @@ const playlistMenu = [
         title: 'Share',
         to: '',
     },
-    {
-        icon: <AiFillDelete />,
-        title: 'Delete',
-        to: '',
-    },
 ];
 
 function Playlist() {
     // const { state } = useLocation();
+
     const state = { name: 'playlistName', username: 'username' }; // hard code
     const { token } = useSelector((state) => state.auth);
     console.log(state);
@@ -59,6 +55,18 @@ function Playlist() {
         };
         fetchSongs();
     }, []);
+    useEffect(() => {
+        const deletePlaylist = {
+            id: pid,
+            type: 'deletePlaylist',
+            icon: <AiFillDelete />,
+            title: 'Delete',
+            to: '',
+        };
+        playlistMenu[playlistMenu.length - 1].type == 'deletePlaylist' &&
+            playlistMenu.splice(playlistMenu.length - 1, 1);
+        playlistMenu[playlistMenu.length - 1].type != 'deletePlaylist' && playlistMenu.push(deletePlaylist);
+    }, [pid]);
     return (
         <div className="flex max-h-[calc(100vh-120px)] w-full gap-4 overflow-y-auto px-14 py-10 text-white">
             {/* Playlist Info */}

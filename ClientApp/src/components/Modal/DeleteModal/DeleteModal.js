@@ -1,10 +1,12 @@
 import { useSelector } from "react-redux";
-import * as apis from '../../services'
+import { useNavigate } from "react-router-dom";
+import * as apis from '../../../services'
 
 function DeleteModal() {
     const {setIsOpenDeleteModal, setSongUploaded} = useSelector(state => state.actions)
     const {deleteSongId} = useSelector(state => state.music)
     const {token} = useSelector(state => state.auth)
+    const navigate = useNavigate()
     const handleDelete = async (e) => {
         e.preventDefault()
         const index = deleteSongId;

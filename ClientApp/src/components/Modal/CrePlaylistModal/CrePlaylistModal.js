@@ -1,13 +1,13 @@
-import { icons } from '../../utils/icons';
-import { crePlaylist } from '../../services/music';
+import { icons } from '../../../utils/icons';
+import * as apis from '../../../services'
 import { useDispatch, useSelector } from 'react-redux';
 import { useState, useRef } from 'react';
 
-import Loading from '../Loading';
-import * as actions from '../../store/actions'
+import Loading from '../../Loading';
+import * as actions from '../../../store/actions'
 
 const { AiOutlineClose } = icons;
-function Modal() {
+function CrePlaylistModal() {
     const [isLoading, setIsLoading] = useState(false);
     const { token } = useSelector((state) => state.auth);
     const { setIsOpenCrePlaylistModal, createPlaylist, createAllPlaylist } = useSelector((state) => state.actions);
@@ -23,7 +23,7 @@ function Modal() {
             cover: file.current,
         };
         setIsLoading(true);
-        const response = await crePlaylist(finalPayload, token);
+        const response = await apis.crePlaylist(finalPayload, token);
         setIsLoading(false);
         if (response.status) {
             setIsOpenCrePlaylistModal((prev) => !prev);
@@ -62,4 +62,4 @@ function Modal() {
         </div>
     );
 }
-export default Modal;
+export default CrePlaylistModal;
