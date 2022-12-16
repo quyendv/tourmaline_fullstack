@@ -164,7 +164,7 @@ public class UserController : ControllerBase
 
     [HttpPost]
     [Route("changepwd")]
-    public async Task<ActionResult> ChangePassword(string username, string oldPassword, string newPassword)
+    public async Task<ActionResult> ChangePassword([FromForm] string username, [FromForm] string oldPassword, [FromForm] string newPassword)
     {
         // Verify old password
         var hasher = new PasswordHasher<User>();
