@@ -2,7 +2,7 @@ export const routesConfigPublic = {
     homeRoute: '/',
     playerRoute: 'player',
     libraryRoute: 'library',
-    albumRoute: 'album',
+    feedRoute: 'feed',
     favoritesRoute: 'favorites',
     settingsRoute: 'setting',
     playlist__title__pid:'playlist/:title/:pid',

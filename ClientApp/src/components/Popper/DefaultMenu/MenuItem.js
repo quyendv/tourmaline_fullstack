@@ -57,6 +57,15 @@ function MenuItem({ data, isParent = 'false', songId, onClick = () => {} }) {
             dispatch(actions.deletePlaylistId(data.id))
             console.log(data.id)
         }
+        if(data.type == 'addSongToNextUp') {
+            const addSongsToNextUp = async () => {
+                const response = await apis.getPlaylist(data.id, token)
+                response.data.songs.forEach(item => {
+                    dispatch(actions.addToNextUp(item))
+                })
+            }
+            addSongsToNextUp()
+        }
     };
 
     return (

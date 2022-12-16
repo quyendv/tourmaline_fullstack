@@ -16,7 +16,7 @@ function DeletePlaylistModal() {
         if (response.status == 200) {
             createPlaylist((prev) => prev.filter((item) => item.id != index));
             createAllPlaylist((prev) => prev.filter((item) => item.id != index));
-            navigate(-1)
+            navigate('/library')
             setIsOpenDeletePlaylistModal((prev) => !prev);
         }
     };

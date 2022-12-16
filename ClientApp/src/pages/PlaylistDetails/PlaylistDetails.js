@@ -16,6 +16,7 @@ const {
     RiShareForwardLine,
     AiFillDelete,
     BsFillPlayFill,
+    RiPlayListAddLine,
 } = icons;
 const playlistMenu = [
     {
@@ -63,10 +64,18 @@ function Playlist() {
             title: 'Delete',
             to: '',
         };
+        const addSongsToNextUp = {
+            id: pid,
+            type: 'addSongToNextUp',
+            icon: <RiPlayListAddLine />,
+            title: 'Add playlist to next up',
+            to: '',
+        };
+        playlistMenu[0].type != 'addSongToNextUp' && playlistMenu.unshift(addSongsToNextUp);
         playlistMenu[playlistMenu.length - 1].type == 'deletePlaylist' &&
             playlistMenu.splice(playlistMenu.length - 1, 1);
         playlistMenu[playlistMenu.length - 1].type != 'deletePlaylist' && playlistMenu.push(deletePlaylist);
-    }, [pid]);
+    }, [pid, songs]);
     return (
         <div className="flex max-h-[calc(100vh-120px)] w-full gap-4 overflow-y-auto px-14 py-10 text-white">
             {/* Playlist Info */}

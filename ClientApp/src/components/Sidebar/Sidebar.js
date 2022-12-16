@@ -50,8 +50,8 @@ function Sidebar() {
                 <SidebarItem
                     clr="#b145e9"
                     icon={<IoAlbumsOutline />}
-                    textContent="Album"
-                    to={routesConfigPublic.albumRoute}
+                    textContent="Feed"
+                    to={routesConfigPublic.feedRoute}
                 />
                 <SidebarItem
                     clr="#0fc70f"
