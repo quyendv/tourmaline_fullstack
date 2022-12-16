@@ -61,4 +61,9 @@ public class UserServices
     {
         return (await _database.Call($"SELECT password FROM user WHERE username='{username}'")).First()["password"];
     }
+
+    public async Task ChangePassword(string username, string passwordHash)
+    {
+        await _database.Call($"UPDATE user WHERE username={username} SET password={passwordHash}");
+    }
 }
