@@ -42,43 +42,47 @@ function MediaItem({ songData }) {
     const [mediaSrc, setMediasrc] = useState('');
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        const fetchCover = async () => {
-            setMediasrc(`${BASE_URL}/api/song/getCover?id=${songData.id}`);
-        };
-        fetchCover();
-    }, []);
+    // useEffect(() => {
+    //     const fetchCover = async () => {
+    //         setMediasrc(`${BASE_URL}/api/song/getCover?id=${songData.id}`);
+    //     };
+    //     fetchCover();
+    // }, []);
     return (
         <div
             // onClick={() => {
             //     dispatch(actions.setCurSongId(songData.id));
             //     dispatch(actions.play(true));
             // }}
-            className="mediaItem relative group flex items-center gap-3 rounded-md p-2 hover:bg-[#ffffff1a]"
+            className="mediaItem group relative flex items-center gap-3 rounded-md p-2 hover:bg-[#ffffff1a]"
         >
             <div className="relative after:inset-0 after:bg-overlay-30 group-hover:after:absolute">
                 <span
                     className="absolute top-1/2 left-1/2 z-10 hidden -translate-x-1/2 -translate-y-1/2 cursor-pointer  p-1 group-hover:block"
                     onClick={() => {
-                        dispatch(actions.setCurSongId(songData.id));
+                        dispatch(actions.setCurSongId(songData?.id));
                         dispatch(actions.play(true));
                     }}
                 >
                     <BsFillPlayFill size={26} />
                 </span>
-                <img className="h-[60px] w-[60px] object-cover" src={mediaSrc} alt="media-cover" />
+                <img
+                    className="h-[60px] w-[60px] object-cover"
+                    src={`${BASE_URL}/api/song/getCover?id=${songData?.id}`}
+                    alt="media-cover"
+                />
             </div>
             <div className="flex flex-1 flex-col text-left">
-                <span className="text-sm font-medium">{songData.name}</span>
-                <span className="text-xs text-[#ffffff80]">{songData.uploader}</span>
-                <span className="text-xs text-[#ffffff80]">{moment(songData.uploadTime).fromNow()}</span>
+                <span className="text-sm font-medium">{songData?.name}</span>
+                <span className="text-xs text-[#ffffff80]">{songData?.uploader}</span>
+                <span className="text-xs text-[#ffffff80]">{moment(songData?.uploadTime).fromNow()}</span>
             </div>
             <MediaMenu menuList={songMenu} songId="" placement="right-start">
                 <span
                     onClick={(e) => {
                         e.stopPropagation();
                     }}
-                    className="hidden absolute top-1/2 right-1 -translate-y-1/2 items-center justify-center rounded-full p-1.5 text-xl hover:bg-[#ffffff1a] group-hover:flex"
+                    className="absolute top-1/2 right-1 hidden -translate-y-1/2 items-center justify-center rounded-full p-1.5 text-xl hover:bg-[#ffffff1a] group-hover:flex"
                 >
                     <BsThreeDots />
                 </span>

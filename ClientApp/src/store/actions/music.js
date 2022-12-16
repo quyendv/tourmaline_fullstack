@@ -28,3 +28,8 @@ export const addPlaylist = (data) => ({
     type: actionTypes.ADD_PLAYLIST,
     data
 })  
+
+export const addToNextUp = (data) => ({
+    type: actionTypes.ADD_TO_NEXTUP,
+    data
+})

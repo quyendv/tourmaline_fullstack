@@ -6,6 +6,7 @@ const initState = {
     recentSong: [],
     commentSongId: null,
     curPlaylist: [],
+    nextUpSong: [],
 };
 
 //TODOS
@@ -41,6 +42,19 @@ const musicReducer = (state = initState, action) => {
             return {
                 ...state,
                 curPlaylist: [...state.curPlaylist, action.data],
+            };
+        case actionTypes.ADD_TO_NEXTUP:
+            let indexOfSong = -1;
+            state.nextUpSong.forEach((item, index) => {
+                if(item.id == action.data.id ) {
+                    indexOfSong = index
+                }
+            })
+            indexOfSong != -1 && state.nextUpSong.splice(indexOfSong, 1)
+            return {
+                ...state,
+                
+                nextUpSong: [ action.data, ...state.nextUpSong],
             };
         default:
             return state;

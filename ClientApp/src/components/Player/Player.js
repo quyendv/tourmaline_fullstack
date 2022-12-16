@@ -4,7 +4,7 @@ import moment from 'moment';
 
 import { icons } from '../../utils/icons';
 import * as actions from '../../store/actions';
-import { getInfoSong,getSong } from '../../services/music';
+import { getInfoSong, getSong } from '../../services/music';
 import { BASE_URL } from '../../utils/constant';
 
 const {
@@ -18,19 +18,19 @@ const {
     SlVolume1,
     SlVolume2,
     SlVolumeOff,
-    RiRepeatOneLine
+    RiRepeatOneLine,
 } = icons;
 
 function Player({ setIsShowSidebar }) {
-    const { curSongId, isPlaying } = useSelector((state) => state.music);
+    const { curSongId, isPlaying, nextUpSong } = useSelector((state) => state.music);
     const { token } = useSelector((state) => state.auth);
     const [volume, setVolume] = useState(100);
     const [songInfo, setSongInfo] = useState({});
-    const [imageSong, setImageSong] = useState('')
+    const [imageSong, setImageSong] = useState('');
     const audio = useRef();
     const [currentSecond, setCurrentSecond] = useState(0);
-    const [isShuffle, setIsShuffle] = useState(false)
-    const [isRepeat, setIsRepeat] = useState(0)
+    const [isShuffle, setIsShuffle] = useState(false);
+    const [isRepeat, setIsRepeat] = useState(0);
     const dispatch = useDispatch();
     const trackRef = useRef();
     const thumbRef = useRef();
@@ -38,24 +38,23 @@ function Player({ setIsShowSidebar }) {
 
     useEffect(() => {
         const fetchSong = async () => {
-            const response = await getSong(curSongId, token)
-            
-            const blob = new Blob([response.data], {type:"audio/mpeg"})
-            const url = URL.createObjectURL(blob)
-            if(audio.current) audio.current.src = url
-        }; 
-        fetchSong();
-        const fetchInfoSong =  async () => {
-            const response = await getInfoSong(curSongId, token)
-            setSongInfo(response.data)
-        }
-        
-        fetchInfoSong()
-        const fetchImageSong = async () => {
-            setImageSong(`${BASE_URL}/api/song/getCover?id=${curSongId}`)
-        }
-        fetchImageSong()
+            const response = await getSong(curSongId, token);
 
+            const blob = new Blob([response.data], { type: 'audio/mpeg' });
+            const url = URL.createObjectURL(blob);
+            if (audio.current) audio.current.src = url;
+        };
+        fetchSong();
+        const fetchInfoSong = async () => {
+            const response = await getInfoSong(curSongId, token);
+            setSongInfo(response.data);
+        };
+
+        fetchInfoSong();
+        const fetchImageSong = async () => {
+            setImageSong(`${BASE_URL}/api/song/getCover?id=${curSongId}`);
+        };
+        fetchImageSong();
     }, [curSongId]);
     var intervalId;
     useEffect(() => {
@@ -88,28 +87,25 @@ function Player({ setIsShowSidebar }) {
         audio.current.volume = volume / 100;
     }, [volume]);
     const handleRepeatOnce = () => {
-        audio.current.play()
-    }
+        audio.current.play();
+    };
     // const handleShuffle = () => {
     //     const randomIndex = Math.round(Math.random() * songs?.length) - 1;
     //     dispatch(actions.setCurSongId(songs[randomIndex].id));
     //     dispatch(actions.play(true));
     // };
     useEffect(() => {
-        console.log(isRepeat)
 
         const handleEnd = () => {
-
-            if(isRepeat == 2) {
-                handleRepeatOnce()
+            if (isRepeat == 2) {
+                handleRepeatOnce();
             } else {
                 audio.current.pause();
                 dispatch(actions.play(false));
             }
-            if(isShuffle) {
+            if (isShuffle) {
                 // handleShuffle()
             }
-
         };
         audio.current.addEventListener('ended', handleEnd);
         return () => {
@@ -123,14 +119,15 @@ function Player({ setIsShowSidebar }) {
         thumbRef.current.style.cssText = `right: ${100 - percent}%`;
         setCurrentSecond(audio.current.currentTime);
     };
-    const handleNextSong = (e) => {
 
-    }
-    const handlePrevSong = (e) => {
-        
-    }
+    const handleNextSong = (e) => {
+        dispatch(actions.setCurSongId(nextUpSong[0].id))
+        audio.current.play()
+        nextUpSong.splice(0, 1)
+    };
+    const handlePrevSong = (e) => {};
     return (
-        <div className="flex items-center h-full text-white">
+        <div className="flex h-full items-center text-white">
             {/* //Songdetai */}
             <div className="flex w-[30%] items-center gap-4 ">
                 <img
@@ -148,10 +145,16 @@ function Player({ setIsShowSidebar }) {
             <div className="flex w-[40%] flex-col items-center justify-center gap-2 ">
                 {/* //Main Player */}
                 <div className="flex items-center justify-center gap-8">
-                    <span onClick={() =>setIsShuffle(prev => !prev)} className={`${isShuffle && 'text-activecolor'} cursor-pointer`}>
+                    <span
+                        onClick={() => setIsShuffle((prev) => !prev)}
+                        className={`${isShuffle && 'text-activecolor'} cursor-pointer`}
+                    >
                         <CiShuffle size={24} />
                     </span>
-                    <span onClick={handlePrevSong} className="cursor-pointer text-gray-600 pointer-events-none">
+                    <span
+                        onClick={handlePrevSong}
+                        className={`cursor-pointer ${nextUpSong.length == 0 && 'pointer-events-none text-gray-600'}`}
+                    >
                         <MdSkipPrevious size={24} />
                     </span>
                     <span onClick={handleToggleMusic} className="cursor-pointer rounded-full border border-white p-1">
@@ -161,11 +164,17 @@ function Player({ setIsShowSidebar }) {
                             <BsPauseFill size={24} className="mr-[-1px]" />
                         )}
                     </span>
-                    <span onClick={handleNextSong} className="cursor-pointer text-gray-600 pointer-events-none">
+                    <span
+                        onClick={handleNextSong}
+                        className={`cursor-pointer ${nextUpSong.length == 0 && 'pointer-events-none text-gray-600'}`}
+                    >
                         <MdSkipNext size={24} />
                     </span>
-                    <span onClick={() => setIsRepeat(prev => (prev == 2 ? 0 : (prev + 1)))} className={`cursor-pointer ${isRepeat > 0 && 'text-activecolor'}`}>
-                        {isRepeat == 2 ? <RiRepeatOneLine size={24}/> : <CiRepeat  size={24} />}
+                    <span
+                        onClick={() => setIsRepeat((prev) => (prev == 2 ? 0 : prev + 1))}
+                        className={`cursor-pointer ${isRepeat > 0 && 'text-activecolor'}`}
+                    >
+                        {isRepeat == 2 ? <RiRepeatOneLine size={24} /> : <CiRepeat size={24} />}
                     </span>
                     <audio ref={audio}> </audio>
                 </div>
@@ -202,7 +211,7 @@ function Player({ setIsShowSidebar }) {
                     {volume > 70 ? <SlVolume2 /> : volume == 0 ? <SlVolumeOff /> : <SlVolume1 />}{' '}
                 </span>
                 <input
-                    className="cursor-pointer font"
+                    className="font cursor-pointer"
                     type="range"
                     min={0}
                     max={100}

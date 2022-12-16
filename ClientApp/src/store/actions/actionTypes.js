@@ -26,6 +26,8 @@ const actionTypes = {
     CREATE_PLAYLIST:'CREATE_PLAYLIST',
     //use in playlist detail
     CREATE_ALL_PLAYLIST: 'CREATE_ALL_PLAYLIST',
+    ADD_TO_NEXTUP:"ADD_TO_NEXTUP",
+    
     //user
     SET_USERNAME: 'SET_USERNAME',
 

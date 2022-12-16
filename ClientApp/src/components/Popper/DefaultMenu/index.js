@@ -12,7 +12,6 @@ function Menu({ children, menuList = [], placement = 'bottom-end', songId = 1, a
     const [history, setHistory] = useState([{ data: menuList }]);
     const current = history[history.length - 1];
     const tippyRef = useRef();
-
     const renderMenuItem = () => {
         return current.data.map((item, index) => {
             const isParent = !!item.children;
