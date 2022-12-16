@@ -14,7 +14,7 @@ public class RecentServices
     public async Task<List<Song>> GetRecent(string username)
     {
         var songServices = new SongServices(_database);
-        var result = (await _database.Call($"SELECT song FROM recents WHERE username='{username}' SORT BY added_date")).Select(e => e["song"]);
+        var result = (await _database.Call($"SELECT song FROM recents WHERE username='{username}' ORDER BY added_date")).Select(e => e["song"]);
         var songs = new List<Song>();
         foreach (var song in result)
         {
