@@ -34,7 +34,7 @@ public class Database
                 }
 
             var queryString =
-                $"SELECT {(columns == null ? "*" : string.Join(", ", columns))} FROM {table} {(conditions != null ? $"WHERE {string.Join("AND ", cons)}" : "")} {(sortBy == null ? "" : $"SORT BY {sortBy}")}";
+                $"SELECT {(columns == null ? "*" : string.Join(", ", columns))} FROM {table} {(conditions != null ? $"WHERE {string.Join("AND ", cons)}" : "")} {(sortBy == null ? "" : $"ORDER BY {sortBy}")}";
             Console.WriteLine($"Query: {queryString}");
             var reader = new MySqlCommand(queryString, connection).ExecuteReader();
             if (reader.HasRows)
