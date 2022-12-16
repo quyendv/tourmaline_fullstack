@@ -1,10 +1,4 @@
-import {
-    faFacebookSquare,
-    faGithubSquare,
-    faGooglePlusSquare,
-    faInstagramSquare,
-    faLinkedin,
-} from '@fortawesome/free-brands-svg-icons';
+
 import {faEarthAfrica, faLocationDot, faPaperPlane, faPhone} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import classNames from 'classnames/bind';
