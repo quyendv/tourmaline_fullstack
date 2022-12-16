@@ -74,7 +74,6 @@ const musicReducer = (state = initState, action) => {
                 prevSong: [action.data, ...state.prevSong],
             }
         case actionTypes.REMOVE_FROM_PREV: 
-            // if(state.curSongId == state.prevSong[])
             return {
                 ...state,
                 prevSong: state.prevSong.filter(item => item != action.data)
@@ -82,7 +81,7 @@ const musicReducer = (state = initState, action) => {
         case actionTypes.REMOVE_FROM_NEXT_UP:
             return {
                 ...state,
-                nextUpSong: state.nextUpSong.filter(item => item.id !== action.data)
+                nextUpSong: state.nextUpSong.filter(item => item.id != action.data)
             }
             
         default:

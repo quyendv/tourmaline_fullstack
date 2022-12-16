@@ -23,7 +23,7 @@ const {
 
 function Player({ setIsShowSidebar }) {
     const { curSongId, isPlaying, nextUpSong, prevSong } = useSelector((state) => state.music);
-    
+
     const { token } = useSelector((state) => state.auth);
     const [volume, setVolume] = useState(100);
     const [songInfo, setSongInfo] = useState({});
@@ -38,10 +38,11 @@ function Player({ setIsShowSidebar }) {
     // TODOS
 
     useEffect(() => {
-        dispatch(actions.addToPrev(curSongId))
+        dispatch(actions.addToPrev(curSongId));
+        console.log('test')
         const fetchSong = async () => {
             const response = await getSong(curSongId, token);
-
+            console.log('in')
             const blob = new Blob([response.data], { type: 'audio/mpeg' });
             const url = URL.createObjectURL(blob);
             if (audio.current) audio.current.src = url;
@@ -63,7 +64,6 @@ function Player({ setIsShowSidebar }) {
         intervalId && clearInterval(intervalId);
 
         if (isPlaying && thumbRef.current) {
-            audio.current.pause();
             // audio.current.load();
             audio.current.play();
             intervalId = setInterval(() => {
@@ -91,29 +91,34 @@ function Player({ setIsShowSidebar }) {
     const handleRepeatOnce = () => {
         audio.current.play();
     };
-    // const handleShuffle = () => {
-    //     const randomIndex = Math.round(Math.random() * songs?.length) - 1;
-    //     dispatch(actions.setCurSongId(songs[randomIndex].id));
-    //     dispatch(actions.play(true));
-    // };
-    useEffect(() => {
 
+    useEffect(() => {
+        const handleShuffle = () => {
+            const randomIndex = Math.round(Math.random() * (nextUpSong?.length - 1)) ;
+            console.log(randomIndex)
+            dispatch(actions.setCurSongId(nextUpSong[randomIndex].id));
+            dispatch(actions.removeFromNextUp(nextUpSong[randomIndex].id))
+            console.log(nextUpSong)
+            dispatch(actions.play(true));
+        };
         const handleEnd = () => {
-            if (isRepeat == 2) {
+            if (isShuffle) {
+                handleShuffle();
+            }
+            else if (!isShuffle && isRepeat == 2) {
                 handleRepeatOnce();
-            } else {
+            } else if (!isShuffle && isRepeat == 1) {
+                handleNextSong();
+            } else if(!isShuffle && isRepeat == 0) {
                 audio.current.pause();
                 dispatch(actions.play(false));
-            }
-            if (isShuffle) {
-                // handleShuffle()
             }
         };
         audio.current.addEventListener('ended', handleEnd);
         return () => {
             audio.current && audio.current.removeEventListener('ended', handleEnd);
         };
-    }, [audio, isRepeat]);
+    }, [audio, isRepeat, isShuffle, nextUpSong]);
     const handleClickProgressbar = (e) => {
         const trackkRect = trackRef.current.getBoundingClientRect();
         const percent = Math.round(((e.clientX - trackkRect.left) * 10000) / trackkRect.width) / 100;
@@ -123,17 +128,18 @@ function Player({ setIsShowSidebar }) {
     };
 
     const handleNextSong = (e) => {
-        console.log(prevSong)
-        dispatch(actions.setCurSongId(nextUpSong[0].id))
-        dispatch(actions.play(true))
-        dispatch(actions.removeFromNextUp(nextUpSong[0].id))
+        e.preventDefault();
+        console.log(prevSong);
+        dispatch(actions.setCurSongId(nextUpSong[0].id));
+        dispatch(actions.play(true));
+        dispatch(actions.removeFromNextUp(nextUpSong[0].id));
     };
     const handlePrevSong = (e) => {
-        const index = prevSong.indexOf(curSongId)
-        console.log(index)
-        dispatch(actions.removeFromPrev(curSongId))
-        dispatch(actions.setCurSongId(prevSong[index + 1]))
-
+        e.preventDefault()
+        const index = prevSong.indexOf(curSongId);
+        console.log(index);
+        dispatch(actions.removeFromPrev(curSongId));
+        dispatch(actions.setCurSongId(prevSong[index + 1]));
     };
     return (
         <div className="flex h-full items-center text-white">
