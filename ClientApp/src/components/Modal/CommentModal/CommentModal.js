@@ -1,8 +1,7 @@
 import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
-
-import { icons } from '../../utils/icons';
-import * as apis from '../../services/comment';
+import {icons} from '../../../utils/icons'
+import * as apis from '../../../services';
 import moment from 'moment';
 
 const { AiOutlineClose, FaRegComment } = icons;

@@ -28,3 +28,7 @@ export const setIsOpenDeleteModal = (setIsOpenDeleteModal) => ({
     type: actionTypes.SET_IS_OPEN_DELETE_MODAL,
     setIsOpenDeleteModal
 })
+export const setIsOpenDeletePlaylistModal = (setIsOpenDeletePlaylistModal) => ({
+    type: actionTypes.SET_IS_OPEN_DELETE_PLAYLIST_MODAL,
+    setIsOpenDeletePlaylistModal
+})
