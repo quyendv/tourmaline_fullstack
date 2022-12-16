@@ -10,7 +10,7 @@ const { HiChevronRight } = icons;
 const cx = classNames.bind(styles);
 
 function MenuItem({ data, isParent = 'false', songId, onClick = () => {} }) {
-    const { setIsOpenCommentModal } = useSelector((state) => state.actions);
+    const { setIsOpenCommentModal, setSongUploaded, setIsOpenDeleteModal } = useSelector((state) => state.actions);
     const {token} = useSelector(state => state.auth)
     const Component = data.to ? Link : 'div';
     const dispatch = useDispatch();
@@ -45,6 +45,12 @@ function MenuItem({ data, isParent = 'false', songId, onClick = () => {} }) {
             fetchSong()
 
 
+        }
+        if(data.type == 'deleteSong') {
+            console.log('test')
+            setIsOpenDeleteModal(prev => !prev)
+            dispatch(actions.deleteSongId(data.id))
+            // handleDelete()
         }
         // e.stopPropagation();
     };

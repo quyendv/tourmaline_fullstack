@@ -36,6 +36,7 @@ function Library() {
     }, []);
     useEffect(() => {
         dispatch(actions.createPlaylist(setPlaylistCreated));
+        dispatch(actions.setSongUploaded(setSongsUploaded))
     }, []);
 
     return (
@@ -77,7 +78,7 @@ function Library() {
             {/* Songs */}
             <div className="mt-8 flex items-center gap-4">
                 <h3 className="text-xl font-semibold">Uploaded Songs</h3>
-                <span className="cursor-pointer">
+                <span onClick={() => navigate('/system/upload')} className="cursor-pointer">
                     <AiOutlinePlusCircle size={20} />
                 </span>
             </div>

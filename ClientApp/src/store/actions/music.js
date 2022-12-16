@@ -46,3 +46,7 @@ export const removeFromNextUp = (data) => ({
     type: actionTypes.REMOVE_FROM_NEXT_UP,
     data
 })
+export const deleteSongId = (id) => ({
+    type: actionTypes.DELETE_SONG_ID,
+    id
+})

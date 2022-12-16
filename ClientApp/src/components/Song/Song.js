@@ -69,11 +69,11 @@ const songMenu = [
         title: 'Share',
         to: '',
     },
-    {
-        icon: <AiFillDelete />,
-        title: 'Delete',
-        to: '',
-    },
+    // {
+    //     icon: <AiFillDelete />,
+    //     title: 'Delete',
+    //     to: '',
+    // },
 ];
 
 function Song({ songData, setSongsUploaded }) {
@@ -100,14 +100,17 @@ function Song({ songData, setSongsUploaded }) {
             };
             !songMenu[3].children.data.some((item) => item.id == obj.id) && songMenu[3].children.data.push(obj);
         });
+        const deleteSong = {
+            id: songData.id,
+            type:'deleteSong',
+            to: '',
+            icon: <AiFillDelete />,
+            title:'Delete'
+        }
+        songMenu[songMenu.length - 1].type != 'deleteSong' && songMenu.push(deleteSong)
     }, []);
     // Đoạn delete này đưa vào cái songMenu ấy, có phần delete
-    const handleDelete = async (e) => {
-        e.stopPropagation();
-        const index = songData.id;
-        const response = await deleteSong(songData.id, token);
-        setSongsUploaded((prev) => prev.filter((item) => item.id !== index));
-    };
+
     const handleAddFavorite = async (e) => {
         e.stopPropagation();
         const prevState = favorite;
