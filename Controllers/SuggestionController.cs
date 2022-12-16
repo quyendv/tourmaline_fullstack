@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using tourmaline.Models;
 using tourmaline.Services;
 
 namespace tourmaline.Controllers;
@@ -47,65 +48,49 @@ public class SuggestionController : ControllerBase
 
     [Route("getRecentPlays")]
     [HttpGet]
-    public async Task<ActionResult<Dictionary<string, dynamic>>> GetRecentlyPlayed()
+    public async Task<ActionResult<List<Song>>> GetRecentlyPlayed()
     {
         if (Username == null)
         {
             return StatusCode(StatusCodes.Status401Unauthorized);
         }
 
-        return Ok(new Dictionary<string, dynamic>()
-            { { "result", await _suggestionServices.GetRecentPlays(Username) } });
+        return Ok(await _suggestionServices.GetRecentPlays(Username));
     }
 
     [Route("getRecentlyUploaded")]
     [HttpGet]
-    public async Task<ActionResult<Dictionary<string, dynamic>>> GetRecentlyUploaded()
+    public async Task<ActionResult<List<Song>>> GetRecentlyUploaded()
     {
         if (Username == null)
         {
             return StatusCode(StatusCodes.Status401Unauthorized);
         }
 
-        return new Dictionary<string, dynamic>()
-        {
-            {
-                "result", await _suggestionServices.GetRecentUploads(Username)
-            }
-        };
+        return Ok(await _suggestionServices.GetRecentUploads(Username));
     }
 
     [Route("getRelatedArtist")]
     [HttpGet]
-    public async Task<ActionResult<Dictionary<string, dynamic>>> GetRelatedArtist()
+    public async Task<ActionResult<List<User>>> GetRelatedArtist()
     {
         if (Username == null)
         {
             return StatusCode(StatusCodes.Status401Unauthorized);
         }
 
-        return Ok(new Dictionary<string, dynamic>()
-        {
-            {
-                "result", await _suggestionServices.GetRelatedArtist(Username)
-            }
-        });
+        return Ok(await _suggestionServices.GetRelatedArtist(Username));
     }
 
     [Route("getSuggestion")]
     [HttpGet]
-    public async Task<ActionResult<Dictionary<string, dynamic>>> GetSuggestion()
+    public async Task<ActionResult<List<Song>>> GetSuggestion()
     {
         if (Username == null)
         {
             return StatusCode(StatusCodes.Status401Unauthorized);
         }
 
-        return Ok(new Dictionary<string, dynamic>()
-        {
-            {
-                "result", await _suggestionServices.GetSongSuggestions(Username)
-            }
-        });
+        return Ok(await _suggestionServices.GetSongSuggestions(Username));
     }
 }

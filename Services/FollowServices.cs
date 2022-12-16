@@ -15,7 +15,7 @@ public class FollowServices
 
     public async Task AddFollow(string username, string following)
     {
-        await _database.Call($"INSERT INTO follow (username, following) VALUES ('{username}', '{following}')");
+        await _database.Call($"INSERT IGNORE INTO follow (username, following) VALUES ('{username}', '{following}')");
     }
     
     public async Task RemoveFollow(string username, string following)
