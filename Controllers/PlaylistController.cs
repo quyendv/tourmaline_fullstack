@@ -128,21 +128,19 @@ public class PlaylistController : ControllerBase
 
     [Route("remove")]
     [HttpDelete]
-    public async Task<ActionResult> RemoveFromPlaylist([FromBody] int[] songIds, int playlistId)
+    public async Task<ActionResult> RemoveFromPlaylist(int songId, int playlistId)
     {
-        if (!await _playlistServices.IsPlaylistExist(playlistId)) return StatusCode(StatusCodes.Status400BadRequest, "Playlist not found!");
-        foreach (var songId in songIds)
+        if (!await _playlistServices.IsPlaylistExist(playlistId))
         {
-            if (await _songServices.IsSongExist(songId))
-            {
-                await _playlistServices.RemoveSong(playlistId, songId);
-            }
-            else
-            {
-                return StatusCode(StatusCodes.Status400BadRequest, "Song not found!");
-            }
+            return StatusCode(StatusCodes.Status400BadRequest, "Playlist not found!");
         }
 
+        if (!await _songServices.IsSongExist(songId))
+        {
+            return StatusCode(StatusCodes.Status400BadRequest, "Song not found!");
+        }
+
+        await _playlistServices.RemoveSong(playlistId, songId);
         return Ok();
     }
 
