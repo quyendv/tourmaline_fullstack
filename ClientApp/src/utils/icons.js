@@ -23,6 +23,7 @@ import { MdKeyboardArrowLeft, MdSkipNext, MdSkipPrevious } from 'react-icons/md'
 import { RiRepeatOneLine, RiShareForwardLine } from 'react-icons/ri';
 import { SlVolume1, SlVolume2, SlVolumeOff } from 'react-icons/sl';
 import { TfiMicrophoneAlt } from 'react-icons/tfi';
+import {RiPlayListAddLine} from 'react-icons/ri'
 
 export const icons = {
     AiFillCloseCircle,
@@ -57,4 +58,5 @@ export const icons = {
     SlVolume2,
     SlVolumeOff,
     TfiMicrophoneAlt,
+    RiPlayListAddLine
 };

@@ -37,6 +37,15 @@ function MenuItem({ data, isParent = 'false', songId, onClick = () => {} }) {
             }
             addToPlaylist()
         }
+        if(data.type == 'addToNext') {
+            const fetchSong = async () => {
+                const response = await apis.getInfoSong(songId, token)
+                dispatch(actions.addToNextUp(response.data))
+            }
+            fetchSong()
+
+
+        }
         // e.stopPropagation();
     };
 

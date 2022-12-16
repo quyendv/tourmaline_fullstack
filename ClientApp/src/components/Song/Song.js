@@ -23,9 +23,16 @@ const {
     RiShareForwardLine,
     AiFillDelete,
     AiOutlinePlusCircle,
+    RiPlayListAddLine,
 } = icons;
 // TODO: Song list sửa sau
 const songMenu = [
+    {
+        type: 'addToNext',
+        icon: <RiPlayListAddLine />,
+        title: 'Add to Next up',
+        to: '',
+    },
     {
         type: '',
         icon: <FaRegComment />,
@@ -69,22 +76,19 @@ const songMenu = [
     },
 ];
 
-function Song({ songData, setSongsUploaded}) {
-    // TODO: hardcode
-    const defaultSrc = 'https://taogroup.com/wp-content/uploads/2022/01/Alan-Walker-1.jpg';
+function Song({ songData, setSongsUploaded }) {
 
-    const dispatch = useDispatch();
+      const dispatch = useDispatch();
     const { curSongId, isPlaying, curPlaylist } = useSelector((state) => state.music);
     const { token } = useSelector((state) => state.auth);
     const { favoriteSongs } = useSelector((state) => state.favorite);
-    const [src, setSrc] = useState('');
     const [favorite, setFavorite] = useState(favoriteSongs.indexOf(songData.id) != -1); // lấy trạng thái init từ db truyền vào
-    useEffect(() => {
-        const fetchCover = async () => {
-            setSrc(`${BASE_URL}/api/song/getCover?id=${songData.id}`);
-        };
-        fetchCover();
-    }, []);
+    // useEffect(() => {
+    //     const fetchCover = async () => {
+    //         setSrc(`${BASE_URL}/api/song/getCover?id=${songData.id}`);
+    //     };
+    //     fetchCover();
+    // }, []);
     useEffect(() => {
         curPlaylist.forEach((item) => {
             const obj = {
@@ -94,10 +98,9 @@ function Song({ songData, setSongsUploaded}) {
                 icon: '',
                 title: item.name,
             };
-            !songMenu[2].children.data.some((item) => item.id == obj.id) && songMenu[2].children.data.push(obj);
+            !songMenu[3].children.data.some((item) => item.id == obj.id) && songMenu[3].children.data.push(obj);
         });
-    }, [curPlaylist]);
-    console.log(curPlaylist);
+    }, []);
     // Đoạn delete này đưa vào cái songMenu ấy, có phần delete
     const handleDelete = async (e) => {
         e.stopPropagation();
@@ -145,7 +148,11 @@ function Song({ songData, setSongsUploaded}) {
                     <BsMusicNoteBeamed />
                 </div>
                 <div>
-                    <img className="h-10 w-10 object-cover" src={src} alt="song-cover" />
+                    <img
+                        className="h-10 w-10 object-cover"
+                        src={`${BASE_URL}/api/song/getCover?id=${songData.id}`}
+                        alt="song-cover"
+                    />
                 </div>
                 <div className="flex flex-col gap-[3px]">
                     <span className="text-sm text-white">{songData.name}</span>
@@ -175,7 +182,7 @@ function Song({ songData, setSongsUploaded}) {
                         <AiTwotoneHeart className="text-[#9b4de0] [filter:drop-shadow(0_0_10px_currentColor)]" />
                     )}
                 </span>
-                <SongMenu menuList={songMenu} songId={songData.id}>
+                <SongMenu menuList={songMenu} songId={songData?.id}>
                     <span
                         onClick={(e) => e.stopPropagation()}
                         className="hidden rounded-full p-1.5 text-xl hover:bg-[#ffffff1a] group-hover:flex"
@@ -184,7 +191,7 @@ function Song({ songData, setSongsUploaded}) {
                     </span>
                 </SongMenu>
                 <span className="block items-center justify-center group-hover:hidden">
-                    {moment.utc((songData.duration || 0) * 1000).format('mm:ss')}
+                    {moment.utc((songData?.duration || 0) * 1000).format('mm:ss')}
                 </span>
             </div>
         </div>
