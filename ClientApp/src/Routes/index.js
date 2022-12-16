@@ -9,6 +9,7 @@ import AllPlaylist from '~/pages/AllPlaylist';
 import Search from '../pages/Search'
 import PlaylistDetails from '../pages/PlaylistDetails';
 import Favorite from '../pages/Favorite'
+import Feed from '../pages/Feed'
 
 export const publicRoutes = [
     {
@@ -38,11 +39,15 @@ export const publicRoutes = [
     {
         path: routesConfigPublic.favoritesRoute,
         page: Favorite
-    }
-    // {
-    //     path: routesConfigPublic.STAR,
-    //     page: MainScreen,
-    // },
+    },
+    {
+        path: routesConfigPublic.feedRoute,
+        page: Feed
+    },
+    {
+        path: routesConfigPublic.STAR,
+        page: MainScreen,
+    },
 ];
 export const privateRoute = [
     {
