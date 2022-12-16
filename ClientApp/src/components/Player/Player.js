@@ -22,7 +22,8 @@ const {
 } = icons;
 
 function Player({ setIsShowSidebar }) {
-    const { curSongId, isPlaying, nextUpSong } = useSelector((state) => state.music);
+    const { curSongId, isPlaying, nextUpSong, prevSong } = useSelector((state) => state.music);
+    
     const { token } = useSelector((state) => state.auth);
     const [volume, setVolume] = useState(100);
     const [songInfo, setSongInfo] = useState({});
@@ -37,6 +38,7 @@ function Player({ setIsShowSidebar }) {
     // TODOS
 
     useEffect(() => {
+        dispatch(actions.addToPrev(curSongId))
         const fetchSong = async () => {
             const response = await getSong(curSongId, token);
 
@@ -121,11 +123,18 @@ function Player({ setIsShowSidebar }) {
     };
 
     const handleNextSong = (e) => {
+        console.log(prevSong)
         dispatch(actions.setCurSongId(nextUpSong[0].id))
-        audio.current.play()
-        nextUpSong.splice(0, 1)
+        dispatch(actions.play(true))
+        dispatch(actions.removeFromNextUp(nextUpSong[0].id))
     };
-    const handlePrevSong = (e) => {};
+    const handlePrevSong = (e) => {
+        const index = prevSong.indexOf(curSongId)
+        console.log(index)
+        dispatch(actions.removeFromPrev(curSongId))
+        dispatch(actions.setCurSongId(prevSong[index + 1]))
+
+    };
     return (
         <div className="flex h-full items-center text-white">
             {/* //Songdetai */}
@@ -153,7 +162,7 @@ function Player({ setIsShowSidebar }) {
                     </span>
                     <span
                         onClick={handlePrevSong}
-                        className={`cursor-pointer ${nextUpSong.length == 0 && 'pointer-events-none text-gray-600'}`}
+                        className={`cursor-pointer ${prevSong.length <= 2 && ' text-gray-600'}`}
                     >
                         <MdSkipPrevious size={24} />
                     </span>

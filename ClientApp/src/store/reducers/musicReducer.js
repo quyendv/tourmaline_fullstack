@@ -7,6 +7,7 @@ const initState = {
     commentSongId: null,
     curPlaylist: [],
     nextUpSong: [],
+    prevSong: []
 };
 
 //TODOS
@@ -44,18 +45,46 @@ const musicReducer = (state = initState, action) => {
                 curPlaylist: [...state.curPlaylist, action.data],
             };
         case actionTypes.ADD_TO_NEXTUP:
-            let indexOfSong = -1;
+            let indexOfSongUp = -1;
             state.nextUpSong.forEach((item, index) => {
                 if(item.id == action.data.id ) {
-                    indexOfSong = index
+                    indexOfSongUp = index
                 }
             })
-            indexOfSong != -1 && state.nextUpSong.splice(indexOfSong, 1)
+            
+            indexOfSongUp != -1 && state.nextUpSong.splice(indexOfSongUp, 1)
+            if(action.data.id == state.curSongId) {
+                return state
+            }
             return {
                 ...state,
-                
-                nextUpSong: [ action.data, ...state.nextUpSong],
+                nextUpSong: [action.data, ...state.nextUpSong],
             };
+
+        case actionTypes.ADD_TO_PREV:
+            let indexOfSongPrev = -1;
+            state.prevSong.forEach((item, index) => {
+                if(item == action.data ) {
+                    indexOfSongPrev = index
+                }
+            })
+            indexOfSongPrev != -1 && state.prevSong.splice(indexOfSongPrev, 1)
+            return {
+                ...state,
+                prevSong: [action.data, ...state.prevSong],
+            }
+        case actionTypes.REMOVE_FROM_PREV: 
+            // if(state.curSongId == state.prevSong[])
+            return {
+                ...state,
+                prevSong: state.prevSong.filter(item => item != action.data)
+            }
+        case actionTypes.REMOVE_FROM_NEXT_UP:
+            return {
+                ...state,
+                nextUpSong: state.nextUpSong.filter(item => item.id !== action.data)
+            }
+            
         default:
             return state;
     }
