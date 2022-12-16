@@ -6,11 +6,25 @@ import { useDispatch } from 'react-redux';
 import moment from 'moment';
 import { DefaultMenu as MediaMenu } from '../Popper';
 import { icons } from '~/utils/icons';
-const { BsFillPlayFill, BsThreeDots, FaRegComment, AiOutlineDownload, BsLink45Deg, RiShareForwardLine, AiFillDelete } =
-    icons;
+const {
+    BsFillPlayFill,
+    BsThreeDots,
+    FaRegComment,
+    AiOutlineDownload,
+    BsLink45Deg,
+    RiShareForwardLine,
+    AiFillDelete,
+    RiPlayListAddLine,
+} = icons;
 
 // TODO: Media list sửa sau
 const songMenu = [
+    {
+        type: 'addToNext',
+        icon: <RiPlayListAddLine />,
+        title: 'Add to Next up',
+        to: '',
+    },
     {
         icon: <FaRegComment />,
         title: 'Comments',
@@ -49,13 +63,7 @@ function MediaItem({ songData }) {
     //     fetchCover();
     // }, []);
     return (
-        <div
-            // onClick={() => {
-            //     dispatch(actions.setCurSongId(songData.id));
-            //     dispatch(actions.play(true));
-            // }}
-            className="mediaItem group relative flex items-center gap-3 rounded-md p-2 hover:bg-[#ffffff1a]"
-        >
+        <div className="mediaItem group relative flex items-center gap-3 rounded-md p-2 hover:bg-[#ffffff1a]">
             <div className="relative after:inset-0 after:bg-overlay-30 group-hover:after:absolute">
                 <span
                     className="absolute top-1/2 left-1/2 z-10 hidden -translate-x-1/2 -translate-y-1/2 cursor-pointer  p-1 group-hover:block"
@@ -77,7 +85,7 @@ function MediaItem({ songData }) {
                 <span className="text-xs text-[#ffffff80]">{songData?.uploader}</span>
                 <span className="text-xs text-[#ffffff80]">{moment(songData?.uploadTime).fromNow()}</span>
             </div>
-            <MediaMenu menuList={songMenu} songId="" placement="right-start">
+            <MediaMenu menuList={songMenu} songId={songData?.id} placement="right-start">
                 <span
                     onClick={(e) => {
                         e.stopPropagation();
