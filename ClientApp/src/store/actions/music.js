@@ -33,3 +33,16 @@ export const addToNextUp = (data) => ({
     type: actionTypes.ADD_TO_NEXTUP,
     data
 })
+
+export const addToPrev = (data) => ({
+    type: actionTypes.ADD_TO_PREV,
+    data
+})
+export const removeFromPrev = (data) => ({
+    type: actionTypes.REMOVE_FROM_PREV,
+    data
+})
+export const removeFromNextUp = (data) => ({
+    type: actionTypes.REMOVE_FROM_NEXT_UP,
+    data
+})
