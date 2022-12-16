@@ -157,10 +157,30 @@ public class UserController : ControllerBase
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return Ok(tokenHandler.WriteToken(token));
         }
-        else
-        {
-            return StatusCode(StatusCodes.Status403Forbidden, "User password is incorrect!");
-        }
+
+        return StatusCode(StatusCodes.Status403Forbidden, "User password is incorrect!");
 
     }
+
+    [HttpPost]
+    [Route("changepwd")]
+    public async Task<ActionResult> ChangePassword(string username, string oldPassword, string newPassword)
+    {
+        // Verify old password
+        var hasher = new PasswordHasher<User>();
+        var user = await _services.GetUser(username);
+        var oldPasswordHash = await _services.GetPassword(username);
+        var verificationResult = hasher.VerifyHashedPassword(user, oldPasswordHash, oldPassword);
+
+        if (verificationResult is not PasswordVerificationResult.Success)
+            return StatusCode(StatusCodes.Status401Unauthorized, "Wrong current password");
+        // Hash new password
+        var newPasswordHash = hasher.HashPassword(user, newPassword);
+            
+        // Update new password hash in database
+        await _services.ChangePassword(username, newPasswordHash);
+        return StatusCode(StatusCodes.Status202Accepted, "Password changed successfully");
+
+    }
+    
 }
