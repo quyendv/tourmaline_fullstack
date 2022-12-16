@@ -7,10 +7,16 @@ const initState = {
     setIsOpenCommentModal: function () {
         return 0;
     },
+    setIsOpenDeleteModal: function () {
+        return 0;
+    },
     createPlaylist: function () {
         return 0;
     },
     createAllPlaylist: function () {
+        return 0;
+    },
+    setSongUploaded: function () {
         return 0;
     },
 };
@@ -39,6 +45,17 @@ const actionsReducer = (state = initState, action) => {
                 ...state,
                 createAllPlaylist: action.createAllPlaylist,
             };
+        case actionTypes.SET_SONG_UPLOADED:
+            return {
+                ...state,
+                setSongUploaded: action.setSongUploaded,
+            };
+
+        case actionTypes.SET_IS_OPEN_DELETE_MODAL:
+            return {
+                ...state,
+                setIsOpenDeleteModal: action.setIsOpenDeleteModal
+            }
         default:
             return state;
     }

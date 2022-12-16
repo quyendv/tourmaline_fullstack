@@ -20,3 +20,11 @@ export const createAllPlaylist = (createAllPlaylist) => ({
     type : actionTypes.CREATE_ALL_PLAYLIST,
     createAllPlaylist
 })
+export const setSongUploaded = (setSongUploaded) => ({
+    type: actionTypes.SET_SONG_UPLOADED,
+    setSongUploaded,
+})
+export const setIsOpenDeleteModal = (setIsOpenDeleteModal) => ({
+    type: actionTypes.SET_IS_OPEN_DELETE_MODAL,
+    setIsOpenDeleteModal
+})

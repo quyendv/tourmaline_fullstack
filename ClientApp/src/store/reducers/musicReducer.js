@@ -7,7 +7,8 @@ const initState = {
     commentSongId: null,
     curPlaylist: [],
     nextUpSong: [],
-    prevSong: []
+    prevSong: [],
+    deleteSongId: null
 };
 
 //TODOS
@@ -32,6 +33,11 @@ const musicReducer = (state = initState, action) => {
                 ...state,
                 commentSongId: action.id,
             };
+        case actionTypes.DELETE_SONG_ID:
+            return {
+                ...state,
+                deleteSongId: action.id
+            }
 
         case actionTypes.SET_CURPLAYLIST:
             return {
