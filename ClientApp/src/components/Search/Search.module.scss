@@ -1,7 +1,8 @@
 .search {
     width: 400px;
     // height: 100%;
-    background-color: #161616;
+    // background-color: #161616;
+    background-color: var(--search-bg);
     border-radius: var(--border-radius);
     display: flex;
     align-items: center;
