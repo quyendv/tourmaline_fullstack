@@ -3,10 +3,10 @@ namespace tourmaline.Models;
 public class Song : IEquatable<Song>
 {
     public Song(int id = -1, string uploader = "", string name = "",
-        string description = "", List<string>? tags = null, int listenTimes = 0, int favorites = 0)
+        string description = "", List<string>? tags = null, int listenTimes = 0, int favorites = 0, DateTime? uploadTime = null, double duration = 0)
     {
         Id = id;
-        UploadTime = DateTime.Now;
+        UploadTime = uploadTime ?? DateTime.Now;
         Uploader = uploader;
         Name = name;
         Description = description;
@@ -15,7 +15,7 @@ public class Song : IEquatable<Song>
         Favorites = favorites;
     }
 
-    public readonly int Id;
+    public int Id { get; }
     public DateTime UploadTime { get; set; }
     public string Uploader { get; set; }
     public string Name { get; set; }

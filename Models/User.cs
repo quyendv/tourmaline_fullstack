@@ -14,7 +14,7 @@ public class User : IEquatable<User>
         Email = "";
     }
 
-    public readonly string Username;
+    public string Username { get; }
     public string Name { get; set; }
     public bool Gender { get; set; }
     public DateTime Birth { get; set; }
