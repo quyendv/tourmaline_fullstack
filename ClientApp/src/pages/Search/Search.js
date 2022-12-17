@@ -1,19 +1,29 @@
-import { useState } from "react"
-
-
+import { useState } from 'react';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { SearchLink } from './SearchLink';
+const activeStyle = 'text-activecolor border-b-4 border-blue-900 px-2  h-full flex items-center hover:text-activecolor' 
+const notActiveStyle = 'px-2 hover:text-activecolor'
 function Search() {
-    const [isActive, setIsActive] = useState(0)
-
-
     return (
         <div className="text-white">
-            <div className="px-[59px] mt-5 border-b pb-2 border-gray-300 flex gap-8 items-center">
-                <span className={`text-2xl  font-bold border-r border-gray-500 pr-4`}>Kết quả tìm kiếm</span>
-                <span>TẤT CẢ</span>
-                <span>BÀI HÁT</span>
-                <span>USER</span>
+            <div className="mt-5 flex items-center gap-8  border-b border-gray-300 px-[59px]  h-[60px]">
+                <span className={`border-r  border-gray-500 pr-4 text-2xl font-bold`}>Kết quả tìm kiếm</span>
+                {SearchLink.map((item) => {
+                    return (
+                        <NavLink
+                            key={item.path}
+                            to={item.path}
+                            className={({ isActive }) => (isActive ? activeStyle  : notActiveStyle)}
+                        >
+                            <span className='font-medium'>{item.text}</span>
+                        </NavLink>
+                    );
+                })}
+            </div>
+            <div>
+                <Outlet />
             </div>
         </div>
-    )
+    );
 }
-export default Search
+export default Search;

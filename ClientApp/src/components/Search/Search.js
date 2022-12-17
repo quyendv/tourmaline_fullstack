@@ -5,6 +5,10 @@ import HeadlessTippy from '@tippyjs/react/headless';
 import { SearchIcon } from '../Icons';
 import { icons } from '~/utils/icons';
 import useDebounce from '~/hooks/useDebounce';
+import * as apis from '../../services'
+import { routesConfigPublic, searchRoutesConfig } from '../../Routes/routesConfig';
+import { useNavigate } from 'react-router-dom';
+import { createSearchParams } from 'react-router-dom';
 
 const cx = classNames.bind(styles);
 const { FaRegTimesCircle, ImSpinner2 } = icons;
@@ -14,7 +18,7 @@ function Search() {
     const [searchResult, setSearchResult] = useState([]);
     const [showResult, setShowResult] = useState(true);
     const [loading, setLoading] = useState(false);
-
+    const navigate = useNavigate()
     const inputRef = useRef();
     const debouncedValue = useDebounce(searchValue, 500);
 
@@ -27,7 +31,13 @@ function Search() {
 
         // Gọi api lấy kết quả search:
         // Chú ý gán kết quả vào searchResult, rồi setLoading(false)
-
+        const search = async() => {
+            const response = await apis.search(debouncedValue)
+            
+            console.log(response)
+        }
+        search()
+        setLoading(false)
         // VD: Tách ra config axios sau:
         // axios
         //     .get('users/search', {
@@ -54,6 +64,17 @@ function Search() {
         setSearchValue('');
         inputRef.current.focus();
     };
+    const handleSearch = (e) => {
+        if(e.keyCode == 13) {
+            const pathname = `${routesConfigPublic.search}${searchRoutesConfig.searchAll}`
+            navigate({
+                pathname,
+                search: createSearchParams({
+                  q: searchValue
+                }).toString()
+              })
+        }
+    }
 
     return (
         <HeadlessTippy
@@ -91,6 +112,7 @@ function Search() {
                     placeholder="Search, Songs, Genre, Album, Artists..."
                     onChange={handleChange}
                     onFocus={() => setShowResult(true)}
+                    onKeyUp={handleSearch}
                 />
                 {!!searchValue && !loading && (
                     <button className={cx('clear')} onClick={handleClear}>

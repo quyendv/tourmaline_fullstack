@@ -9,8 +9,10 @@ export const routesConfigPublic = {
     library__playlist:'library/playlist',
     library__playlist__title__pid: 'library/playlist/:title/:pid',
     username:'user/:username',
-    search: 'search',
+
+
     discover:'discover/:type',
+    search: 'search/',
     
     
     STAR: '*',
@@ -27,3 +29,10 @@ export const routesConfigPrivate = {
     uploadRoute: 'upload',
     STAR: '*',
 };
+
+export const searchRoutesConfig = {
+    searchAll: 'all',
+    searchSongs:'song',
+    searchPlaylist:'playlist',
+    searchUser:'user',
+}
