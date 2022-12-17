@@ -49,7 +49,7 @@ function SidebarRight() {
                         <span>
                             Next up
                         </span>
-                        <div className='flex flex-col'> 
+                        <div className='flex flex-col overflow-y-auto'> 
                             {nextUpSong?.map((item, index) => (
                                 <MediaItem key={index} songData={item} />
                             ))}

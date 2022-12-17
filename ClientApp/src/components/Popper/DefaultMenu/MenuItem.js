@@ -66,6 +66,26 @@ function MenuItem({ data, isParent = 'false', songId, onClick = () => {} }) {
             }
             addSongsToNextUp()
         }
+        if(data.type == 'addHomeSongToNextUp') {
+            const addSongsToNextUp = async() => {
+                switch(data.playlistType) {
+                    case 'hots': 
+                        const res1 = await apis.getSuggestion(token)
+                        res1.data.forEach(item => {
+                            dispatch(actions.addToNextUp(item))
+                        })
+                        break;
+                    case 'top50':
+                        const res2 = await apis.getTop50()
+                        res2.data.result.forEach(item => {
+                            dispatch(actions.addToNextUp(item))
+                        })
+                        break;
+                }
+            }
+            addSongsToNextUp()
+        }
+        
     };
 
     return (

@@ -14,9 +14,9 @@ function Feed() {
         fetchRecentUploaded();
     }, []);
     return (
-        <div className="text-white">
-            <div>Hear the latest posts from the people you’re following:</div>
-            <div className="flex flex-col">
+        <div className="text-white px-[59px]">
+            <h2 className='text-2xl'>Hear the latest posts from the people you’re following:</h2>
+            <div className="flex flex-col ">
                 {recentlyUploaded.map((item, index) => (
                     <div key={index}>
                         <span>{`${item.uploader} post a track ${moment(item.uploadTime).fromNow()} `}</span>

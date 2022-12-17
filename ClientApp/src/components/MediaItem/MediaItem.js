@@ -53,8 +53,6 @@ const songMenu = [
 ];
 
 function MediaItem({ songData }) {
-    console.log(songData)
-    const [mediaSrc, setMediasrc] = useState('');
     const dispatch = useDispatch();
 
     // useEffect(() => {
