@@ -10,6 +10,7 @@ export const routesConfigPublic = {
     library__playlist__title__pid: 'library/playlist/:title/:pid',
     username:'user/:username',
     search: 'search',
+    discover:'discover/:type',
     
     
     STAR: '*',
