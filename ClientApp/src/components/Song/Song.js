@@ -139,7 +139,7 @@ function Song({ songData, setSongsUploaded }) {
 
     return (
         <div
-            className="group -mx-2 flex w-full cursor-pointer items-center border-b border-solid border-[#ffffff0d] p-[10px] text-[#ffffff80] [&>*]:px-2"
+            className="Song group -mx-2 flex w-full cursor-pointer items-center border-b border-solid border-[#ffffff0d] p-[10px] text-[#ffffff80] [&>*]:px-2"
             onClick={() => {
                 songData.id !== curSongId && dispatch(actions.setCurSongId(songData.id));
                 dispatch(actions.play(true));

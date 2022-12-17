@@ -128,21 +128,21 @@ function Player({ setIsShowSidebar }) {
     };
 
     const handleNextSong = (e) => {
-        e.preventDefault();
+        
         console.log(prevSong);
         dispatch(actions.setCurSongId(nextUpSong[0].id));
         dispatch(actions.play(true));
         dispatch(actions.removeFromNextUp(nextUpSong[0].id));
     };
     const handlePrevSong = (e) => {
-        e.preventDefault()
+        
         const index = prevSong.indexOf(curSongId);
         console.log(index);
         dispatch(actions.removeFromPrev(curSongId));
         dispatch(actions.setCurSongId(prevSong[index + 1]));
     };
     return (
-        <div className="flex h-full items-center text-white">
+        <div className="Player flex h-full items-center text-white">
             {/* //Songdetai */}
             <div className="flex w-[30%] items-center gap-4 ">
                 <img
