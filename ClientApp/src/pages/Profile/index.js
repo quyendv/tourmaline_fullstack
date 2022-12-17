@@ -77,12 +77,13 @@ function Profile() {
         e.preventDefault();
         // TODO: update user info in database through API
         // setUserInfo by newUserInfo.current
-
         const finalPayload = {
             ...userInfo,
             username: username,
             avatar: avatarFile.current,
         };
+        console.log(finalPayload)
+
         const response = await setProfile(finalPayload, token);
         console.log(response);
 

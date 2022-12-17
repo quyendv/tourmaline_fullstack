@@ -22,6 +22,7 @@ const initState = {
     setSongUploaded: function () {
         return 0;
     },
+    keyword: null
 };
 
 const actionsReducer = (state = initState, action) => {
@@ -64,6 +65,11 @@ const actionsReducer = (state = initState, action) => {
                 ...state,
                 setIsOpenDeletePlaylistModal: action.setIsOpenDeletePlaylistModal,
             };
+        case actionTypes.SET_KEYWORD:
+            return {
+                ...state,
+                keyword: action.keyword
+            }
         default:
             return state;
     }

@@ -5,7 +5,7 @@ import { deletePlaylist } from '../../services/music';
 import { icons } from '../../utils/icons';
 import { DefaultMenu as PlaylistMenu } from '../Popper';
 import * as apis from '../../services'
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 const {
     BsFillPlayFill,
@@ -50,6 +50,7 @@ function PlaylistItem({ playlistData, className }) {
     const navigate = useNavigate();
     const location = useLocation();
 
+    const  [playlistAvatarSrc, setPlaylistAvatarSrc] = useState('')
     const path = `${playlistData.name.replaceAll(' ', '-')}/${playlistData.id}`;
     const link = (location.pathname === '/library' ? '/playlist/' : '') + path;
     const { token } = useSelector((state) => state.auth);
@@ -66,7 +67,20 @@ function PlaylistItem({ playlistData, className }) {
         e.stopPropagation();
         //
     };
-
+    useEffect(() => {
+        let url
+        const fetchPlaylistAvatar = async() => {
+            const response = await apis.getPlaylistAvatar(playlistData.id, token)
+            const blob = new Blob([response.data],{type:'image/jpeg'})
+            url = URL.createObjectURL(blob)
+            setPlaylistAvatarSrc(url)
+        }
+        
+        fetchPlaylistAvatar()
+        return () => {
+            URL.revokeObjectURL(url)
+        }
+    }, [playlistData.id])
     return (
         <div className={`flex flex-col gap-2 ${className}`}>
             <div
@@ -101,7 +115,7 @@ function PlaylistItem({ playlistData, className }) {
                 </div>
                 <img
                     className="w-full rounded-md object-cover transition-all duration-500 group-hover:scale-125"
-                    src={images.defaultCoverPlaylist}
+                    src={playlistAvatarSrc}
                     alt="playlist-cover"
                 />
             </div>

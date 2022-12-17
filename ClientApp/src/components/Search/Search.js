@@ -9,6 +9,8 @@ import * as apis from '../../services'
 import { routesConfigPublic, searchRoutesConfig } from '../../Routes/routesConfig';
 import { useNavigate } from 'react-router-dom';
 import { createSearchParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import * as actions from '../../store/actions'
 
 const cx = classNames.bind(styles);
 const { FaRegTimesCircle, ImSpinner2 } = icons;
@@ -19,6 +21,7 @@ function Search() {
     const [showResult, setShowResult] = useState(true);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     const inputRef = useRef();
     const debouncedValue = useDebounce(searchValue, 500);
 
@@ -66,6 +69,7 @@ function Search() {
     };
     const handleSearch = (e) => {
         if(e.keyCode == 13) {
+            dispatch(actions.setSearchKeyword(searchValue))
             const pathname = `${routesConfigPublic.search}${searchRoutesConfig.searchAll}`
             navigate({
                 pathname,
@@ -73,6 +77,11 @@ function Search() {
                   q: searchValue
                 }).toString()
               })
+            const fetchSearchData = async () => {
+                const response = await apis.search(searchValue)
+                console.log(response)
+            }
+            fetchSearchData()
         }
     }
 
