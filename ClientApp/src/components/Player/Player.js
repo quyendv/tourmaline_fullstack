@@ -6,6 +6,7 @@ import { icons } from '../../utils/icons';
 import * as actions from '../../store/actions';
 import { getInfoSong, getSong } from '../../services/music';
 import { BASE_URL } from '../../utils/constant';
+import { AudioLoading } from '../Load';
 
 const {
     BsFillPlayFill,
@@ -35,17 +36,27 @@ function Player({ setIsShowSidebar }) {
     const dispatch = useDispatch();
     const trackRef = useRef();
     const thumbRef = useRef();
+    const [isLoading, setIsLoading] = useState(false);
     // TODOS
 
     useEffect(() => {
         dispatch(actions.addToPrev(curSongId));
-        console.log('test')
+        console.log('test');
         const fetchSong = async () => {
-            const response = await getSong(curSongId, token);
-            console.log('in')
-            const blob = new Blob([response.data], { type: 'audio/mpeg' });
-            const url = URL.createObjectURL(blob);
-            if (audio.current) audio.current.src = url;
+            setIsLoading(true);
+            try {
+                const response = await getSong(curSongId, token);
+                if(response.status == 200) {
+                    const blob = new Blob([response.data], { type: 'audio/mpeg' });
+                    const url = URL.createObjectURL(blob);
+                    if (audio.current) audio.current.src = url;
+                }
+            } catch (error) {
+                dispatch(actions.play(false))
+                setIsLoading(false);
+            }
+
+            setIsLoading(false);
         };
         fetchSong();
         const fetchInfoSong = async () => {
@@ -62,6 +73,7 @@ function Player({ setIsShowSidebar }) {
     var intervalId;
     useEffect(() => {
         intervalId && clearInterval(intervalId);
+        audio.current.pause()
 
         if (isPlaying && thumbRef.current) {
             // audio.current.load();
@@ -94,22 +106,21 @@ function Player({ setIsShowSidebar }) {
 
     useEffect(() => {
         const handleShuffle = () => {
-            const randomIndex = Math.round(Math.random() * (nextUpSong?.length - 1)) ;
-            console.log(randomIndex)
+            const randomIndex = Math.round(Math.random() * (nextUpSong?.length - 1));
+            console.log(randomIndex);
             dispatch(actions.setCurSongId(nextUpSong[randomIndex].id));
-            dispatch(actions.removeFromNextUp(nextUpSong[randomIndex].id))
-            console.log(nextUpSong)
+            dispatch(actions.removeFromNextUp(nextUpSong[randomIndex].id));
+            console.log(nextUpSong);
             dispatch(actions.play(true));
         };
         const handleEnd = () => {
             if (isShuffle) {
                 handleShuffle();
-            }
-            else if (!isShuffle && isRepeat == 2) {
+            } else if (!isShuffle && isRepeat == 2) {
                 handleRepeatOnce();
             } else if (!isShuffle && isRepeat == 1) {
                 handleNextSong();
-            } else if(!isShuffle && isRepeat == 0) {
+            } else if (!isShuffle && isRepeat == 0) {
                 audio.current.pause();
                 dispatch(actions.play(false));
             }
@@ -128,14 +139,12 @@ function Player({ setIsShowSidebar }) {
     };
 
     const handleNextSong = (e) => {
-        
         console.log(prevSong);
         dispatch(actions.setCurSongId(nextUpSong[0].id));
         dispatch(actions.play(true));
         dispatch(actions.removeFromNextUp(nextUpSong[0].id));
     };
     const handlePrevSong = (e) => {
-        
         const index = prevSong.indexOf(curSongId);
         console.log(index);
         dispatch(actions.removeFromPrev(curSongId));
@@ -173,7 +182,9 @@ function Player({ setIsShowSidebar }) {
                         <MdSkipPrevious size={24} />
                     </span>
                     <span onClick={handleToggleMusic} className="cursor-pointer rounded-full border border-white p-1">
-                        {!isPlaying ? (
+                        {isLoading ? (
+                            <AudioLoading />
+                        ) : !isPlaying ? (
                             <BsFillPlayFill size={24} className="mr-[-1px]" />
                         ) : (
                             <BsPauseFill size={24} className="mr-[-1px]" />

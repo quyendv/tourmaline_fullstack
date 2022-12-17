@@ -58,9 +58,7 @@ function Library() {
                 </span>
                 <span
                     onClick={() =>
-                        navigate('/library/playlist', {
-                            state: playlistCreated,
-                        })
+                        navigate('/library/playlist')
                     }
                     className="cursor-pointer font-bold hover:text-activecolor"
                 >

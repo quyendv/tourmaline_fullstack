@@ -41,7 +41,10 @@ const actionTypes = {
 
     //favorite
     SET_FAVORITE:'SET_FAVORITE',
-    REMOVE_FAVORITE:'REMOVE_FAVORITE'
+    REMOVE_FAVORITE:'REMOVE_FAVORITE',
+
+    //search
+    SET_KEYWORD:'KEYWORD',
 
 
 };

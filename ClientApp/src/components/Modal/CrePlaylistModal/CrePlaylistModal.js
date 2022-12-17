@@ -3,7 +3,7 @@ import * as apis from '../../../services'
 import { useDispatch, useSelector } from 'react-redux';
 import { useState, useRef } from 'react';
 
-import Loading from '../../Loading';
+import {Loading} from '../../Load';
 import * as actions from '../../../store/actions'
 
 const { AiOutlineClose } = icons;
