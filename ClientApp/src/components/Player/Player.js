@@ -128,14 +128,14 @@ function Player({ setIsShowSidebar }) {
     };
 
     const handleNextSong = (e) => {
-        e.preventDefault();
+        
         console.log(prevSong);
         dispatch(actions.setCurSongId(nextUpSong[0].id));
         dispatch(actions.play(true));
         dispatch(actions.removeFromNextUp(nextUpSong[0].id));
     };
     const handlePrevSong = (e) => {
-        e.preventDefault()
+        
         const index = prevSong.indexOf(curSongId);
         console.log(index);
         dispatch(actions.removeFromPrev(curSongId));
