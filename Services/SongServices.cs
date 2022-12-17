@@ -15,9 +15,8 @@ public class SongServices
     public async Task<Song> GetSong(int id)
     {
         var result = (await _database.Call($"SELECT * FROM song WHERE id={id}")).First();
-        return new Song
+        return new Song(id: id)
         {
-            Id = id,
             Name = result["name"],
             Uploader = result["uploader"],
             UploadTime = result["uploadTime"],
@@ -91,9 +90,8 @@ public class SongServices
         var songs = new List<Song>();
         foreach (var song in result)
         {
-            songs.Add(new Song
+            songs.Add(new Song(id: song["id"])
             {
-                Id = (int)song["id"],
                 Name = song["name"],
                 Uploader = song["uploader"],
                 UploadTime = song["uploadTime"],

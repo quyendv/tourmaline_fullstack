@@ -15,9 +15,8 @@ public class UserServices
     public async Task<User> GetUser(string username)
     {
         var result = (await _database.Call($"SELECT * FROM user WHERE username='{username}'")).First();
-        return new User
+        return new User(username: result["username"])
         {
-            Username = result["username"],
             Bio = result["bio"],
             Birth = result["birth"],
             CreateTime = result["createTime"],

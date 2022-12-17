@@ -68,9 +68,8 @@ public class PlaylistController : ControllerBase
     public async Task<ActionResult<Playlist>> CreatePlaylist([FromForm] string name, [FromForm] string? description,
         [FromForm] IFormFile? cover)
     {
-        var playlist = new Playlist
+        var playlist = new Playlist(id: new Random().Next())
         {
-            Id = new Random().Next(),
             Name = name,
             Username = CurrentSessionUsername,
             Description = description ?? "",

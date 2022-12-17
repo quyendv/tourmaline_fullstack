@@ -82,7 +82,7 @@ public class SuggestionServices
         var recentSongs = await _recentServices.GetRecent(username);
         var favoriteSongs = await _favoriteServices.GetFavorites(username);
         var following = await _followServices.GetFollowings(username);
-        var users = new List<User>();
+        var users = new HashSet<User>();
         foreach (var song in recentSongs.Where(song => !following.Exists(e => e.Username == song.Uploader)))
         {
             users.Add(await _userServices.GetUser(song.Uploader));
@@ -93,7 +93,7 @@ public class SuggestionServices
             users.Add(await _userServices.GetUser(song.Uploader));
         }
 
-        return users;
+        return users.ToList();
     }
 
     public async Task<List<Song>> GetSongSuggestions(string username)

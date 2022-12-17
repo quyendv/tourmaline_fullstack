@@ -1,6 +1,6 @@
 namespace tourmaline.Models;
 
-public class User
+public class User : IEquatable<User>
 {
     public User(string username = "", bool isAdmin = false)
     {
@@ -14,7 +14,7 @@ public class User
         Email = "";
     }
 
-    public string Username { get; set; }
+    public readonly string Username;
     public string Name { get; set; }
     public bool Gender { get; set; }
     public DateTime Birth { get; set; }
@@ -22,4 +22,23 @@ public class User
     public DateTime CreateTime { get; set; }
     public string Email { get; set; }
     public bool IsAdmin { get; set; }
+    
+    public bool Equals(User? other)
+    {
+        if (ReferenceEquals(null, other)) return false;
+        if (ReferenceEquals(this, other)) return true;
+        return Username == other.Username;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (ReferenceEquals(null, obj)) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        return obj.GetType() == GetType() && Equals((User)obj);
+    }
+
+    public override int GetHashCode()
+    {
+        return Username.GetHashCode();
+    }
 }

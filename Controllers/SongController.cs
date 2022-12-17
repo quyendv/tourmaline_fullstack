@@ -129,9 +129,8 @@ public class SongController : ControllerBase
         // };
         // songTags.Shuffle();
         // var tags = songTags.Take(new Random().Next(1, 9)).ToList();
-        await _songServices.AddSong(new Song
+        await _songServices.AddSong(new Song(id: id)
         {
-            Id = id,
             Name = name,
             Duration = duration.TotalSeconds,
             Uploader = CurrentSessionUsername!,
