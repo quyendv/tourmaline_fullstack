@@ -6,7 +6,7 @@ import * as apis from '../../services';
 import * as actions from '../../store/actions'
 import Song from '../../components/Song';
 import MediaItem from '../../components/MediaItem';
-// import UserItem from '../../components/UserItem'
+import UserItem from '../../components/UserItem'
 function MainScreen() {
     const navigate = useNavigate();
     const dispatch = useDispatch()
