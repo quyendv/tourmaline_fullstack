@@ -190,6 +190,17 @@ public class SongController : ControllerBase
         return Ok(await _songServices.GetUserUploads(username));
     }
 
+    [HttpGet]
+    [Route("autoplay")]
+    public async Task<ActionResult<Song>> GetNextSongAutoplay(int id) // previous song id
+    {
+        if (!await _songServices.IsSongExist(id))
+        {
+            return StatusCode(StatusCodes.Status400BadRequest, "Song not found!");
+        }
+        return Ok(await _songServices.GetNextSongAutoplay(id));
+    }
+
     // [HttpGet]
     // [AllowAnonymous]
     // [Route("find")]
