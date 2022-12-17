@@ -10,6 +10,7 @@ import Search from '../pages/Search'
 import PlaylistDetails from '../pages/PlaylistDetails';
 import Favorite from '../pages/Favorite'
 import Feed from '../pages/Feed'
+import User from '../pages/User'
 
 export const publicRoutes = [
     {
@@ -43,6 +44,10 @@ export const publicRoutes = [
     {
         path: routesConfigPublic.feedRoute,
         page: Feed
+    },
+    {
+        path: routesConfigPublic.username,
+        page: User
     },
     {
         path: routesConfigPublic.STAR,

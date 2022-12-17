@@ -6,12 +6,14 @@ import * as apis from '../../services';
 import * as actions from '../../store/actions'
 import Song from '../../components/Song';
 import MediaItem from '../../components/MediaItem';
+import UserItem from '../../components/UserItem'
 function MainScreen() {
     const navigate = useNavigate();
     const dispatch = useDispatch()
     const { token } = useSelector((state) => state.auth);
     const [recentlyPlayed, setRecentlyPlayed] = useState([]);
     const [recentlyUploaded, setRecentlyUploaded] = useState([]);
+    const [relatedArtists, setRelatedArtists] = useState([]);
     const handleClickPlaylist = () => {
         navigate('/playlist/Pop/1');
     };
@@ -57,6 +59,13 @@ function MainScreen() {
             }
         }
         fetchRecentlyUploaded()
+        const fetchRelatedArtists = async()=>{
+            const response = await apis.getRelatedArtist(token)
+            if(response.status === 200) {
+                setRelatedArtists(response.data.result)
+            } 
+        }
+        fetchRelatedArtists()
         const fetchAllPlaylist = async () => {
             const response = await apis.getAllPlaylist(token)
             if(response.status == 200) {
@@ -86,6 +95,19 @@ function MainScreen() {
                     ))}
                 </div>
             </div>
+            {/* Artists you should know */}
+            <div className="mt-12">
+                <h3 className="mb-5 text-2xl font-bold">Artists you should know</h3>
+                <div className='flex gap-2'>
+                    {
+                        relatedArtists.filter((item,index) => index <= 4).map((item, index) => (
+                            <UserItem key={index} userData={item} />
+                        ))
+                    }
+                </div>
+
+            </div>
+
         </div>
     );
 }

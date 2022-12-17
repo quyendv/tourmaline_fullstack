@@ -66,3 +66,19 @@ export const searchSong = (keyword) => new Promise(async(resolve, reject) => {
         reject(err)
     }
 })
+export const getAvatar = (username) => new Promise(async(resolve, reject) => {
+    try {
+        const response = await axiosConfig({
+            url:'api/user/getAvatar',
+            method:'get',
+            params: {
+                username: username
+            },
+            responseType:'blob'
+
+        })
+        resolve(response)
+    } catch (error) {
+        reject(error)
+    }
+})
