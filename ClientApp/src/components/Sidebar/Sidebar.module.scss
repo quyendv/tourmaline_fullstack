@@ -1,8 +1,11 @@
 .wrapper {
-    @apply relative flex h-screen w-full flex-col justify-between bg-[#191523] py-4 px-3 transition-all duration-500;
+    @apply relative flex h-screen w-full flex-col justify-between bg-[color:var(--sidebar-bg)] py-4 px-3 transition-all duration-500;
 
     &:has(.menu-toggle.active) {
         width: 80px;
+        .logo {
+            @apply -translate-x-2;
+        }
         .logo .app-name,
         .sidebar-item .text-content {
             @apply invisible opacity-0;
@@ -11,7 +14,7 @@
 }
 
 .logo {
-    @apply relative text-activecolor transition-all duration-500;
+    @apply relative text-activecolor transition-all duration-500 pl-2;
     .image-logo {
     }
     .app-name {
@@ -21,7 +24,7 @@
 
 .menu-toggle {
     // note: <= 1132 => show
-    @apply absolute right-0 top-[15%] grid translate-x-1/2 cursor-pointer place-content-center rounded-full bg-[#231c2e] p-5 text-white transition-all duration-500;
+    @apply absolute right-0 top-[15%] grid translate-x-1/2 cursor-pointer place-content-center rounded-full bg-[color:var(--menuToggle-bg)] p-5 text-white transition-all duration-500;
     &.active {
         @apply rotate-180;
     }

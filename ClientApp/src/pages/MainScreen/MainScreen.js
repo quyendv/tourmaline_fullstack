@@ -6,7 +6,7 @@ import * as apis from '../../services';
 import * as actions from '../../store/actions'
 import Song from '../../components/Song';
 import MediaItem from '../../components/MediaItem';
-import UserItem from '../../components/UserItem'
+// import UserItem from '../../components/UserItem'
 function MainScreen() {
     const navigate = useNavigate();
     const dispatch = useDispatch()
@@ -100,9 +100,9 @@ function MainScreen() {
                 <h3 className="mb-5 text-2xl font-bold">Artists you should know</h3>
                 <div className='flex gap-2'>
                     {
-                        relatedArtists.filter((item,index) => index <= 4).map((item, index) => (
-                            <UserItem key={index} userData={item} />
-                        ))
+                        // relatedArtists.filter((item,index) => index <= 4).map((item, index) => (
+                        //     <UserItem key={index} userData={item} />
+                        // ))
                     }
                 </div>
 
