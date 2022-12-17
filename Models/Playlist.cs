@@ -11,7 +11,7 @@ public class Playlist : IEquatable<Playlist>
         Songs = new List<Song>();
     }
 
-    public readonly int Id;
+    public int Id { get; }
     public string Username { get; set; }
     public string Name { get; set; }
     public List<Song> Songs { get; set; }
