@@ -62,7 +62,7 @@ function MainScreen() {
         const fetchRelatedArtists = async()=>{
             const response = await apis.getRelatedArtist(token)
             if(response.status === 200) {
-                setRelatedArtists(response.data.result)
+                setRelatedArtists(response.data)
             } 
         }
         fetchRelatedArtists()
@@ -73,6 +73,7 @@ function MainScreen() {
                 dispatch(actions.setCurPlaylist(response.data.playlists))
             }
         }
+        
         fetchAllPlaylist()
     }, []);
     return (
@@ -100,6 +101,7 @@ function MainScreen() {
                 <h3 className="mb-5 text-2xl font-bold">Artists you should know</h3>
                 <div className='flex gap-2'>
                     {
+                        
                         relatedArtists.filter((item,index) => index <= 4).map((item, index) => (
                             <UserItem key={index} userData={item} />
                         ))
