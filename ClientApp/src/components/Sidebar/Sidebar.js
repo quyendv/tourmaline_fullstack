@@ -8,19 +8,31 @@ import SidebarItem from './SidebarItem';
 import { AiOutlineHome } from 'react-icons/ai';
 import { VscFolderLibrary } from 'react-icons/vsc';
 import { IoAlbumsOutline } from 'react-icons/io5';
-import { MdOutlineFavoriteBorder, MdArrowForwardIos } from 'react-icons/md';
-import { useRef } from 'react';
+import { MdOutlineFavoriteBorder, MdArrowBackIos } from 'react-icons/md';
+import { useEffect, useRef } from 'react';
+import useWindowSize from '~/hooks/useWindowSize.js';
 
 const cx = classNames.bind(styles);
 
 function Sidebar() {
     const menuToggleRef = useRef();
+    const firstActive = useRef(true);
+    const windowWidth = useWindowSize();
 
-    const handleToggleMenu = (e) => {
+    useEffect(() => {
+        if (firstActive.current && windowWidth <= 1132) {
+            firstActive.current = false;
+            menuToggleRef.current.classList.add(styles.active);
+        } else if (!firstActive.current && windowWidth > 1132) {
+            firstActive.current = true;
+            menuToggleRef.current.classList.remove(styles.active);
+        }
+    }, [windowWidth]);
+
+    const handleToggleMenu = () => {
         // Active menuToggle
         menuToggleRef.current.classList.toggle(styles.active);
-        // Active wrapper
-        // -> css
+        // Active wrapper -> css
     };
 
     return (
@@ -31,7 +43,7 @@ function Sidebar() {
             </Link>
 
             <div className={cx('menu-toggle')} ref={menuToggleRef} onClick={handleToggleMenu}>
-                <MdArrowForwardIos />
+                <MdArrowBackIos />
             </div>
 
             <div className={cx('content')}>

@@ -3,7 +3,7 @@
     max-height: min((100vh - 96px) - 60px, 734px);
     min-height: 100px;
     border-radius: 8px;
-    background: #614195;
+    background-color: var(--popper-bg);
     box-shadow: rgb(0 0 0 / 12%) 0px 2px 12px;
     .menu-header {
         position: relative;
@@ -30,7 +30,7 @@
     display: flex;
     align-items: center;
     &:hover {
-        background-color: #b400ffba;
+        background-color: var(--popper-active-bg);
     }
     &.separate-top {
         border-top: 1px solid #96949499;

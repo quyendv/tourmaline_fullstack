@@ -12,10 +12,11 @@ $main-register-color: #03e9f4;
 .register-form {
     width: 400px;
     padding: 40px;
+    margin: 12px;
     background: rgba(0, 0, 0, 0.5);
     box-shadow: 0 15px 25px rgba(0, 0, 0, 0.6);
     color: white;
-    
+
     .title {
         text-align: center;
         font-size: 36px;
@@ -23,11 +24,11 @@ $main-register-color: #03e9f4;
         letter-spacing: 2px;
         margin-bottom: 12px;
     }
-    
-    > form {
+
+    > form .form-data {
         padding: 4px;
         max-height: 70vh;
-        overflow-y: overlay;
+        overflow-y: auto;
     }
 
     .register-btn {
@@ -79,7 +80,6 @@ $main-register-color: #03e9f4;
             transition: 0.5s;
         }
     }
-
 }
 
 .form-msg {

@@ -18,14 +18,13 @@ function Menu({ children, menuList = [], placement = 'bottom-end', songId = 1, a
             return (
                 <MenuItem
                     key={index}
+                    ref={tippyRef}
                     data={item}
                     songId={songId}
                     isParent={isParent}
                     onClick={(e) => {
                         if (isParent) {
-                            
                             setHistory((prev) => [...prev, item.children]);
-                            // console.log(isParent);
                         }
                         // else: đoạn này có lẽ nên handle các loại actions chỗ này
                         // tippyRef.current._tippy.hide();

@@ -69,90 +69,92 @@ function Register() {
             <div className={cx('register-form')}>
                 <h2 className={cx('title')}>Register</h2>
                 <form onSubmit={handleSubmit(handleRegister)}>
-                    {/* username */}
-                    <div className={cx('user-box')}>
-                        <input
-                            type="text"
-                            className={cx('register-input')}
-                            placeholder="&nbsp;"
-                            {...register('username')}
-                        />
-                        <label>Username</label>
-                        {errors.username && <p className={cx('form-msg')}>{errors.username.message}</p>}
-                    </div>
-                    {/* fullname */}
-                    <div className={cx('user-box')}>
-                        <input
-                            type="text"
-                            className={cx('register-input')}
-                            placeholder="&nbsp;"
-                            {...register('fullname')}
-                        />
-                        <label>Name</label>
-                        {errors.name && <p className={cx('form-msg')}>{errors.name.message}</p>}
-                    </div>
-                    {/* password */}
-                    <div className={cx('user-box')}>
-                        <input
-                            type="password"
-                            className={cx('register-input')}
-                            placeholder="&nbsp;"
-                            {...register('password')}
-                        />
-                        <label>Password</label>
-                        {errors.password && <p className={cx('form-msg')}>{errors.password.message}</p>}
-                    </div>
-                    {/* confirm password */}
-                    <div className={cx('user-box')}>
-                        <input
-                            type="password"
-                            className={cx('register-input')}
-                            placeholder="&nbsp;"
-                            {...register('confirmPassword')}
-                        />
-                        <label>Confirm Password</label>
-                        {errors.confirmPassword && <p className={cx('form-msg')}>{errors.confirmPassword.message}</p>}
-                    </div>
-                    {/* email */}
-                    <div className={cx('user-box')}>
-                        <input
-                            type="text"
-                            className={cx('register-input')}
-                            placeholder="&nbsp;"
-                            {...register('email')}
-                        />
-                        <label>Email</label>
-                        {errors.email && <p className={cx('form-msg')}>{errors.email.message}</p>}
-                    </div>
-                    {/* Gender */}
-                    <div className="mt-9 flex flex-col">
-                        <div className="flex gap-5">
-                            <div className="flex items-center gap-2">
-                                <input
-                                    type="radio"
-                                    value={true}
-                                    className={cx('radio')}
-                                    id="radio-male"
-                                    {...register('gender')}
-                                />
-                                <label className="cursor-pointer" htmlFor="radio-male">
-                                    Male
-                                </label>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <input
-                                    type="radio"
-                                    value={false}
-                                    className={cx('radio')}
-                                    id="radio-female"
-                                    {...register('gender')}
-                                />
-                                <label className="cursor-pointer" htmlFor="radio-female">
-                                    Female
-                                </label>
-                            </div>
+                    <div className={cx('form-data')}>
+                        {/* username */}
+                        <div className={cx('user-box')}>
+                            <input
+                                type="text"
+                                className={cx('register-input')}
+                                placeholder="&nbsp;"
+                                {...register('username')}
+                            />
+                            <label>Username</label>
+                            {errors.username && <p className={cx('form-msg')}>{errors.username.message}</p>}
                         </div>
-                        {errors.gender && <p className={cx('form-msg')}>{errors.gender.message}</p>}
+                        {/* fullname */}
+                        <div className={cx('user-box')}>
+                            <input
+                                type="text"
+                                className={cx('register-input')}
+                                placeholder="&nbsp;"
+                                {...register('fullname')}
+                            />
+                            <label>Name</label>
+                            {errors.name && <p className={cx('form-msg')}>{errors.name.message}</p>}
+                        </div>
+                        {/* password */}
+                        <div className={cx('user-box')}>
+                            <input
+                                type="password"
+                                className={cx('register-input')}
+                                placeholder="&nbsp;"
+                                {...register('password')}
+                            />
+                            <label>Password</label>
+                            {errors.password && <p className={cx('form-msg')}>{errors.password.message}</p>}
+                        </div>
+                        {/* confirm password */}
+                        <div className={cx('user-box')}>
+                            <input
+                                type="password"
+                                className={cx('register-input')}
+                                placeholder="&nbsp;"
+                                {...register('confirmPassword')}
+                            />
+                            <label>Confirm Password</label>
+                            {errors.confirmPassword && <p className={cx('form-msg')}>{errors.confirmPassword.message}</p>}
+                        </div>
+                        {/* email */}
+                        <div className={cx('user-box')}>
+                            <input
+                                type="text"
+                                className={cx('register-input')}
+                                placeholder="&nbsp;"
+                                {...register('email')}
+                            />
+                            <label>Email</label>
+                            {errors.email && <p className={cx('form-msg')}>{errors.email.message}</p>}
+                        </div>
+                        {/* Gender */}
+                        <div className="mt-9 flex flex-col">
+                            <div className="flex gap-5">
+                                <div className="flex items-center gap-2">
+                                    <input
+                                        type="radio"
+                                        value={true}
+                                        className={cx('radio')}
+                                        id="radio-male"
+                                        {...register('gender')}
+                                    />
+                                    <label className="cursor-pointer" htmlFor="radio-male">
+                                        Male
+                                    </label>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <input
+                                        type="radio"
+                                        value={false}
+                                        className={cx('radio')}
+                                        id="radio-female"
+                                        {...register('gender')}
+                                    />
+                                    <label className="cursor-pointer" htmlFor="radio-female">
+                                        Female
+                                    </label>
+                                </div>
+                            </div>
+                            {errors.gender && <p className={cx('form-msg')}>{errors.gender.message}</p>}
+                        </div>
                     </div>
                     {/* Register btn */}
                     <button type="submit" className={cx('register-btn')}>

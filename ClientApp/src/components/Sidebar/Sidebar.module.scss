@@ -1,8 +1,7 @@
 .wrapper {
-    @apply relative flex h-screen w-full flex-col justify-between bg-[color:var(--sidebar-bg)] py-4 px-3 transition-all duration-500;
-
+    @apply relative z-30 flex h-screen w-[var(--sidebar-width)] flex-col justify-between bg-[color:var(--sidebar-bg)] py-4 px-3 transition-all duration-500;
     &:has(.menu-toggle.active) {
-        width: 80px;
+        width: var(--sidebar-width-small);
         .logo {
             @apply -translate-x-2;
         }
@@ -11,10 +10,18 @@
             @apply invisible opacity-0;
         }
     }
+    &::before {
+        @apply absolute top-0 left-full hidden h-screen w-screen backdrop-blur-[1px] content-[''] [background-image:var(--overlay-sidebar)];
+    }
+    @media screen and (max-width: 1132px) {
+        &:not(:has(.menu-toggle.active))::before {
+            display: block;
+        }
+    }
 }
 
 .logo {
-    @apply relative text-activecolor transition-all duration-500 pl-2;
+    @apply relative pl-2 text-activecolor transition-all duration-500;
     .image-logo {
     }
     .app-name {
@@ -24,7 +31,7 @@
 
 .menu-toggle {
     // note: <= 1132 => show
-    @apply absolute right-0 top-[15%] grid translate-x-1/2 cursor-pointer place-content-center rounded-full bg-[color:var(--menuToggle-bg)] p-5 text-white transition-all duration-500;
+    @apply absolute right-0 top-[15%] hidden translate-x-1/2 cursor-pointer place-content-center rounded-full bg-[color:var(--menuToggle-bg)] p-5 text-white transition-all duration-500 max-[1132px]:grid;
     &.active {
         @apply rotate-180;
     }
