@@ -8,7 +8,8 @@ import Player from '../../components/Player';
 import SidebarRight from '../../components/SidebarRight';
 import * as actions from '../../store/actions';
 import { crePlaylist } from '../../services/music';
-import { CommentModal, CrePlaylistModal, DeleteModal, DeletePlaylistModal } from '../../components/Modal';
+import { CommentModal, CrePlaylistModal, DeleteModal, DeletePlaylistModal } from '~/components/Modal';
+// import { CommentModal, CrePlaylistModal, DeleteModal, DeletePlaylistModal } from '../../components/Modal';
 
 function DefaultLayout() {
     const [isShowSidebar, setIsShowSidebar] = useState(false);
@@ -49,11 +50,11 @@ function DefaultLayout() {
             {isOpenCommentModal && <CommentModal />}
             {isOpenDeleteModal && <DeleteModal />}
             {isOpenDeletePlaylistModal && <DeletePlaylistModal />}
-            <div className="flex w-full">
-                <div className="w-[243px] flex-none">
+            <div className="flex h-screen w-screen">
+                <div className="z-30 max-[1132px]:fixed">
                     <Sidebar />
                 </div>
-                <div className="w-[calc(100vw-var(--sidebar-width))]">
+                <div className="max-w-[calc(100vw-var(--sidebar-width))] flex-1 max-[1132px]:ml-[var(--sidebar-width-small)] max-[1132px]:max-w-[calc(100vw-var(--sidebar-width-small))]"> {/* limit width to swipe list playlist item */}
                     <Header />
                     <Outlet />
                 </div>
@@ -67,7 +68,7 @@ function DefaultLayout() {
             </div>
 
             {/* Sửa: k dùng màu trong suốt, lúc scroll nhìn thấy phần phía sau */}
-            <div className="absolute bottom-0 z-30 w-full bg-[color:var(--player-bg)] py-3 px-4">
+            <div className="absolute bottom-0 z-40 w-full bg-[color:var(--player-bg)] py-3 px-4 [border-top:1px_solid_var(--player-border-color)]">
                 <Player setIsShowSidebar={setIsShowSidebar} />
             </div>
         </div>

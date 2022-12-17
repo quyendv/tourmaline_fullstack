@@ -121,9 +121,8 @@ function MainScreen() {
             )}
             {/* Recently */}
             {recentlyPlayed.length > 0 && (
-                <div>
-                    
-                    <h3 className="text-2xl font-bold">Recently Played</h3>       
+                <div className="mt-12">
+                    <h3 className="text-2xl font-bold">Recently Played</h3>
                     <div className="max-h-64 overflow-y-auto">
                         {recentlyPlayed.map((item, index) => (
                             <Song key={index} songData={item} />

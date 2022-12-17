@@ -182,7 +182,7 @@ function Song({ songData, setSongsUploaded }) {
                     {!favorite ? (
                         <AiOutlineHeart className="hidden group-hover:block" />
                     ) : (
-                        <AiTwotoneHeart className="text-[#9b4de0] [filter:drop-shadow(0_0_10px_currentColor)]" />
+                        <AiTwotoneHeart className="text-[var(--favorite-bg)] [filter:drop-shadow(0_0_10px_currentColor)]" />
                     )}
                 </span>
                 <SongMenu menuList={songMenu} songId={songData?.id}>
