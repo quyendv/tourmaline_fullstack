@@ -142,7 +142,7 @@ function Player({ setIsShowSidebar }) {
         dispatch(actions.setCurSongId(prevSong[index + 1]));
     };
     return (
-        <div className="flex h-full items-center text-white">
+        <div className="Player flex h-full items-center text-white">
             {/* //Songdetai */}
             <div className="flex w-[30%] items-center gap-4 ">
                 <img

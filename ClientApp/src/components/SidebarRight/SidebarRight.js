@@ -19,7 +19,7 @@ function SidebarRight() {
         fetchCurrentSong();
     }, [curSongId]);
     return (
-        <div className="h-full w-full bg-main-100 text-white">
+        <div className="SidebarRight h-full w-full bg-main-100 text-white">
             <div className="flex h-[64px] items-center justify-between px-3">
                 <div className="flex cursor-pointer items-center gap-1 rounded-l-full rounded-r-full bg-[#fff] text-sm text-gray-600">
                     <span
