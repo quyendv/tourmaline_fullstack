@@ -46,7 +46,7 @@ function MainScreen() {
             const response = await apis.getRecentPlays(token)
             if(response.status === 200) {
                 console.log(response)
-                setRecentlyPlayed(response.data.result)
+                setRecentlyPlayed(response.data)
             }
         }
         fetchRecentlyPlays()
