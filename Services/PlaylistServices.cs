@@ -15,9 +15,8 @@ public class PlaylistServices
     public async Task<Playlist> GetPlaylist(int id)
     {
         var result = (await _database.Call($"SELECT * FROM playlist WHERE id={id}")).First();
-        return new Playlist
+        return new Playlist(id: id)
         {
-            Id = id,
             Username = result["user"],
             Name = result["name"],
             Description = result["description"],
