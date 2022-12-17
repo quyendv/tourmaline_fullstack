@@ -105,4 +105,12 @@ public class SongServices
 
         return songs;
     }
+
+    public async Task<Song> GetNextSongAutoplay(int id)
+    {
+        var tags = "AND " + string.Join(" OR ", (await GetTags(id)).Select(e => $"tag='{e}'"));
+        var result = (await _database.Call($"SELECT id FROM songtags WHERE id<>{id} {tags}")).Select(e => e["id"]).ToList();
+        result.Shuffle();
+        return await GetSong(result.First());
+    }
 }
