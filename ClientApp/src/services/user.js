@@ -82,3 +82,18 @@ export const getAvatar = (username) => new Promise(async(resolve, reject) => {
         reject(error)
     }
 })
+export const changePassword = (data) => new Promise(async(resolve, reject) => {
+    try {
+        const response = await axiosConfig({
+            url:'api/user/changepw',
+            method:'post',
+            data: data,
+            headers:{
+                contentType: 'multipart/form-data'
+            }
+        })
+        resolve(response)
+    } catch (error) {
+        reject(error)
+    }
+})

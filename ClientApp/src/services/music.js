@@ -304,3 +304,25 @@ export const removeFromPlaylist = (songId, playlistId, token) => new Promise(asy
         reject(error)
     }
 })
+
+export const editSong = (songId, data, token) => new Promise(async(resolve, reject)=> {
+    try {
+        const response = await axiosConfig({
+            url:'/api/playlist/edit',
+            method:'put',
+            params:{
+                id: songId,
+                name: data.name,
+                description:data.description,
+                tags: data.tags
+            },
+
+            headers: {
+                'Authorization' : `Bearer ${token}`,
+            }
+        })
+        resolve(response)
+    } catch (error) {
+        reject(error)
+    }
+})
