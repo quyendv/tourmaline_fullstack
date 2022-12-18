@@ -35,7 +35,7 @@ namespace tourmaline.Controllers
         [HttpPost]
         public async Task<ActionResult> PostComment([FromForm] int id, [FromForm] string content)
         {
-            if (await _songServices.IsSongExist(id))
+            if (await _songServices.DoesSongExist(id))
             {
                 var currentDate = DateTime.Now;
 
@@ -119,7 +119,7 @@ namespace tourmaline.Controllers
         [AllowAnonymous]
         public async Task<JsonResult> GetAllCommentsOnSong(int songId)
         {
-            if (await _songServices.IsSongExist(songId))
+            if (await _songServices.DoesSongExist(songId))
             {
                 return new JsonResult(await _commentServices.ListAllCommentsOnSong(songId));
             }
