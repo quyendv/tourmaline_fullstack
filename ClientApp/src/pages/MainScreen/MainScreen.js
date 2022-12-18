@@ -148,7 +148,7 @@ function MainScreen() {
             {relatedArtists.length > 0 && (
                 <div className="mt-12">
                     <h3 className="mb-5 text-2xl font-bold">Artists you should know</h3>
-                    <div className="mb-7 grid grid-cols-5 gap-6">
+                    <div className="mb-7 grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-7">
                         {/* {relatedArtists
                             .filter((item, index) => index <= 4)
                             .map((item, index) => (

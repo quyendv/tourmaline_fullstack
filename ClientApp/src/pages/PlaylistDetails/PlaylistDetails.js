@@ -1,4 +1,4 @@
-import { useLocation, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { DefaultMenu as PlaylistMenu } from '~/components/Popper';
 import { images } from '~/assets/images';
 import Song from '../../components/Song';
@@ -20,12 +20,11 @@ const {
     AiOutlineEdit,
 } = icons;
 const playlistMenu = [
-
     {
-        type:'editPlaylist',
-        icon: <AiOutlineEdit/>,
+        type: 'editPlaylist',
+        icon: <AiOutlineEdit />,
         title: 'Edit',
-        to:''
+        to: '',
     },
     {
         icon: <RiShareForwardLine />,
@@ -35,10 +34,7 @@ const playlistMenu = [
 ];
 
 function Playlist() {
-    // const { state } = useLocation();
-
     const { token } = useSelector((state) => state.auth);
-    console.log(state);
     const { pid } = useParams();
     const [songs, setSongs] = useState([]);
     const [playlistInfo, setPlaylistInfo] = useState({});
@@ -69,9 +65,9 @@ function Playlist() {
         playlistMenu[playlistMenu.length - 1].type === 'deletePlaylist' &&
             playlistMenu.splice(playlistMenu.length - 1, 1);
         playlistMenu[playlistMenu.length - 1].type !== 'deletePlaylist' && playlistMenu.push(deletePlaylist);
-        playlistMenu.forEach(item => {
-            item.id = pid
-        })
+        playlistMenu.forEach((item) => {
+            item.id = pid;
+        });
     }, [pid, songs]);
     return (
         <div className="flex max-h-[calc(100vh-120px)] w-full gap-4 overflow-y-auto px-14 py-10 text-white">
@@ -92,9 +88,9 @@ function Playlist() {
                         alt="playlist-cover"
                     />
                 </div>
-                <span className="mt-3 text-lg font-bold">{playlistInfo.name}</span>
+                <span className="mt-2 text-lg font-bold">{playlistInfo.name}</span>
                 <span className="text-xs font-semibold text-[#ffffff80]">
-                    Được tạo bởi <span className="text-white">{playlistInfo.username}</span>
+                    Created by <span className="text-white">{playlistInfo.username}</span>
                 </span>
                 <span className="text-xs font-semibold text-[#ffffff80]">
                     <span className="text-white">{playlistInfo.description}</span>
@@ -125,8 +121,8 @@ function Playlist() {
                         <span>TIME</span>
                     </div>
                 </div>
-                <div className="flex  flex-col">
-                    {/* ...render playlist: hardcode */}
+                {/* ...render playlist */}
+                <div className="flex flex-col">
                     {songs.map((item, index) => (
                         <Song key={index} songData={item} inPlaylist />
                     ))}
