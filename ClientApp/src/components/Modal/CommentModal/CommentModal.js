@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 import { icons } from '../../../utils/icons';
 import * as apis from '../../../services';
 import moment from 'moment';
+import ModalWrapper from '../ModalWrapper';
+import CommentItem from '~/components/CommentItem';
 
 const { AiOutlineClose, FaRegComment, BsThreeDots } = icons;
 
@@ -17,7 +19,7 @@ function CommentModal() {
     useEffect(() => {
         const fetchComment = async () => {
             const response = await apis.getAllComment(commentSongId, token);
-            if (response.status == 200) {
+            if (response.status === 200) {
                 console.log(response);
                 setComments(response.data.reverse());
             }
@@ -29,7 +31,7 @@ function CommentModal() {
             id: commentSongId,
             content: commentValue,
         };
-        if (e.keyCode == '13') {
+        if (e.keyCode === 13) {
             const response = await apis.postComment(finalPayload, token);
             console.log(response);
             if (response.status === 200) {
@@ -50,11 +52,11 @@ function CommentModal() {
     };
 
     return (
-        <div className="CommentModal h-full w-full">
-            <div className="fixed top-0 right-0 bottom-0 left-0 z-40 bg-[#000] opacity-30"></div>
-            <div className="fixed top-[50%] left-[50%] z-50 h-[322px] w-[650px] translate-x-[-50%] translate-y-[-50%] rounded-md bg-[#fff]">
-                <div className="relative px-1">
-                    <h2 className="border-b border-gray-500 py-2 text-center text-3xl font-semibold">Bình luận</h2>
+        <ModalWrapper>
+            <div className="relative flex max-h-[450px] min-h-[300px] w-[650px] flex-col gap-2">
+                {/* Title */}
+                <div className="relative">
+                    <h2 className="border-b border-gray-500 py-2 text-center text-3xl font-semibold">Comments</h2>
                     <span
                         onClick={() => setIsOpenCommentModal((prev) => !prev)}
                         className="absolute top-0 right-1 cursor-pointer"
@@ -62,41 +64,37 @@ function CommentModal() {
                         <AiOutlineClose size={20} />
                     </span>
                 </div>
-                <div className="relative w-full px-3">
-                    <span className="text-[#000] opacity-60">{`${comments.length} bình luận`}</span>
-                    {comments.length == 0 ? (
-                        <div className="flex h-full w-full flex-auto  flex-col items-center justify-center">
-                            <span className="opacity-30">
-                                <FaRegComment size={50} />
-                            </span>
-                            <h3 className="opacity-60">Chưa có bình luận nào</h3>
+                {/* Number of Comments */}
+                <div className="text-sm text-[#ffffff80]">{`${comments.length} comments`}</div>
+                {/* Contents */}
+                <div className="flex-1 overflow-y-auto">
+                    {comments.length === 0 ? (
+                        <div className="grid h-full w-full place-content-center">
+                            <div className="text-center text-8xl opacity-30">
+                                <FaRegComment />
+                            </div>
+                            <h3 className="mt-4 opacity-60">There are no comments yet</h3>
                         </div>
                     ) : (
-                        <div>
+                        <>
                             {comments.map((item, index) => (
-                                <div key={index}>
-                                    <span>{`${item.username || item.userName}: `}</span>
-                                    <span className="overflow-hidden">{item.content} </span>
-
-                                    <span className="text-xs opacity-30">{moment(item.createTime).fromNow()}</span>
-                                    <span>
-                                        <BsThreeDots />
-                                    </span>
-                                </div>
+                                <CommentItem key={index} data={item} />
                             ))}
-                        </div>
+                        </>
                     )}
+                </div>
+                {/* Comment Input */}
+                <div className="mt-5 rounded-full bg-[#375174] px-4 py-1.5">
                     <input
-                        className="fixed bottom-2 right-1 left-1 mt-2 h-[40px] rounded-l-full rounded-r-full bg-[#000]/5 px-4 py-1 text-xl"
+                        className="w-full"
                         placeholder="Write a comment"
                         value={commentValue}
                         onChange={(e) => setCommentValue(e.target.value)}
                         onKeyUp={handlePostComment}
                     />
-                    <div className="h-[50px]"></div>
                 </div>
             </div>
-        </div>
+        </ModalWrapper>
     );
 }
 

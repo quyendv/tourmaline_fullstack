@@ -71,7 +71,7 @@ function DefaultLayout() {
                 </div>
             </div>
 
-            <div className="absolute bottom-0 z-40 w-full bg-[color:var(--player-bg)] py-3 px-4 [border-top:1px_solid_var(--player-border-color)]">
+            <div className="absolute bottom-0 z-40 h-[var(--player-height)] w-full bg-[color:var(--player-bg)] py-3 px-4 [border-top:1px_solid_var(--player-border-color)]">
                 <Player setIsShowSidebar={setIsShowSidebar} />
             </div>
         </div>

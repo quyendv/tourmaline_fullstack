@@ -181,7 +181,10 @@ function Player({ setIsShowSidebar }) {
                     >
                         <MdSkipPrevious size={24} />
                     </span>
-                    <span onClick={handleToggleMusic} className="cursor-pointer rounded-full border border-white p-1">
+                    <span
+                        onClick={handleToggleMusic}
+                        className="grid cursor-pointer place-content-center rounded-full border border-white p-1"
+                    >
                         {isLoading ? (
                             <AudioLoading />
                         ) : !isPlaying ? (
