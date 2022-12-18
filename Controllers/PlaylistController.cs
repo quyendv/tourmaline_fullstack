@@ -66,7 +66,7 @@ public class PlaylistController : ControllerBase
 
     [HttpPost]
     [Route("setCover")]
-    public async Task<ActionResult> SetAvatar([FromForm] int id, [FromForm] IFormFile file)
+    public async Task<ActionResult> SetCover([FromForm] int id, [FromForm] IFormFile file)
     {
         try
         {
@@ -80,6 +80,7 @@ public class PlaylistController : ControllerBase
         }
         catch (Exception e)
         {
+            Console.WriteLine(e);
             Console.WriteLine(e);
         }
 
@@ -98,12 +99,12 @@ public class PlaylistController : ControllerBase
             Description = description ?? "",
         };
 
-        var fileName = $"{playlist.Id}.jpg";
+        var fileName = $"{playlist.Id}.png";
         if (cover != null)
         {
             var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            Directory.CreateDirectory($"{homeDir}/storage/cover");
-            var filePath = Path.Combine($"{homeDir}/storage/cover", fileName);
+            Directory.CreateDirectory($"{homeDir}/storage/playlist");
+            var filePath = Path.Combine($"{homeDir}/storage/playlist", fileName);
             await using var stream = new FileStream(filePath, FileMode.Create);
             await cover.CopyToAsync(stream);
         }
