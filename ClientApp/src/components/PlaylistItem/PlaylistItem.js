@@ -5,7 +5,7 @@ import { deletePlaylist } from '../../services/music';
 import { icons } from '../../utils/icons';
 import { DefaultMenu as PlaylistMenu } from '../Popper';
 import * as apis from '../../services';
-import * as actions from '../../store/actions'
+import * as actions from '../../store/actions';
 import { useEffect, useState } from 'react';
 
 const {
@@ -20,13 +20,11 @@ const {
 } = icons;
 
 const playlistMenu = [
-
     {
         icon: <RiShareForwardLine />,
         title: 'Share',
         to: '',
     },
-
 ];
 
 function PlaylistItem({ playlistData, className }) {
@@ -111,7 +109,7 @@ function PlaylistItem({ playlistData, className }) {
                             state: playlistData,
                         })
                     }
-                    className="cursor-pointer text-sm font-bold hover:text-activecolor"
+                    className="cursor-pointer text-sm font-bold hover:text-active-color"
                 >
                     {playlistData.name}
                 </span>

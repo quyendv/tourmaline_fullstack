@@ -26,6 +26,7 @@
     --overlay-sidebar: linear-gradient(to right, var(--bg-main-screen-color), rgba(0, 0, 0, 0.1));
     --modal-bg: #203d65;
     --follow-btn-bg: #3b68ef;
+    --scroll-color: #009bf480;
 }
 
 * {
@@ -57,7 +58,8 @@ html *::-webkit-scrollbar {
 html *::-webkit-scrollbar-thumb {
     border-radius: 4px;
     // background-color: rgba(22, 24, 35, 0.06);
-    background-color: var(--second-color);
+    // background-color: var(--second-color);
+    background-color: var(--scroll-color);
 }
 
 html *::-webkit-scrollbar-track {
