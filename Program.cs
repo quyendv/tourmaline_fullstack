@@ -44,6 +44,7 @@ services.AddSingleton<CommentServices>(_ => new CommentServices(database));
 services.AddSingleton<SearchServices>(_ => new SearchServices(database));
 services.AddSingleton<FollowServices>(_ => new FollowServices(database));
 services.AddSingleton<SuggestionServices>(_ => new SuggestionServices(database));
+services.AddSingleton<FeedServices>(_ => new FeedServices(database));
 
 #endregion
 
