@@ -1,3 +1,4 @@
+using tourmaline.Helpers;
 using tourmaline.Models;
 
 namespace tourmaline.Services;
@@ -19,9 +20,9 @@ public class SearchServices
 
     public async Task<List<SearchResult>> Search(string query)
     {
-        var songResults = await _database.CallFindProcedure("FindSongs", query);
-        var userResults = await _database.CallFindProcedure("FindUsers", query);
-        var playlistResults = await _database.CallFindProcedure("FindPlaylists", query);
+        var songResults = await _database.CallFindProcedure("FindSongs", query.Normal());
+        var userResults = await _database.CallFindProcedure("FindUsers", query.Normal());
+        var playlistResults = await _database.CallFindProcedure("FindPlaylists", query.Normal());
 
         var results = new List<SearchResult>();
         

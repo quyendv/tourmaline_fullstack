@@ -1,4 +1,5 @@
-﻿using tourmaline.Models;
+﻿using tourmaline.Helpers;
+using tourmaline.Models;
 
 namespace tourmaline.Services
 {
@@ -54,7 +55,7 @@ namespace tourmaline.Services
 
             var result = await _database.AddAndGetObjectId("comment", new Dictionary<string, dynamic>()
                 {
-                    { "content", comment.Content },
+                    { "content", comment.Content.Normal() },
                     { "createTime", comment.CreateTime },
                     { "lastEditedTime", comment.LastEditedTime },
                     { "song", comment.SongId },
