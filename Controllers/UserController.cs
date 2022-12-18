@@ -39,7 +39,7 @@ public class UserController : ControllerBase
         {
             return await _services.GetUser(username);
         }
-        
+
         return StatusCode(StatusCodes.Status404NotFound);
     }
 
@@ -70,34 +70,13 @@ public class UserController : ControllerBase
     }
 
     [HttpPost]
-    [Route("setAvatar")]
-    public async Task<ActionResult> SetAvatar([FromForm] IFormFile file)
-    {
-        try
-        {
-            var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            Directory.CreateDirectory($"{homeDir}/storage/avatar");
-            var fileName = $"{CurrentSessionUsername}.png";
-            var filePath = Path.Combine($"{homeDir}/storage/avatar", fileName);
-            await using var stream = new FileStream(filePath, FileMode.Create);
-            await file.CopyToAsync(stream);
-            return Ok("Upload success!");
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-        }
-
-        return StatusCode(StatusCodes.Status500InternalServerError);
-    }
-
-    [HttpPost]
     [Route("signup")]
     [AllowAnonymous]
     public async Task<ActionResult> SignUp([FromForm] string username, [FromForm] string password,
         [FromForm] string fullname, [FromForm] bool gender, [FromForm] string email)
     {
-        if (await _services.IsUserExist(username)) return StatusCode(StatusCodes.Status406NotAcceptable, "User is already exist!");
+        if (await _services.IsUserExist(username))
+            return StatusCode(StatusCodes.Status406NotAcceptable, "User is already exist!");
 
         var user = new User(username)
         {
@@ -114,13 +93,25 @@ public class UserController : ControllerBase
 
     [HttpPut]
     [Route("edit")]
-    public async Task<ActionResult> EditProfile(string username, string? name, string? bio, bool? gender, string? email, DateTime? birth)
+    public async Task<ActionResult> EditProfile([FromForm] string? name, [FromForm] string? bio,
+        [FromForm] bool? gender, [FromForm] string? email, [FromForm] DateTime? birth, [FromForm] IFormFile? avatar)
     {
-        if (!await _services.IsAdmin(CurrentSessionUsername!) && username != CurrentSessionUsername)
+        if (CurrentSessionUsername == null)
         {
             return StatusCode(StatusCodes.Status403Forbidden);
         }
-        await _services.EditInfo(username, name, bio, gender, birth);
+
+        if (avatar != null)
+        {
+            var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            Directory.CreateDirectory($"{homeDir}/storage/avatar");
+            var fileName = $"{CurrentSessionUsername}.png";
+            var filePath = Path.Combine($"{homeDir}/storage/avatar", fileName);
+            await using var stream = new FileStream(filePath, FileMode.Create);
+            await avatar.CopyToAsync(stream);
+        }
+
+        await _services.EditInfo(CurrentSessionUsername, name, bio, gender, birth);
         return Ok();
     }
 
@@ -129,7 +120,8 @@ public class UserController : ControllerBase
     [AllowAnonymous]
     public async Task<ActionResult> Login([FromForm] LoginModel loginModel)
     {
-        if (!await _services.IsUserExist(loginModel.Username)) return StatusCode(StatusCodes.Status406NotAcceptable, "User not found!");
+        if (!await _services.IsUserExist(loginModel.Username))
+            return StatusCode(StatusCodes.Status406NotAcceptable, "User not found!");
         var user = await _services.GetUser(loginModel.Username);
 
         var hasher = new PasswordHasher<User>();
@@ -159,12 +151,12 @@ public class UserController : ControllerBase
         }
 
         return StatusCode(StatusCodes.Status403Forbidden, "User password is incorrect!");
-
     }
 
     [HttpPost]
     [Route("changepwd")]
-    public async Task<ActionResult> ChangePassword([FromForm] string username, [FromForm] string oldPassword, [FromForm] string newPassword)
+    public async Task<ActionResult> ChangePassword([FromForm] string username, [FromForm] string oldPassword,
+        [FromForm] string newPassword)
     {
         // Verify old password
         var hasher = new PasswordHasher<User>();
@@ -176,11 +168,9 @@ public class UserController : ControllerBase
             return StatusCode(StatusCodes.Status401Unauthorized, "Wrong current password");
         // Hash new password
         var newPasswordHash = hasher.HashPassword(user, newPassword);
-            
+
         // Update new password hash in database
         await _services.ChangePassword(username, newPasswordHash);
         return StatusCode(StatusCodes.Status202Accepted, "Password changed successfully");
-
     }
-    
 }
