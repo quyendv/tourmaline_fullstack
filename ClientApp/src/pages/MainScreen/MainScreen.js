@@ -134,12 +134,17 @@ function MainScreen() {
             {relatedArtists.length > 0 && (
                 <div className="mt-12">
                     <h3 className="mb-5 text-2xl font-bold">Artists you should know</h3>
-                    <div className="flex gap-2">
-                        {relatedArtists
+                    <div className="mb-7 grid grid-cols-5 gap-6">
+                        {/* {relatedArtists
                             .filter((item, index) => index <= 4)
                             .map((item, index) => (
-                                <UserItem key={index} userData={item} />
-                            ))}
+                                <UserItem key={index} userData={item} className="px-3" />
+                            ))} */}
+                        <UserItem userData={{ username: 'sontung-mtp', name: 'Sơn Tùng MTP' }} />
+                        <UserItem userData={{ username: 'sontung-mtp', name: 'Sơn Tùng MTP' }} />
+                        <UserItem userData={{ username: 'sontung-mtp', name: 'Sơn Tùng MTP' }} />
+                        <UserItem userData={{ username: 'sontung-mtp', name: 'Sơn Tùng MTP' }} />
+                        <UserItem userData={{ username: 'sontung-mtp', name: 'Sơn Tùng MTP' }} />
                     </div>
                 </div>
             )}
