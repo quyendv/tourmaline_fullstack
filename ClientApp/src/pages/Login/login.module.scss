@@ -75,11 +75,22 @@ $main-login-color: #03e9f4;
     }
 
     .form-msg {
-        @apply pt-1 text-red-500;
+        padding-top: 0.25rem;
+        color: #ef4444;
+        // @apply pt-1 text-red-500;
     }
 }
 
 .register-link,
 .forgot-password-link {
-    @apply rounded-full p-2 font-semibold text-[color:#03e9f4] underline transition duration-150 ease-in-out hover:bg-[color:#03e9f480];
+    padding: 0.5rem;
+    font-weight: 600;
+    text-decoration: underline;
+    border-radius: 9999px;
+    color: #03e9f4;
+    transition: all 150ms ease-in-out;
+    &:hover {
+        background: #03e9f480;
+    }
+    // @apply rounded-full p-2 font-semibold text-[color:#03e9f4] underline transition duration-150 ease-in-out hover:bg-[color:#03e9f480];
 }

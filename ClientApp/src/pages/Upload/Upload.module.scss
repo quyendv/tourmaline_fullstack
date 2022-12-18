@@ -12,6 +12,12 @@
     background-color: #fff;
 
     .title {
-        @apply pt-4 pb-2 text-center text-3xl font-bold;
+        padding-bottom: 0.5rem;
+        padding-top: 1rem;
+        font-size: 1.875rem;
+        line-height: 2.25rem;
+        font-weight: 700;
+        text-align: center;
+        // @apply pt-4 pb-2 text-center text-3xl font-bold;
     }
 }

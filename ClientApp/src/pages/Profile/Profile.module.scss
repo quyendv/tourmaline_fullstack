@@ -1,95 +1,98 @@
 .profile {
-  @apply container mx-auto grid min-h-[65%] w-full grid-cols-12 gap-4 p-4;
+    // in js
+    // @apply container mx-auto grid min-h-[65%] w-full grid-cols-12 gap-4 p-4;
 
-  & > * {
-    padding: 20px;
-    border-radius: 4px;
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 4px 4px 0px;
-  }
+    & > * {
+        padding: 20px;
+        border-radius: 4px;
+        box-shadow: rgba(100, 100, 111, 0.2) 0px 4px 4px 0px;
+    }
 }
 
 .profile-item1 {
-  @apply col-span-12;
-  @media screen and (min-width: 1000px) {
-    grid-column: span 3;
-  }
+    grid-column: span 12 / span 12;
+    // @apply col-span-12;
+    @media screen and (min-width: 1000px) {
+        grid-column: span 3;
+    }
 }
 
 .profile-item2 {
-  @apply col-span-12;
-  @media screen and (min-width: 1000px) {
-    grid-column: span 9;
-  }
+    grid-column: span 12 / span 12;
+    // @apply col-span-12;
+    @media screen and (min-width: 1000px) {
+        grid-column: span 9;
+    }
 }
 
 .form-group {
-  margin-bottom: 16px;
+    margin-bottom: 16px;
 
-  .form-label {
-    display: inline-block;
-    margin-bottom: 8px;
-  }
-
-  .form-control {
-    &:not([type='radio']) {
-      width: 100%;
-      padding: 6px 12px;
-      border: 1px solid #ccc;
+    .form-label {
+        display: inline-block;
+        margin-bottom: 8px;
     }
 
-    &[type='radio'] {
-      appearance: none;
-      background-color: #fff;
-      color: currentColor;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      margin-right: 8px;
-      border: 2px solid currentColor;
-      cursor: pointer;
-      position: relative;
+    .form-control {
+        &:not([type='radio']) {
+            width: 100%;
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+        }
 
-      &::before {
-        content: '';
-        position: absolute;
-        inset: 2px;
-        border-radius: 50%;
-        background-color: #da99dd;
-        transform: scale(0);
-        transition: all 0.2s ease-in-out;
-      }
+        &[type='radio'] {
+            appearance: none;
+            background-color: #fff;
+            color: currentColor;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            margin-right: 8px;
+            border: 2px solid currentColor;
+            cursor: pointer;
+            position: relative;
 
-      &:checked::before {
-        transform: scale(1);
-      }
+            &::before {
+                content: '';
+                position: absolute;
+                inset: 2px;
+                border-radius: 50%;
+                background-color: #da99dd;
+                transform: scale(0);
+                transition: all 0.2s ease-in-out;
+            }
 
-      & ~ input[type='radio'] {
-        margin-left: 32px;
-      }
+            &:checked::before {
+                transform: scale(1);
+            }
+
+            & ~ input[type='radio'] {
+                margin-left: 32px;
+            }
+        }
     }
-  }
 }
 
 @tailwind components;
 
 @layer components {
-  // container bootstrap
-  .container {
-    width: 100%;
-    @media (min-width: 576px) {
-      max-width: 540px;
+    // container bootstrap
+    .container {
+        width: 100%;
+        @media (min-width: 576px) {
+            max-width: 540px;
+        }
+        @media (min-width: 768px) {
+            max-width: 720px;
+        }
+        @media (min-width: 992px) {
+            max-width: 960px;
+        }
+        @media (min-width: 1200px) {
+            max-width: 1140px;
+        }
+        @media (min-width: 1400px) {
+            max-width: 1320px;
+        }
     }
-    @media (min-width: 768px) {
-      max-width: 720px;
-    }
-    @media (min-width: 992px) {
-      max-width: 960px;
-    }
-    @media (min-width: 1200px) {
-      max-width: 1140px;
-    }
-    @media (min-width: 1400px) {
-      max-width: 1320px;
-    }
-  }
 }
