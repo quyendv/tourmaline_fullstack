@@ -118,7 +118,7 @@ public class PlaylistController : ControllerBase
 
     [HttpPost]
     [Route("edit")]
-    public async Task<ActionResult> SetCover([FromForm] int id, [FromForm] string? name, [FromForm] string? description,
+    public async Task<ActionResult> EditPlaylist([FromForm] int id, [FromForm] string? name, [FromForm] string? description,
         [FromForm] IFormFile? file)
     {
         if (file != null)
