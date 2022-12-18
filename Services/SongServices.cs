@@ -73,8 +73,8 @@ public class SongServices
         if (name != null || description != null)
         {
             await _database.Call($"UPDATE song " +
-                                 $"WHERE id={id} " +
-                                 $"SET {(name != null ? $"name='{name.Normal()}', " : "")}{(description != null ? $"description='{description.Normal()}'" : "")}");
+                                 $"SET {(name != null ? $"name='{name.Normal()}', " : "")}{(description != null ? $"description='{description.Normal()}'" : "")} " +
+                                 $"WHERE id={id}");
         }
         if (tags != null) await SetTags(id, tags);
     }

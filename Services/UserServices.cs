@@ -43,12 +43,12 @@ public class UserServices
 
     public async Task EditInfo(string username, string? name, string? bio, bool? gender, DateTime? birth)
     {
-        await _database.Call($"UPDATE user " +
-                             $"WHERE username='{username}' SET " +
+        await _database.Call($"UPDATE user SET " +
                              $"{(name != null ? $"name='{name.Normal()}'" : "")}, " +
                              $"{(bio != null ? $"bio='{bio.Normal()}'" : "")}, " +
                              $"{(gender != null ? gender == true ? "gender=1" : "gender=0" : "")}, " +
-                             $"{(birth != null ? $"birth='{birth:yyyy-MM-dd H:mm:ss}'" : "")}");
+                             $"{(birth != null ? $"birth='{birth:yyyy-MM-dd H:mm:ss}'" : "")} " +
+                             $"WHERE username='{username}'");
     }
 
     public async Task<bool> IsUserExist(string username)

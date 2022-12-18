@@ -37,8 +37,9 @@ public class PlaylistServices
 
     public async Task EditPlaylist(int id, string? name, string? description)
     {
-        await _database.Call($"UPDATE playlist WHERE id={id} SET " +
-                             $"{(name != null ? $"name='{name.Normal()}', " : "")}{(description != null ? $"description='{description.Normal()}'" : "")}");
+        await _database.Call($"UPDATE playlist SET " +
+                             $"{(name != null ? $"name='{name.Normal()}', " : "")}{(description != null ? $"description='{description.Normal()}'" : "")}" +
+                             $" WHERE id={id}");
     }
 
     public async Task AddSong(int playlistId, int songId)
