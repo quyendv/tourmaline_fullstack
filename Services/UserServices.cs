@@ -44,7 +44,7 @@ public class UserServices
     public async Task EditInfo(string username, string? name, string? bio, bool? gender, DateTime? birth)
     {
         await _database.Call($"UPDATE user " +
-                             $"WHERE username={username} SET " +
+                             $"WHERE username='{username}' SET " +
                              $"{(name != null ? $"name='{name}'" : "")}, " +
                              $"{(bio != null ? $"bio='{bio}'" : "")}, " +
                              $"{(gender != null ? gender == true ? "gender=1" : "gender=0" : "")}, " +
