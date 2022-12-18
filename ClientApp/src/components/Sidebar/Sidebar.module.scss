@@ -1,17 +1,43 @@
 .wrapper {
-    @apply relative z-30 flex h-screen w-[var(--sidebar-width)] flex-col justify-between bg-[color:var(--sidebar-bg)] py-4 px-3 transition-all duration-500;
+    display: flex;
+    position: relative;
+    z-index: 30;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    transition: all 500ms;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100vh;
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    // @apply relative z-30 flex h-screen w-[var(--sidebar-width)] flex-col justify-between bg-[color:var(--sidebar-bg)] py-4 px-3 transition-all duration-500;
     &:has(.menu-toggle.active) {
         width: var(--sidebar-width-small);
         .logo {
-            @apply -translate-x-2;
+            --transform-translate-x: -0.5rem;
+            transform: translateX(--transform-translate-x);
+            // @apply -translate-x-2;
         }
         .logo .app-name,
         .sidebar-item .text-content {
-            @apply invisible opacity-0;
+            visibility: hidden;
+            opacity: 0;
+            // @apply invisible opacity-0;
         }
     }
     &::before {
-        @apply absolute top-0 left-full hidden h-screen w-screen backdrop-blur-[1px] content-[''] [background-image:var(--overlay-sidebar)];
+        content: '';
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 100%;
+        width: 100vw;
+        height: 100vh;
+        backdrop-filter: blur(1px);
+        background-image: var(--overlay-sidebar);
+        // @apply absolute top-0 left-full hidden h-screen w-screen backdrop-blur-[1px] content-[''] [background-image:var(--overlay-sidebar)];
     }
     @media screen and (max-width: 1132px) {
         &:not(:has(.menu-toggle.active))::before {
@@ -21,24 +47,55 @@
 }
 
 .logo {
-    @apply relative pl-2 text-active-color transition-all duration-500;
+    position: relative;
+    padding-left: 0.5rem;
+    color: var(--active-color);
+    transition: all 0.5s;
+    // @apply relative pl-2 text-active-color transition-all duration-500;
     .image-logo {
     }
     .app-name {
-        @apply absolute inline-block px-4 py-1 align-middle text-2xl text-white transition-all duration-500;
+        display: inline-block;
+        position: absolute;
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        color: #ffffff;
+        font-size: 1.5rem;
+        line-height: 2rem;
+        vertical-align: middle;
+        transition: all 0.5s;
+        // @apply absolute inline-block px-4 py-1 align-middle text-2xl text-white transition-all duration-500;
     }
 }
 
 .menu-toggle {
     // note: <= 1132 => show
-    @apply absolute right-0 top-[15%] hidden translate-x-1/2 cursor-pointer place-content-center rounded-full bg-[color:var(--menuToggle-bg)] p-5 text-white transition-all duration-500 max-[1132px]:grid;
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 15%;
+    transform: translateX(50%);
+    padding: 1.25rem;
+    transition-duration: 500ms;
+    color: #ffffff;
+    place-content: center;
+    border-radius: 9999px;
+    background: var(--menuToggle-bg);
+    transition: all 0.5s;
+    cursor: pointer;
+    // @apply absolute right-0 top-[15%] hidden translate-x-1/2 cursor-pointer place-content-center rounded-full bg-[color:var(--menuToggle-bg)] p-5 text-white transition-all duration-500 max-[1132px]:grid;
     &.active {
-        @apply rotate-180;
+        transform: translateX(50%) rotate(180deg);
+        // @apply rotate-180;
     }
 }
 
 .content {
-    @apply -mx-3;
+    margin-left: -0.75rem;
+    margin-right: -0.75rem;
+    // @apply -mx-3;
 }
 
 .empty {
@@ -47,7 +104,15 @@
 
 // SidebarItem
 .sidebar-item {
-    @apply relative flex cursor-pointer items-center rounded-lg text-white [border:8px_solid_transparent] [transition:all_0.25s_linear];
+    display: flex;
+    position: relative;
+    color: #ffffff;
+    align-items: center;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    border: 8px solid transparent;
+    transition: all 0.25s linear;
+    // @apply relative flex cursor-pointer items-center rounded-lg text-white [border:8px_solid_transparent] [transition:all_0.25s_linear];
 
     &::before {
         content: '';
@@ -61,6 +126,7 @@
         transform: scale(0);
         transform-origin: bottom right;
         transition: 0.5s;
+        z-index: -1;
     }
     &::after {
         content: '';
@@ -78,11 +144,23 @@
     }
 
     .text-content {
-        @apply ml-6 text-2xl transition-all duration-500;
+        margin-left: 1.5rem;
+        font-size: 1.5rem;
+        line-height: 2rem;
+        transition: all 0.5s;
+        // @apply ml-6 text-2xl transition-all duration-500;
     }
 
     .icon {
-        @apply grid place-content-center rounded-lg p-3 text-3xl text-current [transition:all_0.25s_linear];
+        display: grid;
+        padding: 0.75rem;
+        color: currentColor;
+        font-size: 1.875rem;
+        line-height: 2.25rem;
+        place-content: center;
+        border-radius: 0.5rem;
+        transition: all 0.25s linear;
+        // @apply grid place-content-center rounded-lg p-3 text-3xl text-current [transition:all_0.25s_linear];
     }
 
     &:hover {
@@ -100,10 +178,20 @@
             transform: scale(1);
         }
         .icon {
-            @apply bg-[var(--clr)] text-white [filter:drop-shadow(0_0_4px_var(--clr))];
+            color: #ffffff;
+            background: var(--clr);
+            filter: drop-shadow(0_0_4px_var (--clr));
+            // @apply bg-[var(--clr)] text-white [filter:drop-shadow(0_0_4px_var(--clr))];
         }
         .text-content {
-            @apply [filter:drop-shadow(0_0_4px_var(--clr))];
+            filter: drop-shadow(0_0_4px_var (--clr));
+            // @apply [filter:drop-shadow(0_0_4px_var(--clr))];
         }
+    }
+}
+
+@media (max-width: 1132px) {
+    .menu-toggle {
+        display: grid !important;
     }
 }

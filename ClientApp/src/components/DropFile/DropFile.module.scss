@@ -5,14 +5,15 @@ $border-color: #4267b2;
     .upload-area {
         display: flex;
         align-items: center;
-        gap: 24px;
-        @apply max-[700px]:flex-col;
+        // gap: 24px;
+        gap: 1.5rem;
+        // @apply flex items-center gap-6 max-[700px]:flex-col;
     }
 }
 
 // upload-area
 .left-part {
-    @apply max-[700px]:w-[90%];
+    // @apply max-[700px]:w-[90%];
     .drop-area {
         position: relative;
         border: 2px dashed $border-color;
@@ -21,7 +22,11 @@ $border-color: #4267b2;
         text-align: center;
 
         img {
-            @apply mx-auto h-44 w-48 object-cover;
+            margin-left: auto;
+            margin-right: auto;
+            width: 12rem;
+            height: 11rem;
+            // @apply mx-auto h-44 w-48 object-cover;
         }
 
         p {
@@ -54,7 +59,23 @@ $border-color: #4267b2;
     font-weight: 400;
 
     .add {
-        @apply absolute top-5 right-0 cursor-pointer rounded-full px-3 py-1 text-base font-semibold [border:1px_solid_#ccc] hover:bg-[#0000001a] max-[375px]:top-10; 
+        position: absolute;
+        right: 0;
+        top: 1.25rem;
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+        font-size: 1rem;
+        line-height: 1.5rem;
+        font-weight: 600;
+        border-radius: 9999px;
+        border: 1px_solid_#ccc;
+        cursor: pointer;
+        &:hover {
+            background: #000;
+        }
+        // @apply absolute top-5 right-0 cursor-pointer rounded-full px-3 py-1 text-base font-semibold [border:1px_solid_#ccc] hover:bg-[#0000001a] max-[375px]:top-10;
     }
 
     .song-info {
@@ -85,7 +106,13 @@ $border-color: #4267b2;
     }
 
     .message {
-        @apply hidden text-center text-sm font-semibold italic text-red-600;
+        display: none;
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+        font-style: italic;
+        font-weight: 600;
+        text-align: center;
+        // @apply hidden text-center text-sm font-semibold italic text-red-600;
     }
 
     &.invalid .message {
@@ -154,5 +181,19 @@ $border-color: #4267b2;
     }
     .del-drop-file-item {
         margin-right: 30px;
+    }
+}
+
+@media (max-width: 700px) {
+    .wrapper .upload-area {
+        flex-direction: column;
+    }
+    .left-part {
+        width: 90%;
+    }
+}
+@media (max-width: 375px) {
+    .add {
+        top: 2.5rem !important;
     }
 }
