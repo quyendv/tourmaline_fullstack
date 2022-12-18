@@ -24,7 +24,8 @@ const {
     AiFillDelete,
     AiOutlinePlusCircle,
     RiPlayListAddLine,
-    AiOutlineEdit
+    AiOutlineEdit,
+    IoMdRemoveCircleOutline
 } = icons;
 // TODO: Song list sửa sau
 const songMenu = [
@@ -83,7 +84,7 @@ const songMenu = [
 
 ];
 
-function Song({ songData, setSongsUploaded }) {
+function Song({ songData, inPlaylist }) {
     const dispatch = useDispatch();
     const { curSongId, isPlaying, curPlaylist } = useSelector((state) => state.music);
     const { token } = useSelector((state) => state.auth);
@@ -91,6 +92,13 @@ function Song({ songData, setSongsUploaded }) {
     const [favorite, setFavorite] = useState(favoriteSongs.indexOf(songData.id) !== -1); // lấy trạng thái init từ db truyền vào
 
     useEffect(() => {
+        inPlaylist && songMenu[songMenu.length - 1].type != 'removeFromPlaylist' && songMenu.push({
+            type:'removeFromPlaylist',
+            to:'',
+            icon: <IoMdRemoveCircleOutline/>,
+            title: 'Remove from playlist'
+        })
+        inPlaylist && songMenu.filter(item => item.type != 'removeFromPlaylist')
         curPlaylist.forEach((item) => {
             const obj = {
                 id: item.id,

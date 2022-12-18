@@ -25,6 +25,9 @@ const initState = {
     setIsOpenEditSongModal: function () {
         return 0;
     },
+    setIsOpenEditPlaylistModal: function () {
+        return 0;
+    },
     keyword: null
 };
 
@@ -77,6 +80,11 @@ const actionsReducer = (state = initState, action) => {
             return {
                 ...state,
                 setIsOpenEditSongModal: action.setIsOpenEditSongModal
+            }
+        case actionTypes.SET_IS_OPEN_EDIT_PLAYLIST_MODAL:
+            return {
+                ...state,
+                setIsOpenEditPlaylistModal: action.setIsOpenEditPlaylistModal
             }
         default:
             return state;

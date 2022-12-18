@@ -58,3 +58,7 @@ export const editSongId = (id) => ({
     type: actionTypes.EDIT_SONG_ID,
     id
 })
+export const editPlaylistId = (id) => ({
+    type: actionTypes.EDIT_PLAYLIST_ID,
+    id
+})

@@ -40,3 +40,8 @@ export const setSearchKeyword = (keyword) => ({
     type: actionTypes.SET_KEYWORD,
     keyword
 })
+
+export const setIsOpenEditPlaylistModal = (setIsOpenEditPlaylistModal) => ({
+    type: actionTypes.SET_IS_OPEN_EDIT_PLAYLIST_MODAL,
+    setIsOpenEditPlaylistModal
+})
