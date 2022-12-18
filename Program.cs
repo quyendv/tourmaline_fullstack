@@ -24,14 +24,14 @@ services.AddCors(o => o.AddPolicy("AllowLocalDebug",
 
 #region Setup connection
 
-var connString = configuration["ConnectionStrings:DefaultConnection"];
-
 var connHostNameEnv = Environment.GetEnvironmentVariable("MYSQL_SERVICE_HOST");
 var connHostPortEnv = Environment.GetEnvironmentVariable("MYSQL_SERVICE_PORT");
 
-if (connHostNameEnv != null && connHostPortEnv != null)
-    connString =
-        $"Server={connHostNameEnv};User ID=root;Password=password;Port={connHostPortEnv};Database=tourmaline;TlsCipherSuites=TLS_DHE_RSA_WITH_AES_256_GCM_SHA384";
+var connString = $"Server={connHostNameEnv ?? "localhost"};" +
+                 $"User ID=root;Password=password;" +
+                 $"Port={connHostPortEnv ?? "3306"};" +
+                 $"Database=tourmaline;" +
+                 $"TlsCipherSuites=TLS_DHE_RSA_WITH_AES_256_GCM_SHA384";
 
 var database = new Database(connString);
 services.AddSingleton(_ => database);
