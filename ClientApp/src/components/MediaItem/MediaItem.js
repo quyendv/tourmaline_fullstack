@@ -119,7 +119,7 @@ function MediaItem({ songData }) {
             {/* Actions */}
             <div className="absolute top-1/2 right-1 -translate-y-1/2 group-hover:flex gap-2">
                 <span
-                    className="flex items-center justify-center rounded-full p-1.5 text-xl hover:bg-[#ffffff1a]"
+                    className="text-[#ffffff80] flex items-center justify-center rounded-full p-1.5 text-xl hover:bg-[#ffffff1a]"
                     onClick={handleAddFavorite}
                 >
                     {!favorite ? (
@@ -128,9 +128,9 @@ function MediaItem({ songData }) {
                         <AiTwotoneHeart className="text-[var(--favorite-bg)] [filter:drop-shadow(0_0_10px_currentColor)]" />
                     )}
                 </span>
-                <MediaMenu menuList={songMenu} songId={songData?.id} placement="right-start">
+                <MediaMenu menuList={songMenu} songId={songData?.id} appendBody placement='right-start'>
                     <span
-                        className="hidden group-hover:flex items-center justify-center rounded-full p-1.5 text-xl hover:bg-[#ffffff1a]"
+                        className="text-[#ffffff80] hidden group-hover:flex items-center justify-center rounded-full p-1.5 text-xl hover:bg-[#ffffff1a]"
                         onClick={(e) => {
                             e.stopPropagation();
                         }}

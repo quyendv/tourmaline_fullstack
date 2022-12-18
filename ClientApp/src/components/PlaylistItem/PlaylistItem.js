@@ -67,7 +67,7 @@ function PlaylistItem({ playlistData, className }) {
     return (
         <div className={`flex flex-col gap-2 ${className}`}>
             <div
-                className="group relative w-full overflow-hidden rounded-md"
+                className="group relative w-full h-0 pb-[100%] overflow-hidden rounded-md"
                 onClick={() =>
                     navigate(link, {
                         state: playlistData,
@@ -97,7 +97,7 @@ function PlaylistItem({ playlistData, className }) {
                     </PlaylistMenu>
                 </div>
                 <img
-                    className="w-full rounded-md object-cover transition-all duration-500 group-hover:scale-125"
+                    className="w-full h-auto rounded-md object-cover transition-all duration-500 group-hover:scale-125"
                     src={playlistAvatarSrc}
                     alt="playlist-cover"
                 />

@@ -65,7 +65,7 @@ function Library() {
                 </span>
             </div>
             {/* List Playlist Item */}
-            <div className="mt-4 grid w-full auto-cols-[minmax(220px,265px)] grid-flow-col gap-3 overflow-x-scroll [scroll-snap-type:x_mandatory]">
+            <div className="mt-4 grid w-full auto-cols-[minmax(220px,265px)] grid-flow-col gap-3 overflow-x-scroll pb-2 [scroll-snap-type:x_mandatory]">
                 {playlistCreated.length > 0 &&
                     playlistCreated
                         // .filter((item, index) => index <= 4) // k cần giới hạn nữa, vuốt sang
