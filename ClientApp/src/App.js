@@ -31,7 +31,7 @@ function App() {
                 <Route path={routesConfigPublic.homeRoute} element={<DefaultLayout />}>
                     <Route path={routesConfigPublic.search} element={<Search />}>
                         {searchRoutes.map((route, index) => {
-                            console.log(route)
+                            console.log(route);
                             const Page = route.page;
                             return <Route key={index} path={route.path} element={<Page />} />;
                         })}

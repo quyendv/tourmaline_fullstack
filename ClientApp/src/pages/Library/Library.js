@@ -25,7 +25,7 @@ function Library() {
         const fetchAllPlaylist = async () => {
             const response = await getAllPlaylist(token);
             setPlaylistCreated(response.data.playlists);
-            dispatch(actions.setCurPlaylist(response.data.playlists))
+            dispatch(actions.setCurPlaylist(response.data.playlists));
         };
         const fetchSongs = async () => {
             const response = await getSongs(username, token);
@@ -36,7 +36,7 @@ function Library() {
     }, []);
     useEffect(() => {
         dispatch(actions.createPlaylist(setPlaylistCreated));
-        dispatch(actions.setSongUploaded(setSongsUploaded))
+        dispatch(actions.setSongUploaded(setSongsUploaded));
     }, []);
 
     return (
@@ -57,21 +57,21 @@ function Library() {
                     </span>
                 </span>
                 <span
-                    onClick={() =>
-                        navigate('/library/playlist')
-                    }
-                    className="cursor-pointer font-bold hover:text-activecolor"
+                    onClick={() => navigate('/library/playlist')}
+                    className="cursor-pointer font-bold hover:text-active-color"
                 >
                     See all
                     <FaCaretRight className="ml-1" />
                 </span>
             </div>
             {/* List Playlist Item */}
-            <div className="mt-4 grid auto-cols-[minmax(220px,265px)] grid-flow-col gap-3 overflow-x-scroll w-full [scroll-snap-type:x_mandatory]">
+            <div className="mt-4 grid w-full auto-cols-[minmax(220px,265px)] grid-flow-col gap-3 overflow-x-scroll pb-2 [scroll-snap-type:x_mandatory]">
                 {playlistCreated.length > 0 &&
                     playlistCreated
                         // .filter((item, index) => index <= 4) // k cần giới hạn nữa, vuốt sang
-                        .map((item, index) => <PlaylistItem playlistData={item} key={index} className='snap-start snap-always' />)}
+                        .map((item, index) => (
+                            <PlaylistItem playlistData={item} key={index} className="snap-start snap-always" />
+                        ))}
             </div>
             {/* Songs */}
             <div className="mt-8 flex items-center gap-4">
@@ -80,7 +80,7 @@ function Library() {
                     <AiOutlinePlusCircle size={20} />
                 </span>
             </div>
-            <div className="flex flex-col gap-2 mt-4 max-h-96 overflow-y-auto">
+            <div className="mt-4 flex max-h-96 flex-col gap-2 overflow-y-auto">
                 {songsUploaded?.map((item) => (
                     <Song key={item.id} songData={item} curPlaylist={playlistCreated} />
                 ))}

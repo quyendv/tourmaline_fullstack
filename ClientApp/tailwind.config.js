@@ -5,7 +5,7 @@ module.exports = {
         extend: {
             colors: {
                 'main-100': '#1e1e1e',
-                'activecolor': '#009cf4',
+                'active-color': '#009cf4',
                 'overlay-30':'rgba(0,0,0,0.3)',
             },
             screens: {

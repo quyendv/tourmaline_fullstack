@@ -5,7 +5,7 @@ import { deletePlaylist } from '../../services/music';
 import { icons } from '../../utils/icons';
 import { DefaultMenu as PlaylistMenu } from '../Popper';
 import * as apis from '../../services';
-import * as actions from '../../store/actions'
+import * as actions from '../../store/actions';
 import { useEffect, useState } from 'react';
 
 const {
@@ -20,13 +20,11 @@ const {
 } = icons;
 
 const playlistMenu = [
-
     {
         icon: <RiShareForwardLine />,
         title: 'Share',
         to: '',
     },
-
 ];
 
 function PlaylistItem({ playlistData, className }) {
@@ -69,7 +67,7 @@ function PlaylistItem({ playlistData, className }) {
     return (
         <div className={`flex flex-col gap-2 ${className}`}>
             <div
-                className="group relative w-full overflow-hidden rounded-md"
+                className="group relative w-full h-0 pb-[100%] overflow-hidden rounded-md"
                 onClick={() =>
                     navigate(link, {
                         state: playlistData,
@@ -99,7 +97,7 @@ function PlaylistItem({ playlistData, className }) {
                     </PlaylistMenu>
                 </div>
                 <img
-                    className="w-full rounded-md object-cover transition-all duration-500 group-hover:scale-125"
+                    className="w-full h-auto rounded-md object-cover transition-all duration-500 group-hover:scale-125"
                     src={playlistAvatarSrc}
                     alt="playlist-cover"
                 />
@@ -111,7 +109,7 @@ function PlaylistItem({ playlistData, className }) {
                             state: playlistData,
                         })
                     }
-                    className="cursor-pointer text-sm font-bold hover:text-activecolor"
+                    className="cursor-pointer text-sm font-bold hover:text-active-color"
                 >
                     {playlistData.name}
                 </span>

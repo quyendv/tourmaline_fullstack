@@ -46,13 +46,13 @@ function Player({ setIsShowSidebar }) {
             setIsLoading(true);
             try {
                 const response = await getSong(curSongId, token);
-                if(response.status == 200) {
+                if (response.status == 200) {
                     const blob = new Blob([response.data], { type: 'audio/mpeg' });
                     const url = URL.createObjectURL(blob);
                     if (audio.current) audio.current.src = url;
                 }
             } catch (error) {
-                dispatch(actions.play(false))
+                dispatch(actions.play(false));
                 setIsLoading(false);
             }
 
@@ -73,7 +73,7 @@ function Player({ setIsShowSidebar }) {
     var intervalId;
     useEffect(() => {
         intervalId && clearInterval(intervalId);
-        audio.current.pause()
+        audio.current.pause();
 
         if (isPlaying && thumbRef.current) {
             // audio.current.load();
@@ -171,7 +171,7 @@ function Player({ setIsShowSidebar }) {
                 <div className="flex items-center justify-center gap-8">
                     <span
                         onClick={() => setIsShuffle((prev) => !prev)}
-                        className={`${isShuffle && 'text-activecolor'} cursor-pointer`}
+                        className={`${isShuffle && 'text-active-color'} cursor-pointer`}
                     >
                         <CiShuffle size={24} />
                     </span>
@@ -198,7 +198,7 @@ function Player({ setIsShowSidebar }) {
                     </span>
                     <span
                         onClick={() => setIsRepeat((prev) => (prev == 2 ? 0 : prev + 1))}
-                        className={`cursor-pointer ${isRepeat > 0 && 'text-activecolor'}`}
+                        className={`cursor-pointer ${isRepeat > 0 && 'text-active-color'}`}
                     >
                         {isRepeat == 2 ? <RiRepeatOneLine size={24} /> : <CiRepeat size={24} />}
                     </span>
@@ -213,7 +213,7 @@ function Player({ setIsShowSidebar }) {
                     >
                         <div
                             ref={thumbRef}
-                            className="absolute top-0 left-0 bottom-0 rounded-r-full rounded-l-full bg-activecolor"
+                            className="bg-activecolor absolute top-0 left-0 bottom-0 rounded-r-full rounded-l-full"
                         ></div>
                     </div>
                     <span>{moment.utc((songInfo?.duration || 0) * 1000).format('mm:ss')}</span>

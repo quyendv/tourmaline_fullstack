@@ -6,7 +6,7 @@ import Song from '../../components/Song';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 function Feed() {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const { token } = useSelector((state) => state.auth);
     const [recentlyUploaded, setRecentlyUploaded] = useState([]);
     useEffect(() => {
@@ -17,12 +17,15 @@ function Feed() {
         fetchRecentUploaded();
     }, []);
     return (
-        <div className="px-[59px] text-white">
-            <h2 className="text-2xl">Hear the latest posts from the people you’re following:</h2>
+        <div className="h-[calc(100vh-var(--header-height))] w-full overflow-y-auto px-14 pt-16 pb-24 text-white">
+            <h2 className="mb-5 text-2xl">Hear the latest posts from the people you’re following:</h2>
             <div className="flex flex-col ">
                 {recentlyUploaded.map((item, index) => (
                     <div key={index}>
-                        <span onClick={() => navigate(`/user/${item.uploader}`)}  className='hover:underline cursor-pointer'>{`${item.uploader} `}</span>
+                        <span
+                            onClick={() => navigate(`/user/${item.uploader}`)}
+                            className="cursor-pointer hover:underline"
+                        >{`${item.uploader} `}</span>
                         <span>{`post a track ${moment(item.uploadTime).fromNow()} `}</span>
                         <div>
                             <Song songData={item}></Song>
