@@ -1,13 +1,9 @@
 import moment from 'moment';
-import { AiOutlineDislike, AiOutlineLike } from 'react-icons/ai';
 import { BsThreeDots } from 'react-icons/bs';
 import { images } from '~/assets/images';
 
 function CommentItem({ data }) {
-    // const handleLike = (params) => {};
-    // const handleDislike = (params) => {};
-
-    // API sửa avatar, (like, dislike)
+    // API sửa avatar
     return (
         <div className="flex gap-3 p-2.5">
             {/* Avatar */}
@@ -17,25 +13,16 @@ function CommentItem({ data }) {
             {/* Comment Infos */}
             <div className=" text-sm">
                 {/* User & Time */}
-                <div className="mb-1.5">
+                <div className="mb-1.5 flex items-center gap-2">
                     <span className="inline-block font-semibold">{data.username}</span>
-                    <span className="ml-1.5 text-[#ffffff80]">{moment(data.createTime).fromNow()}</span>
+                    <span className="text-[#ffffff80]">{moment(data.createTime).fromNow()}</span>
+                    <span className="grid cursor-pointer place-content-center rounded-full p-0.5 hover:bg-[#ffffff1a]">
+                        <BsThreeDots />
+                    </span>
                 </div>
 
                 {/* Content */}
-                <div>{data.content}</div>
-
-                {/* Reaction */}
-                {/* <div className="mt-1.5 mb-2 flex gap-2.5 text-[#ffffff80]">
-                    <div className="flex items-center">
-                        <AiOutlineLike className="cursor-pointer" onClick={handleLike} />
-                        <span className="ml-1.5">10</span>
-                    </div>
-                    <div className="flex items-center">
-                        <AiOutlineDislike className="cursor-pointer" onClick={handleDislike} />
-                        <span className="ml-1.5">0</span>
-                    </div>
-                </div> */}
+                <div className="max-w-[560px] break-words">{data.content}</div>
             </div>
         </div>
     );

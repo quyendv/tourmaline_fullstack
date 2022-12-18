@@ -13,7 +13,8 @@ function User() {
     const [songs, setSongs] = useState([]);
     const { token } = useSelector((state) => state.auth);
     const { username } = useSelector((state) => state.user);
-    const [isFollowing, setIsFollowing] = useState(false) 
+    const [isFollowing, setIsFollowing] = useState(false);
+    
     useEffect(() => {
         const fetchFollowers = async () => {
             const response = await apis.getFollowers(token);
@@ -53,11 +54,11 @@ function User() {
         };
     }, [usernameParam]);
     return (
-        <div className="text-white">
+        <div className="h-[calc(100vh-var(--header-height))] w-full overflow-y-auto px-14 pt-16 pb-24 text-white">
             {/* header */}
-            <div className="flex items-center justify-between px-10">
+            <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4 ">
-                    <img className="h-[190px] w-[190px] rounded-full object-cover" src={userAvatar}></img>
+                    <img className="h-[190px] w-[190px] rounded-full object-cover" src={userAvatar} alt="" />
                     <span className="flex flex-col">
                         <span>{userInfo.name}</span>
                         <span>{userInfo.username}</span>

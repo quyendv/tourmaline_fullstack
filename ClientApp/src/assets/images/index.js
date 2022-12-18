@@ -11,6 +11,7 @@ const uploadImages = {
 export const images = {
     defaultAvatar: require('./defaultAvatar.png'),
     defaultCoverPlaylist: require('./playlistplaceholder.png'),
+    defaultCoverSong: require('./defaultSongCover.png'),
 };
 
 export default uploadImages;
