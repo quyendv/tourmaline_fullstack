@@ -26,11 +26,11 @@ function Favorite() {
     }, [])
 
     return (
-        <div className="favoritepage text-white">
-            <h3 className="text-2xl font-bold px-12 mt-5">Favorite Songs</h3>
+        <div className="h-[calc(100vh-var(--header-height))] w-full overflow-y-auto px-14 pt-16 pb-24 text-white">
+            <h3 className="mb-5 text-2xl font-bold">Favorite Songs</h3>
             <div>
                 {favoriteSongs.map((item, index) => (
-                    <Song key={index} songData={item} isFavorite={true}/>
+                    <Song key={index} songData={item} isFavorite={true} />
                 ))}
             </div>
         </div>

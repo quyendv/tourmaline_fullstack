@@ -1,8 +1,9 @@
 $main-register-color: #03e9f4;
 
 .register-page {
+    --main-register-color: #03e9f4;
     background: linear-gradient(#141e30, #243b55);
-    width: 100%;
+    width: 100vw;
     height: 100vh;
     display: flex;
     justify-content: center;
@@ -11,11 +12,14 @@ $main-register-color: #03e9f4;
 
 .register-form {
     width: 400px;
+    max-height: calc(100% - 40px);
     padding: 40px;
     margin: 12px;
     background: rgba(0, 0, 0, 0.5);
     box-shadow: 0 15px 25px rgba(0, 0, 0, 0.6);
     color: white;
+    display: flex;
+    flex-direction: column;
 
     .title {
         text-align: center;
@@ -25,22 +29,27 @@ $main-register-color: #03e9f4;
         margin-bottom: 12px;
     }
 
-    > form .form-data {
+    > form {
+        max-height: 80%;
         padding: 4px;
-        max-height: 70vh;
+        overflow-y: overlay;
+        &::-webkit-scrollbar-thumb {
+            background: transparent;
+        }
+    }
+
+    .form-data {
+        // max-height: 425px;
+        max-height: 55vh;
+        padding: 4px;
         overflow-y: auto;
+        &::-webkit-scrollbar-thumb {
+            background: #009bf42e;
+        }
     }
 
     .register-btn {
-        display: inline-block;
-        padding: 10px 20px;
-        color: $main-register-color;
-        font-size: 16px;
-        text-transform: uppercase;
-        margin-top: 36px;
-        letter-spacing: 4px;
-        box-shadow: 0 0 5px $main-register-color;
-        cursor: pointer;
+        @apply mt-8 inline-block cursor-pointer py-2 px-5 uppercase tracking-wider text-[var(--main-register-color)] shadow-[0_0_5px_var(--main-register-color)];
     }
 }
 
@@ -115,5 +124,5 @@ $main-register-color: #03e9f4;
 }
 
 .login-link {
-    @apply rounded-full p-2 font-semibold text-[color:#03e9f4] underline transition duration-150 ease-in-out hover:bg-[color:#03e9f480];
+    @apply inline-grid place-content-center rounded-full px-3 py-1.5 font-semibold text-[color:#03e9f4] underline transition duration-150 ease-in-out hover:bg-[color:#03e9f480];
 }

@@ -7,6 +7,8 @@ import * as actions from '../../store/actions';
 import Song from '../../components/Song';
 import MediaItem from '../../components/MediaItem';
 import UserItem from '../../components/UserItem';
+import { FaCaretRight } from 'react-icons/fa';
+
 function MainScreen() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -69,7 +71,7 @@ function MainScreen() {
         fetchRelatedArtists();
         const fetchAllPlaylist = async () => {
             const response = await apis.getAllPlaylist(token);
-            if (response.status == 200) {
+            if (response.status === 200) {
                 // console.log(response)
                 dispatch(actions.setCurPlaylist(response.data.playlists));
             }
@@ -80,10 +82,16 @@ function MainScreen() {
     return (
         <div className="h-[calc(100vh-var(--header-height))] w-full overflow-y-auto px-14 pt-16 pb-24 text-white">
             {suggestion.length > 0 && (
-                <div>
+                <div className="mt-12">
                     <span className="flex justify-between">
-                        <h3 className="text-2xl font-bold">Hots</h3>
-                        <span onClick={() => navigate('discover/hots')}>Go to playlist</span>
+                        <h3 className="mb-5 text-2xl font-bold">Hots</h3>
+                        <span
+                            onClick={() => navigate('discover/hots')}
+                            className="cursor-pointer font-bold hover:text-active-color"
+                        >
+                            Go to playlist
+                            <FaCaretRight className="ml-1" />
+                        </span>
                     </span>
                     <div className="max-h-64 overflow-y-auto">
                         {suggestion
@@ -95,10 +103,16 @@ function MainScreen() {
                 </div>
             )}
             {top50.length > 0 && (
-                <div>
+                <div className="mt-12">
                     <span className="flex justify-between">
-                        <h3 className="text-2xl font-bold">Top50</h3>
-                        <span onClick={() => navigate('discover/top50')}>Go to playlist</span>
+                        <h3 className="mb-5 text-2xl font-bold">Top 50</h3>
+                        <span
+                            onClick={() => navigate('discover/top50')}
+                            className="cursor-pointer font-bold hover:text-active-color"
+                        >
+                            Go to playlist
+                            <FaCaretRight className="ml-1" />
+                        </span>
                     </span>
                     <div className="max-h-64 overflow-y-auto">
                         {top50.map((item, index) => (
@@ -122,7 +136,7 @@ function MainScreen() {
             {/* Recently */}
             {recentlyPlayed.length > 0 && (
                 <div className="mt-12">
-                    <h3 className="text-2xl font-bold">Recently Played</h3>
+                    <h3 className="mb-5 text-2xl font-bold">Recently Played</h3>
                     <div className="max-h-64 overflow-y-auto">
                         {recentlyPlayed.map((item, index) => (
                             <Song key={index} songData={item} />
@@ -134,12 +148,17 @@ function MainScreen() {
             {relatedArtists.length > 0 && (
                 <div className="mt-12">
                     <h3 className="mb-5 text-2xl font-bold">Artists you should know</h3>
-                    <div className="flex gap-2">
-                        {relatedArtists
+                    <div className="mb-7 grid grid-cols-5 gap-6">
+                        {/* {relatedArtists
                             .filter((item, index) => index <= 4)
                             .map((item, index) => (
-                                <UserItem key={index} userData={item} />
-                            ))}
+                                <UserItem key={index} userData={item} className="px-3" />
+                            ))} */}
+                        <UserItem userData={{ username: 'sontung-mtp', name: 'Sơn Tùng MTP' }} />
+                        <UserItem userData={{ username: 'sontung-mtp', name: 'Sơn Tùng MTP' }} />
+                        <UserItem userData={{ username: 'sontung-mtp', name: 'Sơn Tùng MTP' }} />
+                        <UserItem userData={{ username: 'sontung-mtp', name: 'Sơn Tùng MTP' }} />
+                        <UserItem userData={{ username: 'sontung-mtp', name: 'Sơn Tùng MTP' }} />
                     </div>
                 </div>
             )}

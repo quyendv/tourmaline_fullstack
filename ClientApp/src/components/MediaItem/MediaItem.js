@@ -6,6 +6,8 @@ import { useDispatch } from 'react-redux';
 import moment from 'moment';
 import { DefaultMenu as MediaMenu } from '../Popper';
 import { icons } from '~/utils/icons';
+import { toast } from 'react-toastify';
+
 const {
     BsFillPlayFill,
     BsThreeDots,
@@ -15,6 +17,8 @@ const {
     RiShareForwardLine,
     AiFillDelete,
     RiPlayListAddLine,
+    AiOutlineHeart,
+    AiTwotoneHeart,
 } = icons;
 
 // TODO: Media list sửa sau
@@ -54,6 +58,7 @@ const songMenu = [
 
 function MediaItem({ songData }) {
     const dispatch = useDispatch();
+    const [favorite, setFavorite] = useState(false); // lấy init từ db
 
     // useEffect(() => {
     //     const fetchCover = async () => {
@@ -61,6 +66,33 @@ function MediaItem({ songData }) {
     //     };
     //     fetchCover();
     // }, []);
+
+    const handleAddFavorite = async (e) => {
+        e.stopPropagation();
+        const prevState = favorite;
+        setFavorite((prev) => !prev);
+        // Gọi API lưu thông tin favorite song vào db ...
+        // if (!prevState) {
+        //     const response = await apis.addToFavorite(songData.id, token);
+        //     response.status == 200 && dispatch(actions.setFavorite(songData.id));
+        // } else {
+        //     const response = await apis.removeFromFavorite(songData.id, token);
+        //     response.status == 200 && dispatch(actions.removeFavorite(songData.id));
+        // }
+
+        // Show toast
+        toast.success(`${!prevState ? 'Added to' : 'Removed form'} favorites`, {
+            position: 'top-left',
+            autoClose: 1000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'dark',
+        });
+    };
+
     return (
         <div className="mediaItem group relative flex items-center gap-3 rounded-md p-2 hover:bg-[#ffffff1a]">
             <div className="relative after:inset-0 after:bg-overlay-30 group-hover:after:absolute">
@@ -84,16 +116,29 @@ function MediaItem({ songData }) {
                 <span className="text-xs text-[#ffffff80]">{songData?.uploader}</span>
                 <span className="text-xs text-[#ffffff80]">{moment(songData?.uploadTime).fromNow()}</span>
             </div>
-            <MediaMenu menuList={songMenu} songId={songData?.id} placement="right-start">
+            {/* Actions */}
+            <div className="absolute top-1/2 right-1 -translate-y-1/2 group-hover:flex gap-2">
                 <span
-                    onClick={(e) => {
-                        e.stopPropagation();
-                    }}
-                    className="absolute top-1/2 right-1 hidden -translate-y-1/2 items-center justify-center rounded-full p-1.5 text-xl hover:bg-[#ffffff1a] group-hover:flex"
+                    className="text-[#ffffff80] flex items-center justify-center rounded-full p-1.5 text-xl hover:bg-[#ffffff1a]"
+                    onClick={handleAddFavorite}
                 >
-                    <BsThreeDots />
+                    {!favorite ? (
+                        <AiOutlineHeart className="hidden group-hover:block" />
+                    ) : (
+                        <AiTwotoneHeart className="text-[var(--favorite-bg)] [filter:drop-shadow(0_0_10px_currentColor)]" />
+                    )}
                 </span>
-            </MediaMenu>
+                <MediaMenu menuList={songMenu} songId={songData?.id} appendBody placement='right-start'>
+                    <span
+                        className="text-[#ffffff80] hidden group-hover:flex items-center justify-center rounded-full p-1.5 text-xl hover:bg-[#ffffff1a]"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                        }}
+                    >
+                        <BsThreeDots />
+                    </span>
+                </MediaMenu>
+            </div>
         </div>
     );
 }

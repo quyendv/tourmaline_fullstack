@@ -68,7 +68,7 @@ public class SongServices
         await _database.Call($"DELETE FROM song WHERE id={id}");
     }
 
-    public async Task UpdateInfo(int id, string? name, string? description, List<string>? tags)
+    public async Task EditSong(int id, string? name, string? description, List<string>? tags)
     {
         if (name != null || description != null)
         {

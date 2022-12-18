@@ -84,18 +84,12 @@ const songMenu = [
 ];
 
 function Song({ songData, setSongsUploaded }) {
-
-      const dispatch = useDispatch();
+    const dispatch = useDispatch();
     const { curSongId, isPlaying, curPlaylist } = useSelector((state) => state.music);
     const { token } = useSelector((state) => state.auth);
     const { favoriteSongs } = useSelector((state) => state.favorite);
-    const [favorite, setFavorite] = useState(favoriteSongs.indexOf(songData.id) != -1); // lấy trạng thái init từ db truyền vào
-    // useEffect(() => {
-    //     const fetchCover = async () => {
-    //         setSrc(`${BASE_URL}/api/song/getCover?id=${songData.id}`);
-    //     };
-    //     fetchCover();
-    // }, []);
+    const [favorite, setFavorite] = useState(favoriteSongs.indexOf(songData.id) !== -1); // lấy trạng thái init từ db truyền vào
+
     useEffect(() => {
         curPlaylist.forEach((item) => {
             const obj = {
@@ -105,11 +99,13 @@ function Song({ songData, setSongsUploaded }) {
                 icon: '',
                 title: item.name,
             };
-            !songMenu[3].children.data.some((item) => item.id == obj.id) && songMenu[3].children.data.push(obj);
+            !songMenu[3].children.data.some((item) => item.id === obj.id) && songMenu[3].children.data.push(obj);
         });
+
         songMenu.forEach(item => {
             item.id = songData.id
         })
+
     }, []);
     // Đoạn delete này đưa vào cái songMenu ấy, có phần delete
 
@@ -168,9 +164,6 @@ function Song({ songData, setSongsUploaded }) {
             <div className="flex-1 text-sm">
                 <p>{songData.description} (Single)</p>
             </div>
-            {/* <span className='border border-white p-2' onClick={handleDelete}>
-                <AiFillCloseCircle/>
-            </span>
 
             {/* Right Part: time and actions */}
             <div className="flex items-center justify-items-end gap-4 text-sm">

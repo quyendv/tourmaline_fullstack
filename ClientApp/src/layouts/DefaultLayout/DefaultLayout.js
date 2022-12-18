@@ -71,7 +71,6 @@ function DefaultLayout() {
                 </div>
             </div>
 
-            {/* Sửa: k dùng màu trong suốt, lúc scroll nhìn thấy phần phía sau */}
             <div className="absolute bottom-0 z-40 w-full bg-[color:var(--player-bg)] py-3 px-4 [border-top:1px_solid_var(--player-border-color)]">
                 <Player setIsShowSidebar={setIsShowSidebar} />
             </div>

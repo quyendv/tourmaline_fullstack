@@ -42,7 +42,6 @@ const playlistMenu = [
 ];
 
 function HomePlaylist() {
-
     const state = { name: 'playlistName', username: 'username' }; // hard code
     const { token } = useSelector((state) => state.auth);
     const { type } = useParams();
@@ -95,7 +94,7 @@ function HomePlaylist() {
                 <div className="group relative max-w-[300px] overflow-hidden rounded-lg after:absolute after:inset-0 after:hidden after:bg-overlay-30 hover:after:block">
                     {/* icon play */}
                     <span
-                        className="absolute top-1/2 left-1/2 z-10 hidden h-8 w-8 -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-full bg-[#00000033] p-1 group-hover:block"
+                        className="absolute top-1/2 left-1/2 z-10 hidden h-8 w-8 -translate-x-1/2 -translate-y-1/2 cursor-pointer place-content-center rounded-full bg-[#00000033] p-1 group-hover:grid"
                         // onClick={handleClickPlay}
                     >
                         <BsFillPlayFill size={24} />
