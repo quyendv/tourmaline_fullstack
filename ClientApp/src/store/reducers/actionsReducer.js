@@ -22,6 +22,9 @@ const initState = {
     setSongUploaded: function () {
         return 0;
     },
+    setIsOpenEditSongModal: function () {
+        return 0;
+    },
     keyword: null
 };
 
@@ -69,6 +72,11 @@ const actionsReducer = (state = initState, action) => {
             return {
                 ...state,
                 keyword: action.keyword
+            }
+        case actionTypes.SET_IS_OPEN_EDIT_SONG_MODAL:
+            return {
+                ...state,
+                setIsOpenEditSongModal: action.setIsOpenEditSongModal
             }
         default:
             return state;

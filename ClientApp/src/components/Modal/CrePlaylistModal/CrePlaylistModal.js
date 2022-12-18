@@ -15,6 +15,7 @@ function CrePlaylistModal() {
     const [title, setTitle] = useState('');
     const dispatch = useDispatch();
     const file = useRef();
+    console.log(file.current)
     const onChange = (e) => {
         file.current = e.target.files[0];
     };
@@ -49,7 +50,7 @@ function CrePlaylistModal() {
                     onChange={(e) => setTitle(e.target.value)}
                 />
                 <div className="relative mb-5 flex items-center rounded-full bg-[#375174] px-4 py-2 text-[#bebebe]">
-                    <label className="inline-block ">Choose the cover playlist</label>
+                    <label className="inline-block ">{file.current.name || 'Choose the cover playlist'}</label>
                     <span className="ml-4">
                         <AiFillFolderOpen />
                     </span>

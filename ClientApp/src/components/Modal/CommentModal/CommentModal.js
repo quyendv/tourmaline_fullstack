@@ -10,12 +10,13 @@ function CommentModal() {
     const { setIsOpenCommentModal } = useSelector((state) => state.actions);
     const [commentValue, setCommentValue] = useState('');
     const { token } = useSelector((state) => state.auth);
-    const { curSongId } = useSelector((state) => state.music);
+    const { commentSongId } = useSelector((state) => state.music);
+    
     const [comments, setComments] = useState([]);
 
     useEffect(() => {
         const fetchComment = async () => {
-            const response = await apis.getAllComment(curSongId, token);
+            const response = await apis.getAllComment(commentSongId, token);
             if (response.status == 200) {
                 console.log(response);
                 setComments(response.data.reverse());
@@ -25,7 +26,7 @@ function CommentModal() {
     }, []);
     const handlePostComment = async (e) => {
         const finalPayload = {
-            id: curSongId,
+            id: commentSongId,
             content: commentValue,
         };
         if (e.keyCode == '13') {
@@ -39,12 +40,12 @@ function CommentModal() {
     };
 
     const handleEditComment = async () => {
-        const response = await apis.editComment(curSongId, token);
+        const response = await apis.editComment(commentSongId, token);
         console.log(response);
     };
 
     const handleDeleteComment = async () => {
-        const response = await apis.deleteComment(curSongId, token);
+        const response = await apis.deleteComment(commentSongId, token);
         console.log(response);
     };
 

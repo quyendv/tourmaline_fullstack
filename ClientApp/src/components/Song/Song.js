@@ -24,6 +24,7 @@ const {
     AiFillDelete,
     AiOutlinePlusCircle,
     RiPlayListAddLine,
+    AiOutlineEdit
 } = icons;
 // TODO: Song list sửa sau
 const songMenu = [
@@ -60,20 +61,26 @@ const songMenu = [
         },
     },
     {
-        icon: <BsLink45Deg />,
-        title: 'Copy link',
-        to: '',
-    },
-    {
         icon: <RiShareForwardLine />,
         title: 'Share',
         to: '',
     },
-    // {
-    //     icon: <AiFillDelete />,
-    //     title: 'Delete',
-    //     to: '',
-    // },
+    {
+        id:null,
+        type:'editSong',
+        icon: <AiOutlineEdit />,
+        title:'Edit',
+        to:''
+
+    },
+    {
+        id: null,
+        type:'deleteSong',
+        to: '',
+        icon: <AiFillDelete />,
+        title:'Delete'
+    }
+
 ];
 
 function Song({ songData, setSongsUploaded }) {
@@ -94,14 +101,11 @@ function Song({ songData, setSongsUploaded }) {
             };
             !songMenu[3].children.data.some((item) => item.id === obj.id) && songMenu[3].children.data.push(obj);
         });
-        const deleteSong = {
-            id: songData.id,
-            type: 'deleteSong',
-            to: '',
-            icon: <AiFillDelete />,
-            title: 'Delete',
-        };
-        songMenu[songMenu.length - 1].type != 'deleteSong' && songMenu.push(deleteSong);
+
+        songMenu.forEach(item => {
+            item.id = songData.id
+        })
+
     }, []);
     // Đoạn delete này đưa vào cái songMenu ấy, có phần delete
 

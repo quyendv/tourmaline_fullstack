@@ -11,7 +11,7 @@ const { HiChevronRight } = icons;
 const cx = classNames.bind(styles);
 
 function MenuItem({ data, isParent = 'false', songId, onClick = () => {} }, ref) {
-    const { setIsOpenCommentModal, setSongUploaded, setIsOpenDeleteModal, setIsOpenDeletePlaylistModal } = useSelector(
+    const { setIsOpenCommentModal, setSongUploaded, setIsOpenDeleteModal, setIsOpenDeletePlaylistModal, setIsOpenEditSongModal } = useSelector(
         (state) => state.actions,
     );
     const { token } = useSelector((state) => state.auth);
@@ -85,6 +85,14 @@ function MenuItem({ data, isParent = 'false', songId, onClick = () => {} }, ref)
                 }
             };
             addSongsToNextUp();
+        }
+        if(data.type == 'editPlaylist') {
+
+        }
+        if(data.type == 'editSong') {
+            setIsOpenEditSongModal(prev => !prev)
+            console.log(data.id)
+            dispatch(actions.editSongId(data.id))
         }
         if (!isParent) {
             ref.current._tippy.hide();
