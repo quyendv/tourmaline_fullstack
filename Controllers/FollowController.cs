@@ -55,7 +55,7 @@ namespace tourmaline.Controllers
             {
                 return StatusCode(StatusCodes.Status400BadRequest, "User does not exist!");
             }
-            return Ok(await _followServices.GetFollowers(CurrentSessionUsername));
+            return Ok(await _followServices.GetFollowers(username));
         }
         
         [Route("followings")]
@@ -67,7 +67,7 @@ namespace tourmaline.Controllers
             {
                 return StatusCode(StatusCodes.Status400BadRequest, "User does not exist!");
             }
-            return Ok(await _followServices.GetFollowings(CurrentSessionUsername));
+            return Ok(await _followServices.GetFollowings(username));
         }
     }
 }
