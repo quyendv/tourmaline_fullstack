@@ -21,7 +21,6 @@ const {
 
 const playlistMenu = [
 
-
     {
         icon: <RiShareForwardLine />,
         title: 'Share',
