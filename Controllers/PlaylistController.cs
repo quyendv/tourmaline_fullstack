@@ -64,29 +64,6 @@ public class PlaylistController : ControllerBase
         }
     }
 
-    [HttpPost]
-    [Route("setCover")]
-    public async Task<ActionResult> SetCover([FromForm] int id, [FromForm] IFormFile file)
-    {
-        try
-        {
-            var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            Directory.CreateDirectory($"{homeDir}/storage/playlist");
-            var fileName = $"{id}.png";
-            var filePath = Path.Combine($"{homeDir}/storage/playlist", fileName);
-            await using var stream = new FileStream(filePath, FileMode.Create);
-            await file.CopyToAsync(stream);
-            return Ok("Upload success!");
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            Console.WriteLine(e);
-        }
-
-        return StatusCode(StatusCodes.Status500InternalServerError);
-    }
-    
     [Route("create")]
     [HttpPost]
     public async Task<ActionResult<Playlist>> CreatePlaylist([FromForm] string name, [FromForm] string? description,
@@ -124,7 +101,7 @@ public class PlaylistController : ControllerBase
 
         if (!await _userServices.IsAdmin(CurrentSessionUsername) && CurrentSessionUsername !=
             (await _playlistServices.GetPlaylist(id)).Username) return StatusCode(StatusCodes.Status403Forbidden);
-        
+
         await _playlistServices.DeletePlaylist(id);
         var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         try
@@ -139,12 +116,34 @@ public class PlaylistController : ControllerBase
         return Ok();
     }
 
+    [HttpPost]
+    [Route("edit")]
+    public async Task<ActionResult> SetCover([FromForm] int id, [FromForm] string? name, [FromForm] string? description,
+        [FromForm] IFormFile? file)
+    {
+        if (file != null)
+        {
+            var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            Directory.CreateDirectory($"{homeDir}/storage/playlist");
+            var fileName = $"{id}.png";
+            var filePath = Path.Combine($"{homeDir}/storage/playlist", fileName);
+            await using var stream = new FileStream(filePath, FileMode.Create);
+            await file.CopyToAsync(stream);
+        }
+
+        await _playlistServices.EditPlaylist(id, name, description);
+
+        return Ok();
+    }
+
     [Route("add")]
     [HttpPut]
     public async Task<ActionResult> AddToPlaylist(int songId, int playlistId)
     {
-        if (!await _songServices.IsSongExist(songId)) return StatusCode(StatusCodes.Status400BadRequest, "Song not found!");
-        if (!await _playlistServices.IsPlaylistExist(playlistId)) return StatusCode(StatusCodes.Status400BadRequest, "Playlist not found!");
+        if (!await _songServices.IsSongExist(songId))
+            return StatusCode(StatusCodes.Status400BadRequest, "Song not found!");
+        if (!await _playlistServices.IsPlaylistExist(playlistId))
+            return StatusCode(StatusCodes.Status400BadRequest, "Playlist not found!");
         await _playlistServices.AddSong(playlistId, songId);
         return Ok();
     }

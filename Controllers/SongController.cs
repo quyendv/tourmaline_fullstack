@@ -144,14 +144,23 @@ public class SongController : ControllerBase
 
     [HttpPut]
     [Route("edit")]
-    public async Task<ActionResult> EditSong(int id, string? name, string? description, string? tags)
+    public async Task<ActionResult> EditSong([FromForm] int id, [FromForm] string? name, [FromForm] string? description, [FromForm] string? tags, [FromForm] IFormFile? cover)
     {
         if (!await _songServices.IsSongExist(id))
             return StatusCode(StatusCodes.Status400BadRequest, "Song not found!");
         var song = await _songServices.GetSong(id);
         if (!await _userServices.IsAdmin(CurrentSessionUsername!) && CurrentSessionUsername != song.Uploader)
             return StatusCode(StatusCodes.Status403Forbidden);
-        await _songServices.UpdateInfo(id: id, name: name, description: description, tags: tags?.Split(";").Select(e => e.Trim()).ToList());
+        if (cover != null)
+        {
+            var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            Directory.CreateDirectory($"{homeDir}/storage/song/cover");
+            var imageName = $"{id}.png";
+            var imagePath = Path.Combine($"{homeDir}/storage/song/cover", imageName);
+            await using var stream = new FileStream(imagePath, FileMode.Create);
+            await cover.CopyToAsync(stream);
+        }
+        await _songServices.EditSong(id: id, name: name, description: description, tags: tags?.Split(";").Select(e => e.Trim()).ToList());
         return Ok();
     }
 

@@ -27,7 +27,7 @@ public class PlaylistServices
     public async Task AddPlaylist(Playlist playlist)
     {
         await _database.Call($"INSERT INTO playlist (id, user, name, description) " +
-                       $"VALUES ({playlist.Id}, '{playlist.Username}', '{playlist.Name.Normal()}', '{playlist.Description.Normal()}')");
+                             $"VALUES ({playlist.Id}, '{playlist.Username}', '{playlist.Name.Normal()}', '{playlist.Description.Normal()}')");
     }
 
     public async Task DeletePlaylist(int id)
@@ -35,9 +35,16 @@ public class PlaylistServices
         await _database.Call($"DELETE FROM playlist WHERE id={id}");
     }
 
+    public async Task EditPlaylist(int id, string? name, string? description)
+    {
+        await _database.Call($"UPDATE playlist WHERE id={id} SET " +
+                             $"{(name != null ? $"name='{name}', " : "")}{(description != null ? $"description='{description}'" : "")}");
+    }
+
     public async Task AddSong(int playlistId, int songId)
     {
-        await _database.Call($"INSERT IGNORE INTO playlistsongs (playlistId, songId, added_date) VALUES ({playlistId}, {songId}, '{DateTime.Now:yyyy-MM-dd H:mm:ss}')");
+        await _database.Call(
+            $"INSERT IGNORE INTO playlistsongs (playlistId, songId, added_date) VALUES ({playlistId}, {songId}, '{DateTime.Now:yyyy-MM-dd H:mm:ss}')");
     }
 
     public async Task RemoveSong(int playlistId, int songId)
@@ -48,12 +55,15 @@ public class PlaylistServices
     private async Task<List<Song>> GetSongs(int id)
     {
         var songServices = new SongServices(_database);
-        var result = (await _database.Call($"SELECT songId FROM playlistsongs WHERE playlistId={id} ORDER BY added_date DESC")).Select(e => e["songId"]);
+        var result =
+            (await _database.Call($"SELECT songId FROM playlistsongs WHERE playlistId={id} ORDER BY added_date DESC"))
+            .Select(e => e["songId"]);
         var songs = new List<Song>();
         foreach (var song in result)
         {
             songs.Add(await songServices.GetSong(song));
         }
+
         return songs;
     }
 
