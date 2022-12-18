@@ -32,7 +32,10 @@ export const setIsOpenDeletePlaylistModal = (setIsOpenDeletePlaylistModal) => ({
     type: actionTypes.SET_IS_OPEN_DELETE_PLAYLIST_MODAL,
     setIsOpenDeletePlaylistModal
 })
-
+export const setIsOpenEditSongModal = (setIsOpenEditSongModal) => ({
+    type: actionTypes.SET_IS_OPEN_EDIT_SONG_MODAL,
+    setIsOpenEditSongModal
+})
 export const setSearchKeyword = (keyword) => ({
     type: actionTypes.SET_KEYWORD,
     keyword

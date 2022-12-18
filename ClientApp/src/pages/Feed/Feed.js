@@ -12,6 +12,7 @@ function Feed() {
     useEffect(() => {
         const fetchRecentUploaded = async () => {
             const response = await apis.getRecentlyUploaded(token);
+            console.log(response)
             setRecentlyUploaded(response.data);
         };
         fetchRecentUploaded();

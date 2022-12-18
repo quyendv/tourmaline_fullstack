@@ -20,16 +20,14 @@ export const getSong = (id, token) =>
         }
     });
 
-export const getInfoSong = (id, token) =>
+export const getInfoSong = (id) =>
     new Promise(async (resolve, reject) => {
         try {
             const response = await axiosConfig({
                 url: '/api/song/get',
                 method: 'get',
                 params: { id },
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+
             });
             resolve(response);
         } catch (error) {

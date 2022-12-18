@@ -54,3 +54,7 @@ export const deletePlaylistId = (id) => ({
     type: actionTypes.DELETE_PLAYLIST_ID,
     id
 })
+export const editSongId = (id) => ({
+    type: actionTypes.EDIT_SONG_ID,
+    id
+})

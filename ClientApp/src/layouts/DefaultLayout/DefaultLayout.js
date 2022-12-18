@@ -8,7 +8,7 @@ import Player from '../../components/Player';
 import SidebarRight from '../../components/SidebarRight';
 import * as actions from '../../store/actions';
 import { crePlaylist } from '../../services/music';
-import { CommentModal, CrePlaylistModal, DeleteModal, DeletePlaylistModal } from '~/components/Modal';
+import { CommentModal, CrePlaylistModal, DeleteModal, DeletePlaylistModal, EditSongModal } from '~/components/Modal';
 // import { CommentModal, CrePlaylistModal, DeleteModal, DeletePlaylistModal } from '../../components/Modal';
 
 function DefaultLayout() {
@@ -17,7 +17,7 @@ function DefaultLayout() {
     const [isOpenCommentModal, setIsOpenCommentModal] = useState(false);
     const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
     const [isOpenDeletePlaylistModal, setIsOpenDeletePlaylistModal] = useState(false);
-
+    const [isOpenEditSongModal, setIsOpenEditSongModal] = useState(false);
     const { token } = useSelector((state) => state.auth);
     const [title, setTitle] = useState('');
     const dispatch = useDispatch();
@@ -27,6 +27,7 @@ function DefaultLayout() {
         dispatch(actions.setIsOpenCommentModal(setIsOpenCommentModal));
         dispatch(actions.setIsOpenDeleteModal(setIsOpenDeleteModal));
         dispatch(actions.setIsOpenDeletePlaylistModal(setIsOpenDeletePlaylistModal));
+        dispatch(actions.setIsOpenEditSongModal(setIsOpenEditSongModal));
     }, []);
 
     const file = useRef();
@@ -50,11 +51,14 @@ function DefaultLayout() {
             {isOpenCommentModal && <CommentModal />}
             {isOpenDeleteModal && <DeleteModal />}
             {isOpenDeletePlaylistModal && <DeletePlaylistModal />}
+            {isOpenEditSongModal && <EditSongModal />}
             <div className="flex h-screen w-screen">
                 <div className="z-30 max-[1132px]:fixed">
                     <Sidebar />
                 </div>
-                <div className="max-w-[calc(100vw-var(--sidebar-width))] flex-1 max-[1132px]:ml-[var(--sidebar-width-small)] max-[1132px]:max-w-[calc(100vw-var(--sidebar-width-small))]"> {/* limit width to swipe list playlist item */}
+                <div className="max-w-[calc(100vw-var(--sidebar-width))] flex-1 max-[1132px]:ml-[var(--sidebar-width-small)] max-[1132px]:max-w-[calc(100vw-var(--sidebar-width-small))]">
+                    {' '}
+                    {/* limit width to swipe list playlist item */}
                     <Header />
                     <Outlet />
                 </div>

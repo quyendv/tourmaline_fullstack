@@ -17,6 +17,7 @@ const {
     RiShareForwardLine,
     AiOutlineClose,
     AiFillDelete,
+    AiOutlineEdit
 } = icons;
 
 const playlistMenu = [
@@ -66,6 +67,20 @@ function PlaylistItem({ playlistData, className }) {
             URL.revokeObjectURL(url);
         };
     }, [playlistData.id]);
+
+    useEffect(() => {
+        if(playlistMenu[0].type != 'editPlaylist') {
+
+            const menuItem =     {
+                id: playlistData.id,
+                type: 'editPlaylist',
+                icon: <AiOutlineEdit/>,
+                title:'Edit',
+                to:''
+            }
+            playlistMenu.unshift(menuItem)
+        }
+    }, [playlistData.id])
     return (
         <div className={`flex flex-col gap-2 ${className}`}>
             <div

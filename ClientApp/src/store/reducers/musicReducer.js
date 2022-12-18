@@ -9,6 +9,7 @@ const initState = {
     nextUpSong: [],
     prevSong: [],
     deleteSongId: null,
+    editSongId: null,
     deletePlaylistId: null,
 };
 
@@ -95,7 +96,11 @@ const musicReducer = (state = initState, action) => {
                 ...state,
                 nextUpSong: state.nextUpSong.filter((item) => item.id != action.data),
             };
-
+        case actionTypes.EDIT_SONG_ID:
+            return {
+                ...state,
+                editSongId: action.id
+            }
         default:
             return state;
     }
