@@ -45,8 +45,8 @@ public class UserServices
     {
         await _database.Call($"UPDATE user " +
                              $"WHERE username='{username}' SET " +
-                             $"{(name != null ? $"name='{name}'" : "")}, " +
-                             $"{(bio != null ? $"bio='{bio}'" : "")}, " +
+                             $"{(name != null ? $"name='{name.Normal()}'" : "")}, " +
+                             $"{(bio != null ? $"bio='{bio.Normal()}'" : "")}, " +
                              $"{(gender != null ? gender == true ? "gender=1" : "gender=0" : "")}, " +
                              $"{(birth != null ? $"birth='{birth:yyyy-MM-dd H:mm:ss}'" : "")}");
     }
