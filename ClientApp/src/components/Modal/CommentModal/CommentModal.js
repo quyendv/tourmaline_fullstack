@@ -1,10 +1,10 @@
 import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
-import {icons} from '../../../utils/icons'
+import { icons } from '../../../utils/icons';
 import * as apis from '../../../services';
 import moment from 'moment';
 
-const { AiOutlineClose, FaRegComment } = icons;
+const { AiOutlineClose, FaRegComment, BsThreeDots } = icons;
 
 function CommentModal() {
     const { setIsOpenCommentModal } = useSelector((state) => state.actions);
@@ -18,7 +18,7 @@ function CommentModal() {
             const response = await apis.getAllComment(curSongId, token);
             if (response.status == 200) {
                 console.log(response);
-                setComments(response.data);
+                setComments(response.data.reverse());
             }
         };
         fetchComment();
@@ -30,22 +30,23 @@ function CommentModal() {
         };
         if (e.keyCode == '13') {
             const response = await apis.postComment(finalPayload, token);
-            setCommentValue('');
-
             console.log(response);
+            if (response.status === 200) {
+                setCommentValue('');
+                setComments((prev) => [response.data, ...prev]);
+            }
         }
     };
 
     const handleEditComment = async () => {
-        const response = await apis.editComment(curSongId, token)
-        console.log(response)
-    }
+        const response = await apis.editComment(curSongId, token);
+        console.log(response);
+    };
 
     const handleDeleteComment = async () => {
-        const response = await apis.deleteComment(curSongId, token)
-        console.log(response)
-        
-    }
+        const response = await apis.deleteComment(curSongId, token);
+        console.log(response);
+    };
 
     return (
         <div className="CommentModal h-full w-full">
@@ -73,10 +74,13 @@ function CommentModal() {
                         <div>
                             {comments.map((item, index) => (
                                 <div key={index}>
-                                    <span>{`${item.username}: `}</span>
+                                    <span>{`${item.username || item.userName}: `}</span>
                                     <span className="overflow-hidden">{item.content} </span>
 
                                     <span className="text-xs opacity-30">{moment(item.createTime).fromNow()}</span>
+                                    <span>
+                                        <BsThreeDots />
+                                    </span>
                                 </div>
                             ))}
                         </div>

@@ -3,7 +3,10 @@ import { useSelector } from 'react-redux';
 import * as apis from '../../services';
 import moment from 'moment';
 import Song from '../../components/Song';
+import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 function Feed() {
+    const navigate = useNavigate()
     const { token } = useSelector((state) => state.auth);
     const [recentlyUploaded, setRecentlyUploaded] = useState([]);
     useEffect(() => {
@@ -14,12 +17,13 @@ function Feed() {
         fetchRecentUploaded();
     }, []);
     return (
-        <div className="text-white px-[59px]">
-            <h2 className='text-2xl'>Hear the latest posts from the people you’re following:</h2>
+        <div className="px-[59px] text-white">
+            <h2 className="text-2xl">Hear the latest posts from the people you’re following:</h2>
             <div className="flex flex-col ">
                 {recentlyUploaded.map((item, index) => (
                     <div key={index}>
-                        <span>{`${item.uploader} post a track ${moment(item.uploadTime).fromNow()} `}</span>
+                        <span onClick={() => navigate(`/user/${item.uploader}`)}  className='hover:underline cursor-pointer'>{`${item.uploader} `}</span>
+                        <span>{`post a track ${moment(item.uploadTime).fromNow()} `}</span>
                         <div>
                             <Song songData={item}></Song>
                         </div>

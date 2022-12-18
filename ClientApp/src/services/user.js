@@ -1,3 +1,4 @@
+import axios from 'axios'
 import axiosConfig from '../utils/axiosConfig'
 
 export const getProfile =  (username, token) => new Promise(async(resolve, reject) => {
@@ -83,6 +84,17 @@ export const getAvatar = (username) => new Promise(async(resolve, reject) => {
             },
             responseType:'blob'
 
+        })
+        resolve(response)
+    } catch (error) {
+        reject(error)
+    }
+})
+export const getUserInfo = (username) => new Promise(async(resolve, reject) => {
+    try {
+        const response = await axiosConfig({
+            url:`api/user/getUser/${username}`,
+            method:'get',
         })
         resolve(response)
     } catch (error) {

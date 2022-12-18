@@ -1,10 +1,11 @@
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { images } from '~/assets/images';
 import { deletePlaylist } from '../../services/music';
 import { icons } from '../../utils/icons';
 import { DefaultMenu as PlaylistMenu } from '../Popper';
-import * as apis from '../../services'
+import * as apis from '../../services';
+import * as actions from '../../store/actions'
 import { useEffect, useState } from 'react';
 
 const {
@@ -19,68 +20,53 @@ const {
 } = icons;
 
 const playlistMenu = [
-    {
-        icon: <FaRegComment />,
-        title: 'Comments',
-        to: '',
-    },
-    {
-        icon: <AiOutlineDownload />,
-        title: 'Download',
-        to: '',
-    },
-    {
-        icon: <BsLink45Deg />,
-        title: 'Copy link',
-        to: '',
-    },
+
+
     {
         icon: <RiShareForwardLine />,
         title: 'Share',
         to: '',
     },
-    {
-        icon: <AiFillDelete />,
-        title: 'Delete',
-        to: '',
-    },
+
 ];
 
 function PlaylistItem({ playlistData, className }) {
     const navigate = useNavigate();
     const location = useLocation();
-
-    const  [playlistAvatarSrc, setPlaylistAvatarSrc] = useState('')
+    const dispatch = useDispatch();
+    const [playlistAvatarSrc, setPlaylistAvatarSrc] = useState('');
     const path = `${playlistData.name.replaceAll(' ', '-')}/${playlistData.id}`;
     const link = (location.pathname === '/library' ? '/playlist/' : '') + path;
     const { token } = useSelector((state) => state.auth);
-    const { createPlaylist, createAllPlaylist } = useSelector((state) => state.actions);
+    const { createPlaylist, createAllPlaylist, setIsOpenDeletePlaylistModal } = useSelector((state) => state.actions);
 
     const handleDeletePlaylist = async (e) => {
         e.stopPropagation();
-        const response = await deletePlaylist(playlistData.id, token);
+        setIsOpenDeletePlaylistModal((prev) => !prev);
+        dispatch(actions.deletePlaylistId(playlistData.id));
+        // const response = await deletePlaylist(playlistData.id, token);
 
-        createPlaylist((prev) => prev.filter((item) => item.id !== playlistData.id));
-        createAllPlaylist((prev) => prev.filter((item) => item.id !== playlistData.id));
+        // createPlaylist((prev) => prev.filter((item) => item.id !== playlistData.id));
+        // createAllPlaylist((prev) => prev.filter((item) => item.id !== playlistData.id));
     };
     const handleClickPlay = (e) => {
         e.stopPropagation();
         //
     };
     useEffect(() => {
-        let url
-        const fetchPlaylistAvatar = async() => {
-            const response = await apis.getPlaylistAvatar(playlistData.id, token)
-            const blob = new Blob([response.data],{type:'image/jpeg'})
-            url = URL.createObjectURL(blob)
-            setPlaylistAvatarSrc(url)
-        }
-        
-        fetchPlaylistAvatar()
+        let url;
+        const fetchPlaylistAvatar = async () => {
+            const response = await apis.getPlaylistAvatar(playlistData.id, token);
+            const blob = new Blob([response.data], { type: 'image/jpeg' });
+            url = URL.createObjectURL(blob);
+            setPlaylistAvatarSrc(url);
+        };
+
+        fetchPlaylistAvatar();
         return () => {
-            URL.revokeObjectURL(url)
-        }
-    }, [playlistData.id])
+            URL.revokeObjectURL(url);
+        };
+    }, [playlistData.id]);
     return (
         <div className={`flex flex-col gap-2 ${className}`}>
             <div

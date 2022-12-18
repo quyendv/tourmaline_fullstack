@@ -55,7 +55,6 @@ function MenuItem({ data, isParent = 'false', songId, onClick = () => {} }, ref)
         if (data.type === 'deletePlaylist') {
             setIsOpenDeletePlaylistModal((prev) => !prev);
             dispatch(actions.deletePlaylistId(data.id));
-            console.log(data.id);
         }
         if (data.type === 'addSongToNextUp') {
             const addSongsToNextUp = async () => {
