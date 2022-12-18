@@ -1,14 +1,16 @@
 import { useSelector } from 'react-redux';
 import ModalWrapper from '../ModalWrapper';
 import { icons } from '../../../utils/icons';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import * as apis from '../../../services';
 
 const { AiOutlineClose } = icons;
 function EditSongModal() {
     const { setIsOpenEditSongModal } = useSelector((state) => state.actions);
-    const [songInfo, setSongInfo] = useState({name:'',description: '',tags:[]});
+    const [songInfo, setSongInfo] = useState({ name: '', description: '', tags: [] });
     const { editSongId } = useSelector((state) => state.music);
+    const { token } = useSelector((state) => state.auth);
+    const file = useRef();
     useEffect(() => {
         const fetchSongInfo = async () => {
             const response = await apis.getInfoSong(editSongId);
@@ -18,17 +20,26 @@ function EditSongModal() {
         };
         fetchSongInfo();
     }, [editSongId]);
-    const handleEdit = () => {
-        // const response = await apis.editSong()
+    const handleEdit = async () => {
+        console.log(songInfo);
+        songInfo.tags.filter(item => item != '')
         const finalPayload = {
-            ...songInfo,
-            tags: songInfo.tags.splice(0, 1)
-        }
-        console.log(songInfo)
-    }
+            id: editSongId,
+            name: songInfo.name,
+            description: songInfo.description,
+            cover: file.current,
+            tags: songInfo.tags
+        };
+        console.log(finalPayload);
+        const response = await apis.editSong(finalPayload, token);
+        console.log(response);
+    };
+    const onChange = (e) => {
+        file.current = e.target.files[0];
+    };
     return (
         <ModalWrapper>
-            <div className="w-[600px] flex flex-col">
+            <div className="flex w-[600px] flex-col">
                 <span className="flex cursor-pointer justify-end" onClick={() => setIsOpenEditSongModal(false)}>
                     <AiOutlineClose size={20} />
                 </span>
@@ -45,9 +56,18 @@ function EditSongModal() {
                 />
                 <input
                     placeholder="Tags"
-                    value={ `${songInfo.tags.toString().replaceAll("," , "#")}`}
-                    onChange={(e) => setSongInfo((prev) => ({ ...prev, tags: e.target.value.split('#') }))}
+                    value={`${songInfo.tags.toString().replaceAll(',', '#')}`}
+                    onChange={(e) =>
+                        setSongInfo((prev) => {
+                            if (!e.target.value.startsWith('#')) {
+                                return   ({ ...prev, tags: `#${e.target.value}`.split('#') })
+                            }
+                            return ({ ...prev, tags: e.target.value.split('#') });
+
+                        })
+                    }
                 />
+                <input type="file" onChange={onChange} accept="image/*"></input>
                 <button onClick={handleEdit}>Edit</button>
             </div>
         </ModalWrapper>

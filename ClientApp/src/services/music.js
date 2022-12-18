@@ -332,21 +332,23 @@ export const removeFromPlaylist = (songId, playlistId, token) =>
         }
     });
 
-export const editSong = (songId, data, token) =>
+export const editSong = (data, token) =>
     new Promise(async (resolve, reject) => {
         try {
             const response = await axiosConfig({
-                url: '/api/playlist/edit',
+                url: '/api/song/edit',
                 method: 'put',
-                params: {
-                    id: songId,
+                data: {
+                    id: data.id,
                     name: data.name,
                     description: data.description,
                     tags: data.tags,
+                    cover: data.cover
                 },
 
                 headers: {
                     Authorization: `Bearer ${token}`,
+                    'Content-Type':`multipart/form-data`
                 },
             });
             resolve(response);
