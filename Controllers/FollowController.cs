@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using tourmaline.Models;
 using tourmaline.Services;
@@ -52,6 +48,7 @@ namespace tourmaline.Controllers
 
         [Route("followers")]
         [HttpGet]
+        [AllowAnonymous]
         public async Task<List<User>> GetFollowers()
         {
             return await _followServices.GetFollowers(CurrentSessionUsername);
@@ -59,6 +56,7 @@ namespace tourmaline.Controllers
         
         [Route("followings")]
         [HttpGet]
+        [AllowAnonymous]
         public async Task<List<User>> GetFollowings()
         {
             return await _followServices.GetFollowings(CurrentSessionUsername);
