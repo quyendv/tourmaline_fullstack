@@ -25,7 +25,7 @@ namespace tourmaline.Controllers
         [HttpPut]
         public async Task<ActionResult> Follow(string username)
         {
-            if (CurrentSessionUsername == username || !await _userServices.IsUserExist(username))
+            if (CurrentSessionUsername == username || !await _userServices.DoesUserExist(username))
             {
                 return StatusCode(StatusCodes.Status400BadRequest);
             }
@@ -37,7 +37,7 @@ namespace tourmaline.Controllers
         [HttpDelete]
         public async Task<ActionResult> Unfollow(string username)
         {
-            if (CurrentSessionUsername == username || !await _userServices.IsUserExist(username))
+            if (CurrentSessionUsername == username || !await _userServices.DoesUserExist(username))
             {
                 return StatusCode(StatusCodes.Status400BadRequest);
             }
@@ -49,17 +49,25 @@ namespace tourmaline.Controllers
         [Route("followers")]
         [HttpGet]
         [AllowAnonymous]
-        public async Task<List<User>> GetFollowers()
+        public async Task<ActionResult<List<User>>> GetFollowers(string username)
         {
-            return await _followServices.GetFollowers(CurrentSessionUsername);
+            if (!await _userServices.DoesUserExist(username))
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, "User does not exist!");
+            }
+            return Ok(await _followServices.GetFollowers(CurrentSessionUsername));
         }
         
         [Route("followings")]
         [HttpGet]
         [AllowAnonymous]
-        public async Task<List<User>> GetFollowings()
+        public async Task<ActionResult<List<User>>> GetFollowings(string username)
         {
-            return await _followServices.GetFollowings(CurrentSessionUsername);
+            if (!await _userServices.DoesUserExist(username))
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, "User does not exist!");
+            }
+            return Ok(await _followServices.GetFollowings(CurrentSessionUsername));
         }
     }
 }

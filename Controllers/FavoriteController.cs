@@ -26,7 +26,7 @@ namespace tourmaline.Controllers
         [HttpPut]
         public async Task<ActionResult> AddToFavorite(int id)
         {
-            if (!await _songServices.IsSongExist(id))
+            if (!await _songServices.DoesSongExist(id))
             {
                 return StatusCode(StatusCodes.Status404NotFound, "Song doesn't exist!");
             }
@@ -39,7 +39,7 @@ namespace tourmaline.Controllers
         [HttpDelete]
         public async Task<ActionResult> RemoveFromFavorite(int id)
         {
-            if (!await _songServices.IsSongExist(id))
+            if (!await _songServices.DoesSongExist(id))
             {
                 return StatusCode(StatusCodes.Status404NotFound, "Song doesn't exist!");
             }

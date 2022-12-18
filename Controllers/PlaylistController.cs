@@ -28,7 +28,7 @@ public class PlaylistController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<Playlist>> GetPlaylist(int id)
     {
-        if (!await _playlistServices.IsPlaylistExist(id))
+        if (!await _playlistServices.DoesPlaylistExist(id))
         {
             return StatusCode(StatusCodes.Status404NotFound, "Playlist not found");
         }
@@ -41,7 +41,7 @@ public class PlaylistController : ControllerBase
     [AllowAnonymous]
     public async Task<ActionResult> GetCover(int id)
     {
-        if (!await _playlistServices.IsPlaylistExist(id))
+        if (!await _playlistServices.DoesPlaylistExist(id))
             return StatusCode(StatusCodes.Status400BadRequest, "Playlist not found!");
 
         var fileName = $"{id}.png";
@@ -94,7 +94,7 @@ public class PlaylistController : ControllerBase
     [HttpDelete]
     public async Task<ActionResult> DeletePlaylist(int id)
     {
-        if (!await _playlistServices.IsPlaylistExist(id))
+        if (!await _playlistServices.DoesPlaylistExist(id))
         {
             return StatusCode(StatusCodes.Status400BadRequest, "Playlist does not exist!");
         }
@@ -140,9 +140,9 @@ public class PlaylistController : ControllerBase
     [HttpPut]
     public async Task<ActionResult> AddToPlaylist(int songId, int playlistId)
     {
-        if (!await _songServices.IsSongExist(songId))
+        if (!await _songServices.DoesSongExist(songId))
             return StatusCode(StatusCodes.Status400BadRequest, "Song not found!");
-        if (!await _playlistServices.IsPlaylistExist(playlistId))
+        if (!await _playlistServices.DoesPlaylistExist(playlistId))
             return StatusCode(StatusCodes.Status400BadRequest, "Playlist not found!");
         await _playlistServices.AddSong(playlistId, songId);
         return Ok();
@@ -152,12 +152,12 @@ public class PlaylistController : ControllerBase
     [HttpDelete]
     public async Task<ActionResult> RemoveFromPlaylist(int songId, int playlistId)
     {
-        if (!await _playlistServices.IsPlaylistExist(playlistId))
+        if (!await _playlistServices.DoesPlaylistExist(playlistId))
         {
             return StatusCode(StatusCodes.Status400BadRequest, "Playlist not found!");
         }
 
-        if (!await _songServices.IsSongExist(songId))
+        if (!await _songServices.DoesSongExist(songId))
         {
             return StatusCode(StatusCodes.Status400BadRequest, "Song not found!");
         }

@@ -51,7 +51,7 @@ public class UserServices
                              $"WHERE username='{username}'");
     }
 
-    public async Task<bool> IsUserExist(string username)
+    public async Task<bool> DoesUserExist(string username)
     {
         return (await _database.Call($"SELECT * FROM user WHERE username='{username}'")).Count != 0;
     }

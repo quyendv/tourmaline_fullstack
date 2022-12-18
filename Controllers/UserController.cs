@@ -35,7 +35,7 @@ public class UserController : ControllerBase
     [AllowAnonymous]
     public async Task<ActionResult<User>> GetUser(string username)
     {
-        if (await _services.IsUserExist(username))
+        if (await _services.DoesUserExist(username))
         {
             return await _services.GetUser(username);
         }
@@ -48,7 +48,7 @@ public class UserController : ControllerBase
     [AllowAnonymous]
     public async Task<ActionResult> GetAvatar(string username)
     {
-        if (!await _services.IsUserExist(username))
+        if (!await _services.DoesUserExist(username))
         {
             return StatusCode(StatusCodes.Status406NotAcceptable, "User not found!");
         }
@@ -75,7 +75,7 @@ public class UserController : ControllerBase
     public async Task<ActionResult> SignUp([FromForm] string username, [FromForm] string password,
         [FromForm] string fullname, [FromForm] bool gender, [FromForm] string email)
     {
-        if (await _services.IsUserExist(username))
+        if (await _services.DoesUserExist(username))
             return StatusCode(StatusCodes.Status406NotAcceptable, "User is already exist!");
 
         var user = new User(username)
@@ -120,7 +120,7 @@ public class UserController : ControllerBase
     [AllowAnonymous]
     public async Task<ActionResult> Login([FromForm] LoginModel loginModel)
     {
-        if (!await _services.IsUserExist(loginModel.Username))
+        if (!await _services.DoesUserExist(loginModel.Username))
             return StatusCode(StatusCodes.Status406NotAcceptable, "User not found!");
         var user = await _services.GetUser(loginModel.Username);
 

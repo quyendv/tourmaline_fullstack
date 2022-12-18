@@ -68,7 +68,7 @@ public class PlaylistServices
         return songs;
     }
 
-    public async Task<bool> IsPlaylistExist(int id)
+    public async Task<bool> DoesPlaylistExist(int id)
     {
         return (await _database.Call($"SELECT * FROM playlist WHERE id={id}")).Count != 0;
     }

@@ -32,7 +32,7 @@ public class SongController : ControllerBase
     [AllowAnonymous]
     public async Task<ActionResult<Song>> GetSongInfo(int id)
     {
-        if (!await _songServices.IsSongExist(id))
+        if (!await _songServices.DoesSongExist(id))
         {
             return StatusCode(StatusCodes.Status404NotFound);
         }
@@ -45,7 +45,7 @@ public class SongController : ControllerBase
     [AllowAnonymous]
     public async Task<ActionResult> GetMedia(int id)
     {
-        if (!await _songServices.IsSongExist(id)) return StatusCode(StatusCodes.Status400BadRequest, "Song not found!");
+        if (!await _songServices.DoesSongExist(id)) return StatusCode(StatusCodes.Status400BadRequest, "Song not found!");
         var songPath = $"{id}.mp3";
         var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         var file = new FileStream($"{homeDir}/storage/song/media/{songPath}", FileMode.Open, FileAccess.Read,
@@ -67,7 +67,7 @@ public class SongController : ControllerBase
     [AllowAnonymous]
     public async Task<ActionResult> GetCover(int id)
     {
-        if (!await _songServices.IsSongExist(id)) return StatusCode(StatusCodes.Status400BadRequest, "Song not found!");
+        if (!await _songServices.DoesSongExist(id)) return StatusCode(StatusCodes.Status400BadRequest, "Song not found!");
 
         var coverPath = $"{id}.png";
         var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
@@ -146,7 +146,7 @@ public class SongController : ControllerBase
     [Route("edit")]
     public async Task<ActionResult> EditSong([FromForm] int id, [FromForm] string? name, [FromForm] string? description, [FromForm] string? tags, [FromForm] IFormFile? cover)
     {
-        if (!await _songServices.IsSongExist(id))
+        if (!await _songServices.DoesSongExist(id))
             return StatusCode(StatusCodes.Status400BadRequest, "Song not found!");
         var song = await _songServices.GetSong(id);
         if (!await _userServices.IsAdmin(CurrentSessionUsername!) && CurrentSessionUsername != song.Uploader)
@@ -168,7 +168,7 @@ public class SongController : ControllerBase
     [Route("delete")]
     public async Task<ActionResult> DeleteSong(int id)
     {
-        if (!await _songServices.IsSongExist(id))
+        if (!await _songServices.DoesSongExist(id))
         {
             return StatusCode(StatusCodes.Status400BadRequest, "Song not found!");
         }
@@ -191,7 +191,7 @@ public class SongController : ControllerBase
     [Route("getUploaded")]
     public async Task<ActionResult<UserUploads>> GetSongs(string username)
     {
-        if (!await _userServices.IsUserExist(username))
+        if (!await _userServices.DoesUserExist(username))
         {
             return StatusCode(StatusCodes.Status404NotFound, "User doesn't exist!");
         }
@@ -203,7 +203,7 @@ public class SongController : ControllerBase
     [Route("autoplay")]
     public async Task<ActionResult<Song>> GetNextSongAutoplay(int id) // previous song id
     {
-        if (!await _songServices.IsSongExist(id))
+        if (!await _songServices.DoesSongExist(id))
         {
             return StatusCode(StatusCodes.Status400BadRequest, "Song not found!");
         }

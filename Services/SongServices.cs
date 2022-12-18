@@ -79,7 +79,7 @@ public class SongServices
         if (tags != null) await SetTags(id, tags);
     }
 
-    public async Task<bool> IsSongExist(int id)
+    public async Task<bool> DoesSongExist(int id)
     {
         return (await _database.Call($"SELECT * FROM song WHERE id={id}")).Count != 0;
     }
