@@ -225,7 +225,20 @@ public class Database
 
     public Task<List<Dictionary<string, dynamic>>> CallFindProcedure(string procedureName, string match)
     {
-        return CallReadProcedure(procedureName, new Dictionary<string, dynamic>() { { "keyword", match } });
+        string[] keywordList = match.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+        for (int i = 0; i < keywordList.Length; i++)
+        {
+            // Skip redudant
+            if ((keywordList[i].Length == 1) && !char.IsLetterOrDigit(keywordList[i][0])) {
+                continue;
+            }
+            keywordList[i] += "*";
+        }
+
+        return CallReadProcedure(procedureName, new Dictionary<string, dynamic>() { 
+            { "keyword", string.Join(' ', keywordList) } 
+        });
     }
 
     public Task<bool> CallUpdateProcedure(string procedureName, Dictionary<string, dynamic> parameters)

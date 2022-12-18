@@ -269,8 +269,8 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `FindPlaylists`(IN keyword VARCHAR(100))
 BEGIN
-    SELECT *, MATCH(user, name, description) AGAINST (keyword IN NATURAL LANGUAGE MODE) as score FROM playlist
-    WHERE MATCH(user, name, description) AGAINST (keyword IN NATURAL LANGUAGE MODE) >= 0.03
+    SELECT *, MATCH(user, name, description) AGAINST (keyword IN BOOLEAN MODE) as score FROM playlist
+    WHERE MATCH(user, name, description) AGAINST (keyword IN BOOLEAN MODE) >= 0.03
     ORDER BY score DESC;
 END ;;
 DELIMITER ;
@@ -295,8 +295,8 @@ BEGIN
 
 	SELECT 
 		id, uploadTime, uploader, name, description, 
-		MATCH (name, description, uploader) AGAINST (keywordLowered IN NATURAL LANGUAGE MODE) as score FROM song
-	WHERE MATCH (name, description, uploader) AGAINST (keywordLowered IN NATURAL LANGUAGE MODE) >= 0.03
+		MATCH (name, description, uploader) AGAINST (keywordLowered IN BOOLEAN MODE) as score FROM song
+	WHERE MATCH (name, description, uploader) AGAINST (keywordLowered IN BOOLEAN MODE) >= 0.03
     ORDER BY score DESC;
 END ;;
 DELIMITER ;
@@ -318,8 +318,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `FindUsers`(IN keyword VARCHAR(100))
 BEGIN
     SELECT
 		username, name, bio, createTime, birth, gender, isAdmin,
-		MATCH(username, name, bio) AGAINST (keyword IN NATURAL LANGUAGE MODE) as score FROM user
-    WHERE MATCH(username, name, bio) AGAINST (keyword IN NATURAL LANGUAGE MODE) >= 0.03
+		MATCH(username, name, bio) AGAINST (keyword IN BOOLEAN MODE) as score FROM user
+    WHERE MATCH(username, name, bio) AGAINST (keyword IN BOOLEAN MODE) >= 0.03
     ORDER BY score DESC;
 END ;;
 DELIMITER ;
