@@ -15,6 +15,7 @@ import SearchAll from '../pages/Search/SearchAll'
 import SearchSong from '../pages/Search/SearchSong'
 import SearchPlaylist from '../pages/Search/SearchPlaylist'
 import SearchUser from '../pages/Search/SearchUser'
+import User from '../pages/User'
 
 export const publicRoutes = [
     {
@@ -53,10 +54,10 @@ export const publicRoutes = [
         path: routesConfigPublic.discover,
         page: HomePlaylist
     },
-    // {
-    //     path: routesConfigPublic.username,
-    //     page: User
-    // },
+    {
+        path: routesConfigPublic.username,
+        page: User
+    },
     {
         path: routesConfigPublic.STAR,
         page: MainScreen,

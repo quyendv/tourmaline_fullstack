@@ -5,7 +5,8 @@ import {
     AiOutlineCloudUpload,
     AiOutlineDownload,
     AiOutlineHeart, AiOutlinePlus,
-    AiOutlinePlusCircle, AiTwotoneHeart
+    AiOutlinePlusCircle, AiTwotoneHeart,
+    AiOutlineEdit
 } from 'react-icons/ai';
 import {
     BsFillPlayFill,
@@ -26,6 +27,7 @@ import { TfiMicrophoneAlt } from 'react-icons/tfi';
 import {RiPlayListAddLine} from 'react-icons/ri'
 
 export const icons = {
+    AiOutlineEdit,
     AiFillCloseCircle,
     AiFillDelete,
     AiOutlineClose,
