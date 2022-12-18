@@ -17,22 +17,15 @@ const {
     AiFillDelete,
     BsFillPlayFill,
     RiPlayListAddLine,
+    AiOutlineEdit,
 } = icons;
 const playlistMenu = [
+
     {
-        icon: <FaRegComment />,
-        title: 'Comments',
-        to: '',
-    },
-    {
-        icon: <AiOutlineDownload />,
-        title: 'Download',
-        to: '',
-    },
-    {
-        icon: <BsLink45Deg />,
-        title: 'Copy link',
-        to: '',
+        type:'editPlaylist',
+        icon: <AiOutlineEdit/>,
+        title: 'Edit',
+        to:''
     },
     {
         icon: <RiShareForwardLine />,
@@ -44,14 +37,15 @@ const playlistMenu = [
 function Playlist() {
     // const { state } = useLocation();
 
-    const state = { name: 'playlistName', username: 'username' }; // hard code
     const { token } = useSelector((state) => state.auth);
     console.log(state);
     const { pid } = useParams();
     const [songs, setSongs] = useState([]);
+    const [playlistInfo, setPlaylistInfo] = useState({});
     useEffect(() => {
         const fetchSongs = async () => {
             const response = await apis.getPlaylist(pid, token);
+            setPlaylistInfo(response.data);
             setSongs(response.data.songs);
         };
         fetchSongs();
@@ -75,6 +69,9 @@ function Playlist() {
         playlistMenu[playlistMenu.length - 1].type === 'deletePlaylist' &&
             playlistMenu.splice(playlistMenu.length - 1, 1);
         playlistMenu[playlistMenu.length - 1].type !== 'deletePlaylist' && playlistMenu.push(deletePlaylist);
+        playlistMenu.forEach(item => {
+            item.id = pid
+        })
     }, [pid, songs]);
     return (
         <div className="flex max-h-[calc(100vh-120px)] w-full gap-4 overflow-y-auto px-14 py-10 text-white">
@@ -95,9 +92,12 @@ function Playlist() {
                         alt="playlist-cover"
                     />
                 </div>
-                <span className="mt-3 text-lg font-bold">{state.name}</span>
+                <span className="mt-3 text-lg font-bold">{playlistInfo.name}</span>
                 <span className="text-xs font-semibold text-[#ffffff80]">
-                    Được tạo bởi <span className="text-white">{state.username}</span>
+                    Được tạo bởi <span className="text-white">{playlistInfo.username}</span>
+                </span>
+                <span className="text-xs font-semibold text-[#ffffff80]">
+                    <span className="text-white">{playlistInfo.description}</span>
                 </span>
                 <PlaylistMenu menuList={playlistMenu} placement="right-start">
                     <span
@@ -128,7 +128,7 @@ function Playlist() {
                 <div className="flex  flex-col">
                     {/* ...render playlist: hardcode */}
                     {songs.map((item, index) => (
-                        <Song songData={item} />
+                        <Song key={index} songData={item} inPlaylist />
                     ))}
                 </div>
             </div>

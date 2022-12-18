@@ -11,9 +11,14 @@ const { HiChevronRight } = icons;
 const cx = classNames.bind(styles);
 
 function MenuItem({ data, isParent = 'false', songId, onClick = () => {} }, ref) {
-    const { setIsOpenCommentModal, setSongUploaded, setIsOpenDeleteModal, setIsOpenDeletePlaylistModal, setIsOpenEditSongModal } = useSelector(
-        (state) => state.actions,
-    );
+    const {
+        setIsOpenCommentModal,
+        setSongUploaded,
+        setIsOpenDeleteModal,
+        setIsOpenDeletePlaylistModal,
+        setIsOpenEditSongModal,
+        setIsOpenEditPlaylistModal,
+    } = useSelector((state) => state.actions);
     const { token } = useSelector((state) => state.auth);
     const Component = data.to ? Link : 'div';
     const dispatch = useDispatch();
@@ -86,13 +91,14 @@ function MenuItem({ data, isParent = 'false', songId, onClick = () => {} }, ref)
             };
             addSongsToNextUp();
         }
-        if(data.type == 'editPlaylist') {
 
+        if (data.type == 'editSong') {
+            setIsOpenEditSongModal((prev) => !prev);
+            dispatch(actions.editSongId(data.id));
         }
-        if(data.type == 'editSong') {
-            setIsOpenEditSongModal(prev => !prev)
-            console.log(data.id)
-            dispatch(actions.editSongId(data.id))
+        if (data.type == 'editPlaylist') {
+            setIsOpenEditPlaylistModal(prev => !prev)
+            dispatch(actions.editPlaylistId(data.id))
         }
         if (!isParent) {
             ref.current._tippy.hide();
@@ -116,7 +122,7 @@ function MenuItem({ data, isParent = 'false', songId, onClick = () => {} }, ref)
     );
 }
 
-// Khai báo function Child(props, ref) 
+// Khai báo function Child(props, ref)
 // props có thể tách destructuring, ref là ref nhận vào từ cha dưới dạng <Child ref={...} />
 // Chú ý, ta có thể tạo refChild bằng useRef rồi truyền vào Child, trong child gán ref={ref} nhận đc vào element cần
 // -> Parent có thể điều khiển element trong Child

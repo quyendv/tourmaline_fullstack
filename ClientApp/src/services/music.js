@@ -27,7 +27,6 @@ export const getInfoSong = (id) =>
                 url: '/api/song/get',
                 method: 'get',
                 params: { id },
-
             });
             resolve(response);
         } catch (error) {
@@ -82,11 +81,11 @@ export const getPlaylistAvatar = (id, token) =>
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
-                responseType:'blob'
+                responseType: 'blob',
             });
-            resolve(response)
+            resolve(response);
         } catch (error) {
-            reject(error)
+            reject(error);
         }
     });
 export const getPlaylist = (id, token) =>
@@ -343,12 +342,36 @@ export const editSong = (data, token) =>
                     name: data.name,
                     description: data.description,
                     tags: data.tags,
-                    cover: data.cover
+                    cover: data.cover,
                 },
 
                 headers: {
                     Authorization: `Bearer ${token}`,
-                    'Content-Type':`multipart/form-data`
+                    'Content-Type': `multipart/form-data`,
+                },
+            });
+            resolve(response);
+        } catch (error) {
+            reject(error);
+        }
+    });
+
+export const editPlaylist = (data, token) =>
+    new Promise(async (resolve, reject) => {
+        try {
+            const response = await axiosConfig({
+                url: '/api/playlist/edit',
+                method: 'put',
+                data: {
+                    id: data.id,
+                    name: data.name,
+                    description: data.description,
+                    file: data.file,
+                },
+
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': `multipart/form-data`,
                 },
             });
             resolve(response);

@@ -8,7 +8,15 @@ import Player from '../../components/Player';
 import SidebarRight from '../../components/SidebarRight';
 import * as actions from '../../store/actions';
 import { crePlaylist } from '../../services/music';
-import { CommentModal, CrePlaylistModal, DeleteModal, DeletePlaylistModal, EditSongModal } from '~/components/Modal';
+import {
+    CommentModal,
+    CrePlaylistModal,
+    DeleteModal,
+    DeletePlaylistModal,
+    EditSongModal,
+    EditPl,
+} from '~/components/Modal';
+import EditPlaylistModal from '~/components/Modal/EditPlaylistModal/EditPlaylistModal';
 // import { CommentModal, CrePlaylistModal, DeleteModal, DeletePlaylistModal } from '../../components/Modal';
 
 function DefaultLayout() {
@@ -18,6 +26,7 @@ function DefaultLayout() {
     const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
     const [isOpenDeletePlaylistModal, setIsOpenDeletePlaylistModal] = useState(false);
     const [isOpenEditSongModal, setIsOpenEditSongModal] = useState(false);
+    const [isOpenEditPlaylistModal, setIsOpenEditPlaylistModal] = useState(false);
     const { token } = useSelector((state) => state.auth);
     const [title, setTitle] = useState('');
     const dispatch = useDispatch();
@@ -28,6 +37,7 @@ function DefaultLayout() {
         dispatch(actions.setIsOpenDeleteModal(setIsOpenDeleteModal));
         dispatch(actions.setIsOpenDeletePlaylistModal(setIsOpenDeletePlaylistModal));
         dispatch(actions.setIsOpenEditSongModal(setIsOpenEditSongModal));
+        dispatch(actions.setIsOpenEditPlaylistModal(setIsOpenEditPlaylistModal));
     }, []);
 
     const file = useRef();
@@ -52,6 +62,7 @@ function DefaultLayout() {
             {isOpenDeleteModal && <DeleteModal />}
             {isOpenDeletePlaylistModal && <DeletePlaylistModal />}
             {isOpenEditSongModal && <EditSongModal />}
+            {isOpenEditPlaylistModal && <EditPlaylistModal />}
             <div className="flex h-screen w-screen">
                 <div className="z-30 max-[1132px]:fixed">
                     <Sidebar />
