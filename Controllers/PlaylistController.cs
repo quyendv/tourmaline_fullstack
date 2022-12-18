@@ -38,6 +38,7 @@ public class PlaylistController : ControllerBase
 
     [Route("getCover")]
     [HttpGet]
+    [AllowAnonymous]
     public async Task<ActionResult> GetCover(int id)
     {
         if (!await _playlistServices.IsPlaylistExist(id))
@@ -48,7 +49,7 @@ public class PlaylistController : ControllerBase
         try
         {
             var file = new FileStream($"{homeDir}/storage/playlist/{fileName}", FileMode.Open, FileAccess.Read,
-                FileShare.None, 2048,
+                FileShare.ReadWrite, 2048,
                 true);
 
             return File(file, "image/jpeg", true);
@@ -56,13 +57,35 @@ public class PlaylistController : ControllerBase
         catch (Exception e)
         {
             var file = new FileStream($"Assets/defaultPlaylist.png", FileMode.Open, FileAccess.Read,
-                FileShare.None, 2048,
+                FileShare.ReadWrite, 2048,
                 true);
 
             return File(file, "image/jpeg", true);
         }
     }
 
+    [HttpPost]
+    [Route("setCover")]
+    public async Task<ActionResult> SetAvatar([FromForm] int id, [FromForm] IFormFile file)
+    {
+        try
+        {
+            var homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            Directory.CreateDirectory($"{homeDir}/storage/playlist");
+            var fileName = $"{id}.png";
+            var filePath = Path.Combine($"{homeDir}/storage/playlist", fileName);
+            await using var stream = new FileStream(filePath, FileMode.Create);
+            await file.CopyToAsync(stream);
+            return Ok("Upload success!");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+
+        return StatusCode(StatusCodes.Status500InternalServerError);
+    }
+    
     [Route("create")]
     [HttpPost]
     public async Task<ActionResult<Playlist>> CreatePlaylist([FromForm] string name, [FromForm] string? description,
