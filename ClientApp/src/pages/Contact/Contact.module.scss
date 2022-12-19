@@ -44,8 +44,34 @@
     align-items: center;
     padding: 8px;
     border-radius: 4px;
-
+    transition: all 0.2s ease-in-out;
+    &:hover {
+        color: rgb(74 222 128/1);
+    }
     & + .contact-info__item {
         margin-top: 25px;
     }
 }
+
+.contact-info__item__icon {
+    display: flex;
+    padding: 1rem;
+    margin-right: 0.75rem;
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+    justify-content: center;
+    align-items: center;
+    border-radius: 9999px;
+    border-width: 1px;
+    height: 40px;
+    width: 40px;
+    transition: all 0.2s ease-in-out;
+    // @apply mr-3 flex h-[40px] w-[40px] items-center justify-center rounded-full border p-4 text-lg transition-all duration-300 ease-in-out lg:mr-4;
+    @media (min-width: 1024px) {
+        margin-right: 1rem;
+    }
+}
+
+// .contact-info__social-icon {
+//     @apply inline-block p-2 text-3xl transition-all duration-300 ease-in-out hover:scale-125 hover:text-green-500;
+// }
