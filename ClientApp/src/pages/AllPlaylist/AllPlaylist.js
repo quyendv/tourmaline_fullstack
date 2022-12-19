@@ -27,7 +27,7 @@ function AllPlaylist() {
         <div className="AllplaylistComponent flex h-[calc(100vh-var(--header-height))] w-full flex-col overflow-y-auto px-14 pt-16 pb-24 text-white">
             <h2 className="mb-7 border-b border-[color:#ffffff1a] pb-3 text-2xl font-bold">Playlist</h2>
             {/* Container */}
-            <div className="grid auto-rows-[minmax(260px,_1fr)] grid-cols-4 gap-5 xl:grid-cols-5">
+            <div className="grid auto-rows-[minmax(260px,_1fr)] grid-cols-3 md:grid-cols-4 gap-5 xl:grid-cols-5">
                 {/* Create new playlist item */}
                 <div
                     onClick={() => setIsOpenCrePlaylistModal((prev) => !prev)}
