@@ -5,10 +5,12 @@ import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
-import { routesConfigPublic } from '../../Routes/routesConfig';
+import { routesConfigPublicDefault } from '../../Routes/routesConfig';
 import * as actions from '../../store/actions';
+import * as apis from '../../services'
 import styles from './login.module.scss';
 import {Loading} from '../../components/Load'
+import { actionTypes } from '~/store/actions/actionTypes';
 const cx = classNames.bind(styles);
 const yupSchema = yup
     .object({
@@ -41,24 +43,52 @@ function Login() {
         dispatch(actions.setLoadingLogin(setIsLoading))
     }, [])
 
-    const handleLogin = (data) => {
+    const handleLogin = async (data) => {
         // e.preventDefault(); // if have errors auto preventDefault
         // K cần check object empty (errors), handleSubmit chỉ khi hết lỗi mới thực hiện hàm
 
         dispatch(actions.logout()); // đoạn này t tưởng luôn logout trước khi vào đăng nhập rồi?
         // console.log(data); // data form
-        dispatch(actions.login(data, setIsLoading)); // or getValue("root")
+        try {
+            setIsLoading(false)
+            const response = await apis.apiLogin(data);
+            setIsLoading(true)
+            console.log(response)
+            if (response.data != null) {
+                dispatch({
+                    type: actionTypes.LOGIN_SUCCESS,
+                    data: response.data
+                })
+            } else {
+                dispatch({
+                    type: actionTypes.LOGIN_FAIL,
+                    data: "Invalid Username or PassWord"
+                })
+            }
+        } catch (err) {
+            dispatch({
+                type: actionTypes.LOGIN_FAIL,
+                data: "Invalid Username or Password"
+            })
+    
+        }// or getValue("root")
         // console.log([isLoggedIn, msg]);
         dispatch(actions.setUsername(data.username)); // setUsername để làm gì đây, t k thấy dispatch nó như nào??
 
     };
 
     useEffect(() => {
+        console.log('in')
         if (msg) {
             setError('password', { type: 'custom', message: 'Invalid user or password' }, { shouldFocus: true });
         } else {
             clearErrors('password');
-            if (isLoggedIn) navigate(routesConfigPublic.homeRoute);
+            
+            if (isLoggedIn) {
+                
+                navigate(`${routesConfigPublicDefault.homeRoute}`)
+                console.log('in')
+            };
         }
     }, [isLoggedIn, msg]);
 

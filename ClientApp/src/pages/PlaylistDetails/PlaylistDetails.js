@@ -19,26 +19,57 @@ const {
     RiPlayListAddLine,
     AiOutlineEdit,
 } = icons;
-const playlistMenu = [
-    {
-        type: 'editPlaylist',
-        icon: <AiOutlineEdit />,
-        title: 'Edit',
-        to: '',
-    },
-    {
-        icon: <RiShareForwardLine />,
-        title: 'Share',
-        to: '',
-    },
-];
 
 function Playlist() {
-
-    const { token } = useSelector((state) => state.auth);
     const { pid } = useParams();
-    const [songs, setSongs] = useState([]);
     const [playlistInfo, setPlaylistInfo] = useState({});
+    const [playlistAvatar, setPlaylistAvatar] = useState('');
+
+    const [playlistMenu, setPlaylistMenu] = useState([
+         {
+            id: pid,
+            type: 'addSongToNextUp',
+            icon: <RiPlayListAddLine />,
+            title: 'Add playlist to next up',
+            to: '',
+        },
+        {
+            id: pid,
+            type: 'editPlaylist',
+            icon: <AiOutlineEdit />,
+            title: 'Edit',
+            playlistInfo: function() {},
+            setPlaylistInfo: function() {},
+            to: '',
+        },
+        {
+            id: pid,
+            icon: <RiShareForwardLine />,
+            title: 'Share',
+            to: '',
+        },
+         {
+            id: pid,
+            type: 'deletePlaylist',
+            icon: <AiFillDelete />,
+            title: 'Delete',
+            to: '',
+        }
+    ]);
+    const { token } = useSelector((state) => state.auth);
+    const [songs, setSongs] = useState([]);
+    useEffect(() => {
+        if(playlistMenu[1].playlistInfo != playlistInfo ) {
+            const newArr = playlistMenu
+            newArr[1].playlistInfo = playlistInfo
+            setPlaylistInfo(newArr)
+        }
+        if(playlistMenu[1].setPlaylistInfo != setPlaylistInfo ) {
+            const newArr = playlistMenu
+            newArr[1].setPlaylistInfo = setPlaylistInfo
+            setPlaylistInfo(newArr)
+        }
+    }, [])
     useEffect(() => {
         const fetchSongs = async () => {
             const response = await apis.getPlaylist(pid, token);
@@ -46,30 +77,21 @@ function Playlist() {
             setSongs(response.data.songs);
         };
         fetchSongs();
+        const fetchAvatar = async () => {
+            playlistAvatar && URL.revokeObjectURL(playlistAvatar);
+            let url;
+            const response = await apis.getPlaylistAvatar(pid, token);
+            const blob = new Blob([response.data], { type: 'image/jpeg' });
+            url = URL.createObjectURL(blob);
+            setPlaylistAvatar(url);
+            return () => {
+                URL.revokeObjectURL(url);
+            };
+        };
+        fetchAvatar();
     }, []);
-    useEffect(() => {
-        const deletePlaylist = {
-            id: pid,
-            type: 'deletePlaylist',
-            icon: <AiFillDelete />,
-            title: 'Delete',
-            to: '',
-        };
-        const addSongsToNextUp = {
-            id: pid,
-            type: 'addSongToNextUp',
-            icon: <RiPlayListAddLine />,
-            title: 'Add playlist to next up',
-            to: '',
-        };
-        playlistMenu[0].type !== 'addSongToNextUp' && playlistMenu.unshift(addSongsToNextUp);
-        playlistMenu[playlistMenu.length - 1].type === 'deletePlaylist' &&
-            playlistMenu.splice(playlistMenu.length - 1, 1);
-        playlistMenu[playlistMenu.length - 1].type !== 'deletePlaylist' && playlistMenu.push(deletePlaylist);
-        playlistMenu.forEach((item) => {
-            item.id = pid;
-        });
-    }, [pid, songs]);
+
+
     return (
         <div className="flex max-h-[calc(100vh-120px)] w-full gap-4 overflow-y-auto px-14 py-10 text-white">
             {/* Playlist Info */}
@@ -84,8 +106,8 @@ function Playlist() {
                     </span>
                     {/* img */}
                     <img
-                        className="h-full w-full rounded-lg object-cover transition-all duration-1000 group-hover:scale-125"
-                        src={images.defaultCoverPlaylist}
+                        className="h-[200px] w-[250px] rounded-lg object-cover transition-all duration-1000 group-hover:scale-125"
+                        src={playlistAvatar}
                         alt="playlist-cover"
                     />
                 </div>

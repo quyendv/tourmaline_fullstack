@@ -13,11 +13,12 @@ function CrePlaylistModal() {
     const { token } = useSelector((state) => state.auth);
     const { setIsOpenCrePlaylistModal, createPlaylist, createAllPlaylist } = useSelector((state) => state.actions);
     const [title, setTitle] = useState('');
+    const [name, setName] = useState('')
     const dispatch = useDispatch();
     const file = useRef();
-    console.log(file.current)
     const onChange = (e) => {
         file.current = e.target.files[0];
+        setName(file.current.name)
     };
     const handleCreplaylist = async (e) => {
         const finalPayload = {
@@ -50,7 +51,7 @@ function CrePlaylistModal() {
                     onChange={(e) => setTitle(e.target.value)}
                 />
                 <div className="relative mb-5 flex items-center rounded-full bg-[#375174] px-4 py-2 text-[#bebebe]">
-                    <label className="inline-block ">{file.current.name || 'Choose the cover playlist'}</label>
+                    <label className="inline-block ">{ name != '' ? name : 'Choose the cover playlist'}</label>
                     <span className="ml-4">
                         <AiFillFolderOpen />
                     </span>

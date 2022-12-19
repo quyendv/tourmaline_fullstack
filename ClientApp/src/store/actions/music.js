@@ -62,3 +62,12 @@ export const editPlaylistId = (id) => ({
     type: actionTypes.EDIT_PLAYLIST_ID,
     id
 })
+
+export const setNextUp = (data) => ({
+    type: actionTypes.SET_NEXTUP,
+    data
+})
+export const setPrev = (data) => ({
+    type: actionTypes.SET_PREV,
+    data    
+})

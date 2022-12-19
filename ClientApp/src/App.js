@@ -9,13 +9,21 @@ import ForgotPassword from './pages/ForgotPassword';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import SearchAll from './pages/Search/SearchAll';
-import { privateRoute, publicRoutes, searchRoutes } from './Routes';
+import {
+    privateRoute,
+    privateRouteDefault,
+    privateRouteOnly,
+    publicRoutes,
+    publicRoutesDefault,
+    searchRoutes,
+} from './Routes';
 import {
     ForgotPasswordRoute,
     LOGIN,
     REGISTER,
-    routesConfigPrivate,
-    routesConfigPublic,
+    routesConfigPrivateDefault,
+    routeConfigPrivateOnly,
+    routesConfigPublicDefault,
     searchRoutesConfig,
 } from './Routes/routesConfig';
 
@@ -24,29 +32,36 @@ function App() {
     return (
         <div className="App">
             <Routes>
-                <Route path={LOGIN} element={<Login />} />
-                <Route path={REGISTER} element={<Register />} />
+                {<Route path={LOGIN} element={<Login />} />}
+                { <Route path={REGISTER} element={<Register />} />}
                 <Route path={ForgotPasswordRoute} element={<ForgotPassword />} />
 
-                <Route path={routesConfigPublic.homeRoute} element={<DefaultLayout />}>
-                    <Route path={routesConfigPublic.search} element={<Search />}>
+                <Route path={routesConfigPublicDefault.homeRoute} element={<DefaultLayout />}>
+                    <Route path={searchRoutesConfig.search} element={<Search />}>
                         {searchRoutes.map((route, index) => {
                             console.log(route);
                             const Page = route.page;
                             return <Route key={index} path={route.path} element={<Page />} />;
                         })}
                     </Route>
-                    {publicRoutes.map((route, index) => {
+                    {publicRoutesDefault.map((route, index) => {
                         const Page = route.page;
                         return <Route key={index} path={route.path} element={<Page />} />;
                     })}
+                    {isLoggedIn &&
+                        privateRouteDefault.map((route, index) => {
+                            const Page = route.page;
+                            return <Route key={index} path={route.path} element={<Page />} />;
+                        })}
                 </Route>
-                <Route path={routesConfigPrivate.system} element={<OnlyBodyLayout />}>
-                    {privateRoute.map((route, index) => {
-                        const Page = route.page;
-                        return <Route key={index} path={route.path} element={<Page />} />;
-                    })}
-                </Route>
+                {isLoggedIn && (
+                    <Route path={routeConfigPrivateOnly.system} element={<OnlyBodyLayout />}>
+                        {privateRouteOnly.map((route, index) => {
+                            const Page = route.page;
+                            return <Route key={index} path={route.path} element={<Page />} />;
+                        })}
+                    </Route>
+                )}
             </Routes>
 
             <ToastContainer />

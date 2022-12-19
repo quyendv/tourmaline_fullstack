@@ -67,3 +67,12 @@ export const songAvatar = (songAvatar) => ({
     type: actionTypes.SONG_AVATAR,
     songAvatar
 })
+export const setPlaylistInfo = (setPlaylistInfo) => ({
+    type: actionTypes.SET_PLAYLIST_INFO,
+    setPlaylistInfo
+})
+
+export const setIsOpenLogginModal = (setIsOpenLogginModal) => ({
+    type: actionTypes.SET_IS_OPEN_LOGIN_MODAL,
+    setIsOpenLogginModal
+})

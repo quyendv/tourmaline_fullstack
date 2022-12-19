@@ -34,6 +34,9 @@ function EditPlaylistModal() {
         const editPlaylist = async () => {
             const response = await apis.editPlaylist(finalPayload, token);
             console.log(response);
+            if(response.status == 200) {
+                setIsOpenEditPlaylistModal(prev => !prev)
+            }
         };
         editPlaylist();
     };

@@ -34,6 +34,12 @@ function MenuItem({ data, isParent = 'false', songId, onClick = () => {} }, ref)
         if (data.title === 'Logout') {
             e.stopPropagation();
             dispatch(actions.logout());
+            dispatch(actions.setUsername(null))
+            dispatch(actions.setCurSongId(null))
+            dispatch(actions.setFavorite([]))
+            dispatch(actions.setCurPlaylist([]))
+            dispatch(actions.setNextUp([]))
+            dispatch(actions.setPrev([]))
         }
         if (data.title === 'Comments') {
             handleOpenCommentModal(e);
@@ -104,6 +110,7 @@ function MenuItem({ data, isParent = 'false', songId, onClick = () => {} }, ref)
         if (data.type == 'editPlaylist') {
             setIsOpenEditPlaylistModal(prev => !prev)
             dispatch(actions.editPlaylistId(data.id))
+            dispatch(actions.setPlaylistInfo(data.setPlaylistInfo))
         }
         if (!isParent) {
             ref.current._tippy.hide();

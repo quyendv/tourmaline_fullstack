@@ -40,6 +40,9 @@ const initState = {
     setIsLoadingRegister: function() {
         return 0;
     },
+    setIsOpenLogginModal: function() {
+        return 0;
+    },
     songAvatar: '',
     keyword: null
 };
@@ -124,6 +127,12 @@ const actionsReducer = (state = initState, action) => {
                 ...state,
                 songAvatar: action.songAvatar
             }
+        case actionTypes.SET_IS_OPEN_LOGIN_MODAL:
+            return {
+                ...state,
+                setIsOpenLogginModal: action.setIsOpenLogginModal
+            }
+        
         default:
             return state;
     }

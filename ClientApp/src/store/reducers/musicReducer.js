@@ -17,6 +17,16 @@ const initState = {
 //TODOS
 const musicReducer = (state = initState, action) => {
     switch (action.type) {
+        case actionTypes.SET_NEXTUP:
+            return {
+                ...state,
+                nextUpSong: action.data
+            }
+        case actionTypes.SET_PREV:
+            return {
+                ...state,
+                prevSong: action.data
+            }
         case actionTypes.SET_CUR_SONG_ID:
             return {
                 ...state,
@@ -70,6 +80,7 @@ const musicReducer = (state = initState, action) => {
             if (action.data.id == state.curSongId) {
                 return state;
             }
+           state.nextUpSong =  state.nextUpSong.filter(item => typeof(item) != 'undefined')
             return {
                 ...state,
                 nextUpSong: [action.data, ...state.nextUpSong],
@@ -83,6 +94,8 @@ const musicReducer = (state = initState, action) => {
                 }
             });
             indexOfSongPrev != -1 && state.prevSong.splice(indexOfSongPrev, 1);
+           state.prevSong =  state.prevSong.filter(item => typeof(item) != 'undefined')
+
             return {
                 ...state,
                 prevSong: [action.data, ...state.prevSong],
@@ -90,12 +103,12 @@ const musicReducer = (state = initState, action) => {
         case actionTypes.REMOVE_FROM_PREV:
             return {
                 ...state,
-                prevSong: state.prevSong.filter((item) => item != action.data),
+                prevSong: state.prevSong.filter((item) => item != action.data).filter(item => typeof(item) != 'undefined'),
             };
         case actionTypes.REMOVE_FROM_NEXT_UP:
             return {
                 ...state,
-                nextUpSong: state.nextUpSong.filter((item) => item.id != action.data),
+                nextUpSong: state.nextUpSong.filter((item) => item.id != action.data).filter(item => typeof(item) != 'undefined'),
             };
         case actionTypes.EDIT_SONG_ID:
             return {
