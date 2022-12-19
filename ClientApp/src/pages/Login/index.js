@@ -47,7 +47,13 @@ function Login() {
         // e.preventDefault(); // if have errors auto preventDefault
         // K cần check object empty (errors), handleSubmit chỉ khi hết lỗi mới thực hiện hàm
 
-        dispatch(actions.logout()); // đoạn này t tưởng luôn logout trước khi vào đăng nhập rồi?
+        dispatch(actions.logout());
+        dispatch(actions.setUsername(null))
+        dispatch(actions.setCurSongId(null))
+        dispatch(actions.fetchFavorite([]))
+        dispatch(actions.setCurPlaylist([]))
+        dispatch(actions.setNextUp([]))
+        dispatch(actions.setPrev([]))// đoạn này t tưởng luôn logout trước khi vào đăng nhập rồi?
         // console.log(data); // data form
         try {
             setIsLoading(false)
