@@ -20,9 +20,8 @@ function MainScreen() {
     const [top50, setTop50] = useState([]);
     const [suggestion, setSuggestion] = useState([]);
     const { username } = useSelector((state) => state.user);
-    const handleClickPlaylist = () => {
-        navigate('/playlist/Pop/1');
-    };
+    const { isLoggedin } = useSelector((state) => state.auth);
+
     useEffect(() => {
         const fetchSuggestion = async () => {
             const response = await apis.getSuggestion(token);
@@ -83,6 +82,7 @@ function MainScreen() {
             const response = await apis.getFavorite(token);
             dispatch(actions.fetchFavorite(response.data.songs));
         };
+
         fetchFavoriteSongs();
     }, []);
     return (

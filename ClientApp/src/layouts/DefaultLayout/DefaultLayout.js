@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation, useParams } from 'react-router-dom';
 
 import Header from '../../components/Header';
 import Sidebar from '../../components/Sidebar';
@@ -14,7 +14,7 @@ import {
     DeleteModal,
     DeletePlaylistModal,
     EditSongModal,
-    EditPl,
+    LoginModal
 } from '~/components/Modal';
 import EditPlaylistModal from '~/components/Modal/EditPlaylistModal/EditPlaylistModal';
 // import { CommentModal, CrePlaylistModal, DeleteModal, DeletePlaylistModal } from '../../components/Modal';
@@ -27,10 +27,18 @@ function DefaultLayout() {
     const [isOpenDeletePlaylistModal, setIsOpenDeletePlaylistModal] = useState(false);
     const [isOpenEditSongModal, setIsOpenEditSongModal] = useState(false);
     const [isOpenEditPlaylistModal, setIsOpenEditPlaylistModal] = useState(false);
+    const [isOpenLogginModal, setIsOpenLogginModal] = useState(false)
     const { token } = useSelector((state) => state.auth);
     const [title, setTitle] = useState('');
+    const { curSongId } = useSelector((state) => state.music);
     const dispatch = useDispatch();
-
+    const {pathname} = useLocation()
+    const {isLoggedIn} = useSelector(state => state.auth)
+    useEffect(() => {
+        if(pathname != '/' && !isLoggedIn) {
+            setIsOpenLogginModal(prev => !prev)
+        }
+    }, [pathname])
     useEffect(() => {
         dispatch(actions.setIsOpenCrePlaylistModal(setIsOpenCrePlaylistModal));
         dispatch(actions.setIsOpenCommentModal(setIsOpenCommentModal));
@@ -38,6 +46,7 @@ function DefaultLayout() {
         dispatch(actions.setIsOpenDeletePlaylistModal(setIsOpenDeletePlaylistModal));
         dispatch(actions.setIsOpenEditSongModal(setIsOpenEditSongModal));
         dispatch(actions.setIsOpenEditPlaylistModal(setIsOpenEditPlaylistModal));
+        dispatch(actions.setIsOpenLogginModal(setIsOpenLogginModal));
     }, []);
 
     const file = useRef();
@@ -63,6 +72,7 @@ function DefaultLayout() {
             {isOpenDeletePlaylistModal && <DeletePlaylistModal />}
             {isOpenEditSongModal && <EditSongModal />}
             {isOpenEditPlaylistModal && <EditPlaylistModal />}
+            {isOpenLogginModal && <LoginModal />}
             <div className="flex h-screen w-screen">
                 <div className="z-30 max-[1132px]:fixed">
                     <Sidebar />
@@ -82,9 +92,11 @@ function DefaultLayout() {
                 </div>
             </div>
 
-            <div className="absolute bottom-0 z-40 h-[var(--player-height)] w-full bg-[color:var(--player-bg)] py-3 px-4 [border-top:1px_solid_var(--player-border-color)]">
-                <Player setIsShowSidebar={setIsShowSidebar} />
-            </div>
+            {curSongId != null && (
+                <div className="absolute bottom-0 z-40 h-[var(--player-height)] w-full bg-[color:var(--player-bg)] py-3 px-4 [border-top:1px_solid_var(--player-border-color)]">
+                    <Player setIsShowSidebar={setIsShowSidebar} />
+                </div>
+            )}
         </div>
     );
 }

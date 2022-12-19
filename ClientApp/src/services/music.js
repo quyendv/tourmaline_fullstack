@@ -69,7 +69,7 @@ export const crePlaylist = (data, token) =>
             reject(error);
         }
     });
-export const getPlaylistAvatar = (id, token) =>
+export const getPlaylistAvatar = (id) =>
     new Promise(async (resolve, reject) => {
         try {
             const response = await axiosConfig({
@@ -78,9 +78,7 @@ export const getPlaylistAvatar = (id, token) =>
                 params: {
                     id,
                 },
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+
                 responseType: 'blob',
             });
             resolve(response);
@@ -361,7 +359,7 @@ export const editPlaylist = (data, token) =>
         try {
             const response = await axiosConfig({
                 url: '/api/playlist/edit',
-                method: 'put',
+                method: 'post',
                 data: {
                     id: data.id,
                     name: data.name,

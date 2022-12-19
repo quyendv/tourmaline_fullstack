@@ -4,7 +4,7 @@ import Contact from '../pages/Contact';
 import MainScreen from '../pages/MainScreen';
 import Upload from '../pages/Upload';
 import Library from '../pages/Library';
-import { routesConfigPrivate, routesConfigPublic, searchRoutesConfig } from './routesConfig';
+import { routesConfigPrivateDefault, routesConfigPublicDefault, searchRoutesConfig, routeConfigPrivateOnly } from './routesConfig';
 import AllPlaylist from '~/pages/AllPlaylist';
 import Search from '../pages/Search'
 import PlaylistDetails from '../pages/PlaylistDetails';
@@ -17,69 +17,75 @@ import SearchPlaylist from '../pages/Search/SearchPlaylist'
 import SearchUser from '../pages/Search/SearchUser'
 import User from '../pages/User'
 
-export const publicRoutes = [
+export const publicRoutesDefault = [
     {
-        path: routesConfigPublic.homeRoute,
+        path: routesConfigPublicDefault.homeRoute,
         page: MainScreen,
     },
+
+
     {
-        path: routesConfigPublic.libraryRoute,
-        page: Library,
-    },
-    {
-        path: routesConfigPublic.playlist__title__pid,
-        page: PlaylistDetails
-    },
-    {
-        path: routesConfigPublic.library__playlist,
-        page: AllPlaylist
-    },
-    {
-        path: routesConfigPublic.library__playlist__title__pid,
-        page: PlaylistDetails
-    },
-    {
-        path: routesConfigPublic.search,
-        page: Search
-    },
-    {
-        path: routesConfigPublic.favoritesRoute,
-        page: Favorite
-    },
-    {
-        path: routesConfigPublic.feedRoute,
-        page: Feed
-    },
-    {
-        path: routesConfigPublic.discover,
+        path: routesConfigPublicDefault.discover,
         page: HomePlaylist
     },
+
     {
-        path: routesConfigPublic.username,
-        page: User
-    },
-    {
-        path: routesConfigPublic.STAR,
+        path: routesConfigPublicDefault.STAR,
         page: MainScreen,
     },
 ];
-export const privateRoute = [
+export const privateRouteDefault = [
     {
-        path: routesConfigPrivate.contact,
+        path: routesConfigPrivateDefault.libraryRoute,
+        page: Library,
+    },
+    {
+        path: routesConfigPrivateDefault.playlist__title__pid,
+        page: PlaylistDetails
+    },
+    {
+        path: routesConfigPrivateDefault.library__playlist,
+        page: AllPlaylist
+    },
+    {
+        path: routesConfigPrivateDefault.library__playlist__title__pid,
+        page: PlaylistDetails
+    },
+    {
+        path: routesConfigPrivateDefault.favoritesRoute,
+        page: Favorite
+    },
+    {
+        path: routesConfigPrivateDefault.feedRoute,
+        page: Feed
+    },
+    {
+        path: routesConfigPrivateDefault.username,
+        page: User
+    },
+]
+export const privateRouteOnly = [
+    {
+        path: routeConfigPrivateOnly.contact,
         page: Contact,
         layout: OnlyBodyLayout,
     },
     {
-        path: routesConfigPrivate.profileRoute,
+        path: routeConfigPrivateOnly.profileRoute,
         page: Profile,
     },
     {
-        path: routesConfigPrivate.uploadRoute,
+        path: routeConfigPrivateOnly.uploadRoute,
         page: Upload,
     },
 ];
 
 export const searchRoutes = [
+       
+    {
+        path: searchRoutesConfig.search,
+        page: Search
+    },
     {
         path: searchRoutesConfig.searchAll,
         page: SearchAll

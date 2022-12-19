@@ -38,9 +38,8 @@ function Player({ setIsShowSidebar }) {
     const thumbRef = useRef();
     const [isLoading, setIsLoading] = useState(false);
     // TODOS
-
     useEffect(() => {
-        dispatch(actions.addToPrev(curSongId));
+        if(typeof(curSongId) != 'undefined' && curSongId != null) dispatch(actions.addToPrev(curSongId));
         console.log('test');
         const fetchSong = async () => {
             setIsLoading(true);
@@ -139,19 +138,19 @@ function Player({ setIsShowSidebar }) {
     };
 
     const handleNextSong = (e) => {
-        console.log(prevSong);
         dispatch(actions.setCurSongId(nextUpSong[0].id));
         dispatch(actions.play(true));
         dispatch(actions.removeFromNextUp(nextUpSong[0].id));
+        console.log(prevSong)
     };
     const handlePrevSong = (e) => {
         const index = prevSong.indexOf(curSongId);
-        console.log(index);
         dispatch(actions.removeFromPrev(curSongId));
         dispatch(actions.setCurSongId(prevSong[index + 1]));
     };
     return (
-        <div className="Player flex h-full items-center text-white">
+        
+       <div className={`Player flex h-full items-center text-white `}>
             {/* //Songdetai */}
             <div className="flex w-[30%] items-center gap-4 ">
                 <img
@@ -177,7 +176,7 @@ function Player({ setIsShowSidebar }) {
                     </span>
                     <span
                         onClick={handlePrevSong}
-                        className={`cursor-pointer ${prevSong.length <= 2 && ' text-gray-600'}`}
+                        className={`cursor-pointer ${prevSong.length <= 1 && ' text-gray-600 pointer-events-none'}`}
                     >
                         <MdSkipPrevious size={24} />
                     </span>
@@ -195,7 +194,7 @@ function Player({ setIsShowSidebar }) {
                     </span>
                     <span
                         onClick={handleNextSong}
-                        className={`cursor-pointer ${nextUpSong.length == 0 && 'pointer-events-none text-gray-600'}`}
+                        className={`cursor-pointer ${nextUpSong.length <= 0 && 'pointer-events-none text-gray-600'}`}
                     >
                         <MdSkipNext size={24} />
                     </span>

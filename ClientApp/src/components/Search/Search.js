@@ -6,7 +6,7 @@ import { SearchIcon } from '../Icons';
 import { icons } from '~/utils/icons';
 import useDebounce from '~/hooks/useDebounce';
 import * as apis from '../../services'
-import { routesConfigPublic, searchRoutesConfig } from '../../Routes/routesConfig';
+import {  searchRoutesConfig } from '../../Routes/routesConfig';
 import { useNavigate } from 'react-router-dom';
 import { createSearchParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -70,7 +70,7 @@ function Search() {
     const handleSearch = (e) => {
         if(e.keyCode == 13) {
             dispatch(actions.setSearchKeyword(searchValue))
-            const pathname = `${routesConfigPublic.search}${searchRoutesConfig.searchAll}`
+            const pathname = `${searchRoutesConfig.search}${searchRoutesConfig.searchAll}`
             navigate({
                 pathname,
                 search: createSearchParams({

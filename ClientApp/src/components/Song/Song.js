@@ -92,7 +92,6 @@ function Song({ songData, inPlaylist }) {
             title: 'Delete',
         },
     ]);
-    console.log(songMenu);
     const dispatch = useDispatch();
     const { curSongId, isPlaying, curPlaylist } = useSelector((state) => state.music);
     const { token } = useSelector((state) => state.auth);
@@ -152,7 +151,6 @@ function Song({ songData, inPlaylist }) {
             if (!songMenu[3].children.data.some((item) => item.id === obj.id)) {
                 const newArr = songMenu;
                 newArr[3].children.data.push(obj);
-                console.log(newArr);
                 setSongMenu(newArr);
             }
             if (songMenu[5].setInfo != setInfo) {
