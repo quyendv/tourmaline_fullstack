@@ -7,6 +7,7 @@ import moment from 'moment';
 import { DefaultMenu as MediaMenu } from '../Popper';
 import { icons } from '~/utils/icons';
 import { toast } from 'react-toastify';
+import LazyLoad from 'react-lazy-load';
 
 const {
     BsFillPlayFill,
@@ -105,11 +106,13 @@ function MediaItem({ songData }) {
                 >
                     <BsFillPlayFill size={26} />
                 </span>
-                <img
-                    className="h-[60px] w-[60px] object-cover"
-                    src={`${BASE_URL}/api/song/getCover?id=${songData?.id}`}
-                    alt="media-cover"
-                />
+                <LazyLoad>
+                    <img
+                        className="h-[60px] w-[60px] object-cover"
+                        src={`${BASE_URL}/api/song/getCover?id=${songData?.id}`}
+                        alt="media-cover"
+                    />
+                </LazyLoad>
             </div>
             <div className="flex flex-1 flex-col text-left">
                 <span className="text-sm font-medium">{songData?.name}</span>
@@ -117,9 +120,9 @@ function MediaItem({ songData }) {
                 <span className="text-xs text-[#ffffff80]">{moment(songData?.uploadTime).fromNow()}</span>
             </div>
             {/* Actions */}
-            <div className="absolute top-1/2 right-1 -translate-y-1/2 group-hover:flex gap-2">
+            <div className="absolute top-1/2 right-1 -translate-y-1/2 gap-2 group-hover:flex">
                 <span
-                    className="text-[#ffffff80] flex items-center justify-center rounded-full p-1.5 text-xl hover:bg-[#ffffff1a]"
+                    className="flex items-center justify-center rounded-full p-1.5 text-xl text-[#ffffff80] hover:bg-[#ffffff1a]"
                     onClick={handleAddFavorite}
                 >
                     {!favorite ? (
@@ -128,9 +131,9 @@ function MediaItem({ songData }) {
                         <AiTwotoneHeart className="text-[var(--favorite-bg)] [filter:drop-shadow(0_0_10px_currentColor)]" />
                     )}
                 </span>
-                <MediaMenu menuList={songMenu} songId={songData?.id} appendBody placement='right-start'>
+                <MediaMenu menuList={songMenu} songId={songData?.id} appendBody placement="right-start">
                     <span
-                        className="text-[#ffffff80] hidden group-hover:flex items-center justify-center rounded-full p-1.5 text-xl hover:bg-[#ffffff1a]"
+                        className="hidden items-center justify-center rounded-full p-1.5 text-xl text-[#ffffff80] hover:bg-[#ffffff1a] group-hover:flex"
                         onClick={(e) => {
                             e.stopPropagation();
                         }}

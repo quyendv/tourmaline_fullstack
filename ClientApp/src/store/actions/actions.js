@@ -45,3 +45,25 @@ export const setIsOpenEditPlaylistModal = (setIsOpenEditPlaylistModal) => ({
     type: actionTypes.SET_IS_OPEN_EDIT_PLAYLIST_MODAL,
     setIsOpenEditPlaylistModal
 })
+export const setInfo = (setInfo) => ({
+    type: actionTypes.SET_INFO,
+    setInfo
+})
+
+export const setSongAvatar = (setSongAvatar) => ({
+    type: actionTypes.SET_SONG_AVATAR,
+    setSongAvatar
+})
+export const setLoadingLogin = (setIsLoadingLogin) => ({
+    type: actionTypes.SET_IS_LOADING_LOGIN,
+    setIsLoadingLogin
+})
+
+export const SetLoadingRegister = (setIsLoadingRegister) => ({
+    type: actionTypes.SET_IS_LOADING_REGISTER,
+    setIsLoadingRegister
+})
+export const songAvatar = (songAvatar) => ({
+    type: actionTypes.SONG_AVATAR,
+    songAvatar
+})

@@ -28,6 +28,19 @@ const initState = {
     setIsOpenEditPlaylistModal: function () {
         return 0;
     },
+    setInfo: function() {
+        return 0;
+    },
+    setSongAvatar: function() {
+        return 0;
+    },
+    setIsLoadingLogin: function() {
+        return 0;
+    },
+    setIsLoadingRegister: function() {
+        return 0;
+    },
+    songAvatar: '',
     keyword: null
 };
 
@@ -85,6 +98,31 @@ const actionsReducer = (state = initState, action) => {
             return {
                 ...state,
                 setIsOpenEditPlaylistModal: action.setIsOpenEditPlaylistModal
+            }
+        case actionTypes.SET_INFO:
+            return {
+                ...state,
+                setInfo: action.setInfo
+            }
+        case actionTypes.SET_SONG_AVATAR:
+            return {
+                ...state,
+                setSongAvatar: action.setSongAvatar
+            }
+        case actionTypes.SET_IS_LOADING_LOGIN:
+            return {
+                ...state,
+                setIsLoadingLogin: action.setIsLoadingLogin
+            }
+        case actionTypes.SET_IS_LOADING_REGISTER:
+            return {
+                ...state,
+                setIsLoadingRegister: action.setIsLoadingRegister
+            }
+        case actionTypes.SONG_AVATAR:
+            return {
+                ...state,
+                songAvatar: action.songAvatar
             }
         default:
             return state;

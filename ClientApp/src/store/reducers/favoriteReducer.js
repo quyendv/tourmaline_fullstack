@@ -6,8 +6,12 @@ const initState = {
 
 const favoriteReducer = (state = initState, action) => {
     switch (action.type) {
+        case actionTypes.FETCH_FAVORITE:
+            return {
+                ...state,
+                favoriteSongs: action.data,
+            };
         case actionTypes.SET_FAVORITE:
-            console.log('in');
             return {
                 ...state,
                 favoriteSongs: [...state.favoriteSongs, action.id],

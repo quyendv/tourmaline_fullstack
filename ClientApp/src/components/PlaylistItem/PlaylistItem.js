@@ -90,7 +90,7 @@ function PlaylistItem({ playlistData, className }) {
                 }
             >
                 <div className="absolute inset-0 z-20 hidden cursor-pointer items-center justify-center gap-3 rounded-md bg-overlay-30  group-hover:flex ">
-                    <span
+                    {/* <span
                         className="grid h-6 w-6 place-content-center rounded-full bg-[#00000033] p-0.5"
                         onClick={handleDeletePlaylist}
                     >
@@ -109,7 +109,7 @@ function PlaylistItem({ playlistData, className }) {
                         >
                             <BsThreeDots />
                         </span>
-                    </PlaylistMenu>
+                    </PlaylistMenu> */}
                 </div>
                 <img
                     className="w-full h-auto rounded-md object-cover transition-all duration-500 group-hover:scale-125"

@@ -8,6 +8,7 @@ import Song from '../../components/Song';
 import MediaItem from '../../components/MediaItem';
 import UserItem from '../../components/UserItem';
 import { FaCaretRight } from 'react-icons/fa';
+import LazyLoad from 'react-lazy-load';
 
 function MainScreen() {
     const navigate = useNavigate();
@@ -18,6 +19,7 @@ function MainScreen() {
     const [relatedArtists, setRelatedArtists] = useState([]);
     const [top50, setTop50] = useState([]);
     const [suggestion, setSuggestion] = useState([]);
+    const { username } = useSelector((state) => state.user);
     const handleClickPlaylist = () => {
         navigate('/playlist/Pop/1');
     };
@@ -72,12 +74,16 @@ function MainScreen() {
         const fetchAllPlaylist = async () => {
             const response = await apis.getAllPlaylist(token);
             if (response.status === 200) {
-                // console.log(response)
                 dispatch(actions.setCurPlaylist(response.data.playlists));
             }
         };
 
         fetchAllPlaylist();
+        const fetchFavoriteSongs = async () => {
+            const response = await apis.getFavorite(token);
+            dispatch(actions.fetchFavorite(response.data.songs));
+        };
+        fetchFavoriteSongs();
     }, []);
     return (
         <div className="h-[calc(100vh-var(--header-height))] w-full overflow-y-auto px-14 pt-16 pb-24 text-white">
@@ -93,13 +99,15 @@ function MainScreen() {
                             <FaCaretRight className="ml-1" />
                         </span>
                     </span>
-                    <div className="max-h-64 overflow-y-auto">
-                        {suggestion
-                            .filter((item, index) => index <= 3)
-                            .map((item, index) => (
-                                <Song key={index} songData={item} />
-                            ))}
-                    </div>
+                    <LazyLoad>
+                        <div className="max-h-64 overflow-y-auto">
+                            {suggestion
+                                .filter((item, index) => index <= 3)
+                                .map((item, index) => (
+                                    <Song key={index} songData={item} />
+                                ))}
+                        </div>
+                    </LazyLoad>
                 </div>
             )}
             {top50.length > 0 && (
@@ -114,11 +122,13 @@ function MainScreen() {
                             <FaCaretRight className="ml-1" />
                         </span>
                     </span>
-                    <div className="max-h-64 overflow-y-auto">
-                        {top50.map((item, index) => (
-                            <Song key={index} songData={item} />
-                        ))}
-                    </div>
+                    <LazyLoad>
+                        <div className="max-h-64 overflow-y-auto">
+                            {top50.map((item, index) => (
+                                <Song key={index} songData={item} />
+                            ))}
+                        </div>
+                    </LazyLoad>
                 </div>
             )}
 
@@ -126,40 +136,42 @@ function MainScreen() {
             {recentlyUploaded.length > 0 && (
                 <div className="mt-12">
                     <h3 className="mb-5 text-2xl font-bold">News</h3>
-                    <div className="grid h-64 grid-cols-2 gap-3 overflow-y-auto lg:grid-cols-3">
-                        {recentlyUploaded.map((item, index) => (
-                            <MediaItem key={index} songData={item} />
-                        ))}
-                    </div>
+                    <LazyLoad>
+                        <div className="grid h-64 grid-cols-2 gap-3 overflow-y-auto lg:grid-cols-3">
+                            {recentlyUploaded.map((item, index) => (
+                                <MediaItem key={index} songData={item} />
+                            ))}
+                        </div>
+                    </LazyLoad>
                 </div>
             )}
             {/* Recently */}
             {recentlyPlayed.length > 0 && (
                 <div className="mt-12">
                     <h3 className="mb-5 text-2xl font-bold">Recently Played</h3>
-                    <div className="max-h-64 overflow-y-auto">
-                        {recentlyPlayed.map((item, index) => (
-                            <Song key={index} songData={item} />
-                        ))}
-                    </div>
+                    <LazyLoad>
+                        <div className="max-h-64 overflow-y-auto">
+                            {recentlyPlayed.map((item, index) => (
+                                <Song key={index} songData={item} />
+                            ))}
+                        </div>
+                    </LazyLoad>
                 </div>
             )}
             {/* Artists you should know */}
             {relatedArtists.length > 0 && (
                 <div className="mt-12">
                     <h3 className="mb-5 text-2xl font-bold">Artists you should know</h3>
-                    <div className="mb-7 grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-7">
-                        {/* {relatedArtists
-                            .filter((item, index) => index <= 4)
-                            .map((item, index) => (
-                                <UserItem key={index} userData={item} className="px-3" />
-                            ))} */}
-                        <UserItem userData={{ username: 'sontung-mtp', name: 'Sơn Tùng MTP' }} />
-                        <UserItem userData={{ username: 'sontung-mtp', name: 'Sơn Tùng MTP' }} />
-                        <UserItem userData={{ username: 'sontung-mtp', name: 'Sơn Tùng MTP' }} />
-                        <UserItem userData={{ username: 'sontung-mtp', name: 'Sơn Tùng MTP' }} />
-                        <UserItem userData={{ username: 'sontung-mtp', name: 'Sơn Tùng MTP' }} />
-                    </div>
+                    <LazyLoad>
+                        <div className="mb-7 grid grid-cols-3 gap-7 md:grid-cols-4 lg:grid-cols-5">
+                            {relatedArtists
+                                .filter((item, index) => index <= 4)
+                                .filter((item) => item.username != username)
+                                .map((item, index) => (
+                                    <UserItem key={index} userData={item} className="px-3" />
+                                ))}
+                        </div>
+                    </LazyLoad>
                 </div>
             )}
         </div>

@@ -5,6 +5,7 @@ import { useEffect, useState, useRef } from 'react';
 import * as apis from '../../../services';
 import { images } from '~/assets/images';
 import { AiOutlineUpload } from 'react-icons/ai';
+import {Loading} from '../../Load'
 
 const { AiOutlineClose } = icons;
 function EditSongModal() {
@@ -13,8 +14,9 @@ function EditSongModal() {
     const { editSongId } = useSelector((state) => state.music);
     const { token } = useSelector((state) => state.auth);
     const coverFile = useRef();
-    const [coverPreview, setCoverPreview] = useState(images.defaultCoverSong);
-
+    const [isLoading, setIsloading] = useState(false)
+    const { setInfo, setSongAvatar, songAvatar } = useSelector((state) => state.actions);
+    const [coverPreview, setCoverPreview] = useState(songAvatar)
     useEffect(() => {
         const fetchSongInfo = async () => {
             const response = await apis.getInfoSong(editSongId);
@@ -27,18 +29,26 @@ function EditSongModal() {
     }, [editSongId]);
 
     const handleEdit = async () => {
-        console.log(songInfo);
+
         songInfo.tags.filter((item) => item != '');
         const finalPayload = {
             id: editSongId,
             name: songInfo.name,
             description: songInfo.description,
             cover: coverFile.current,
+
             tags: songInfo.tags,
         };
-        console.log(finalPayload);
         const response = await apis.editSong(finalPayload, token);
-        console.log(response);
+
+        if (coverFile.current) {
+            const blob = new Blob([coverFile.current], { type: coverFile.current?.type });
+            const url = URL.createObjectURL(blob);
+            setSongAvatar(url);
+            console.log('in')
+        }
+        setInfo(songInfo);
+        setIsOpenEditSongModal((prev) => !prev);
     };
     const handleChangeCover = (e) => {
         coverFile.current = e.target.files[0];
@@ -106,16 +116,17 @@ function EditSongModal() {
                 </div>
                 {/* Confirm */}
                 <div className="mt-4 flex items-center justify-end gap-3">
-                    <div className="cursor-pointer rounded-full bg-[#3c68ef] px-4 py-1.5" onClick={handleEdit}>
-                        Save
+                    <div className={`cursor-pointer rounded-full bg-[#3c68ef] px-4 py-1.5 ${isLoading && 'pointer-events-none opacity-30'}`} onClick={handleEdit}>
+                        {!isLoading ? 'Save' : <Loading />}
                     </div>
                     <div
-                        className="cursor-pointer rounded-full bg-[#375174] px-4 py-1.5"
+                        className={`cursor-pointer rounded-full bg-[#375174] px-4 py-1.5 ${isLoading && 'pointer-events-none opacity-30'}`}
                         onClick={() => setIsOpenEditSongModal(false)}
                     >
-                        Cancel
+                        {!isLoading ? 'Cancel' : <Loading />}
                     </div>
                 </div>
+
             </div>
         </ModalWrapper>
     );

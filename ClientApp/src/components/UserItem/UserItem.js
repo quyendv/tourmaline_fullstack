@@ -43,7 +43,7 @@ function UserItem({ userData, className }) {
                     className="h-auto w-full cursor-pointer rounded-full object-cover"
                     onClick={() => navigate(`/user/${userData.username}`)}
                     // src={userAvatar}
-                    src="https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_webp/avatars/8/a/a/b/8aab7a0386dd9c24b90adcc5ef5a7814.jpg"
+                    src={userAvatar}
                     alt="avatar"
                 />
             </div>
@@ -58,7 +58,7 @@ function UserItem({ userData, className }) {
                 className="flex items-center gap-1 rounded-full bg-[var(--follow-btn-bg)] px-6 py-1.5"
             >
                 <AiOutlineUserAdd />
-                <button>{isFollow ? 'Follow' : 'Unfollow'}</button>
+                <button>{!isFollow ? 'Follow' : 'Unfollow'}</button>
             </div>
         </div>
     );

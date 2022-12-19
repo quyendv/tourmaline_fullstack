@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import classNames from 'classnames/bind';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
@@ -8,7 +8,7 @@ import * as yup from 'yup';
 import { routesConfigPublic } from '../../Routes/routesConfig';
 import * as actions from '../../store/actions';
 import styles from './login.module.scss';
-
+import {Loading} from '../../components/Load'
 const cx = classNames.bind(styles);
 const yupSchema = yup
     .object({
@@ -26,7 +26,7 @@ function Login() {
     const dispatch = useDispatch();
     const { isLoggedIn, msg } = useSelector((state) => state.auth);
     const navigate = useNavigate();
-
+    const [isLoading, setIsLoading] = useState(false)
     // Validate resolver
     const {
         register,
@@ -37,6 +37,9 @@ function Login() {
     } = useForm({
         resolver: yupResolver(yupSchema),
     });
+    useEffect(() => {
+        dispatch(actions.setLoadingLogin(setIsLoading))
+    }, [])
 
     const handleLogin = (data) => {
         // e.preventDefault(); // if have errors auto preventDefault
@@ -44,7 +47,7 @@ function Login() {
 
         dispatch(actions.logout()); // đoạn này t tưởng luôn logout trước khi vào đăng nhập rồi?
         // console.log(data); // data form
-        dispatch(actions.login(data)); // or getValue("root")
+        dispatch(actions.login(data, setIsLoading)); // or getValue("root")
         // console.log([isLoggedIn, msg]);
         dispatch(actions.setUsername(data.username)); // setUsername để làm gì đây, t k thấy dispatch nó như nào??
 
@@ -88,7 +91,7 @@ function Login() {
                     </div>
                     {/* Submit btn */}
                     <button type="submit" className={cx('login-btn')}>
-                        Login
+                      { !isLoading ? 'Login' : <Loading/>}
                     </button>
                     {/* Link register */}
                     <div className="mt-6 py-2 tracking-wide text-white">

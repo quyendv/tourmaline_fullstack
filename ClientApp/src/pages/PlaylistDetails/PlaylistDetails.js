@@ -34,6 +34,7 @@ const playlistMenu = [
 ];
 
 function Playlist() {
+
     const { token } = useSelector((state) => state.auth);
     const { pid } = useParams();
     const [songs, setSongs] = useState([]);
