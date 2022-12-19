@@ -59,7 +59,7 @@ public class UserController : ControllerBase
         if (!System.IO.File.Exists(filePath))
         {
             // Returns default file
-            filePath = "Assets/defaultAvatar.png";
+            filePath = $"{homeDir}/storage/default/avatar.png";
         }
 
         var file = new FileStream(filePath, FileMode.Open, FileAccess.Read,
