@@ -76,16 +76,3 @@ export const setIsOpenLogginModal = (setIsOpenLogginModal) => ({
     type: actionTypes.SET_IS_OPEN_LOGIN_MODAL,
     setIsOpenLogginModal
 })
-
-export const playlistAvatar = (playlistAvatar) => ({
-    type: actionTypes.PLAYLIST_AVATAR,
-    playlistAvatar
-})
-export const playlistInfo = (playlistInfo) => ({
-    type: actionTypes.PLAYLIST_INFO,
-    playlistInfo
-})
-export const setPlaylistAvatar = (setPlaylistAvatar) => ({
-    type: actionTypes.SET_PLAYLIST_AVATAR,
-    setPlaylistAvatar
-})
