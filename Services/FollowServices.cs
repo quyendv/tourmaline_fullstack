@@ -37,7 +37,7 @@ public class FollowServices
 
     public async Task<List<User>> GetFollowers(string username)
     {
-        var result = (await _database.Call($"SELECT username FROM follow WHERE following='{username}'")).Select(e => e["following"]);
+        var result = (await _database.Call($"SELECT username FROM follow WHERE following='{username}'")).Select(e => e["username"]);
         var users = new List<User>();
         foreach (var user in result)
         {
