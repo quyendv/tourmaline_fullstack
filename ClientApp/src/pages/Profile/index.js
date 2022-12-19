@@ -126,7 +126,11 @@ function Profile() {
     };
 
     return (
-        <form method="" action="" className={cx('profile')}>
+        <form
+            method=""
+            action=""
+            className={cx('profile', 'container mx-auto grid min-h-[65%] w-full grid-cols-12 gap-4 p-4')}
+        >
             {/* Avatar + About */}
             <div className={cx('profile-item1')}>
                 <div className={cx('profile__avatar', 'mb-4')}>
