@@ -164,6 +164,7 @@ CREATE TABLE `songtags` (
   `tag` varchar(50) NOT NULL,
   PRIMARY KEY (`id`,`tag`),
   KEY `songtags_tag_fk` (`tag`),
+  FULLTEXT KEY `Idx_Songtags_Tag` (`tag`),
   CONSTRAINT `songtags_id_fk` FOREIGN KEY (`id`) REFERENCES `song` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `songtags_tag_fk` FOREIGN KEY (`tag`) REFERENCES `tags` (`tag`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -290,14 +291,24 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `FindSongs`(IN keyword VARCHAR(100))
 BEGIN
-    DECLARE keywordLowered VARCHAR(100);
-    SET keywordLowered = lower(keyword);
+   DECLARE keywordLowered VARCHAR(100);
+   SET keywordLowered = lower(keyword);
 
-	SELECT 
-		id, uploadTime, uploader, name, description, 
-		MATCH (name, description, uploader) AGAINST (keywordLowered IN BOOLEAN MODE) as score FROM song
-	WHERE MATCH (name, description, uploader) AGAINST (keywordLowered IN BOOLEAN MODE) >= 0.03
-    ORDER BY score DESC;
+   # Use average because group concat erase the score to 0 for some reason, where the score stays the same
+   SELECT id, uploadTime, uploader, name, description, AVG(score) as score, SUM(scoreForTagSearch) as scoreTags,
+          GROUP_CONCAT(tag SEPARATOR ';') as tags
+   FROM
+		(SELECT 
+			song.id, song.uploadTime, song.uploader, song.name, song.description,
+			songtags.tag,
+			MATCH (song.name, song.description, song.uploader) AGAINST (keywordLowered IN BOOLEAN MODE) as score,
+			MATCH (songtags.tag) AGAINST (keywordLowered IN BOOLEAN MODE) as scoreForTagSearch
+		FROM song
+		INNER JOIN songtags ON song.id = songtags.id)
+        AS rawSearchResult
+	GROUP BY id
+    HAVING (score >= 0.03) OR (scoreTags >= 0.03)
+    ORDER BY (score * 0.8 + scoreTags * 0.2) DESC;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
