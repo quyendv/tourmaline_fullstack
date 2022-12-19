@@ -42,6 +42,8 @@ function Player({ setIsShowSidebar }) {
         if(typeof(curSongId) != 'undefined' && curSongId != null) dispatch(actions.addToPrev(curSongId));
         console.log('test');
         const fetchSong = async () => {
+            audio.current.pause();
+
             setIsLoading(true);
             try {
                 const response = await getSong(curSongId, token);
@@ -72,7 +74,6 @@ function Player({ setIsShowSidebar }) {
     var intervalId;
     useEffect(() => {
         intervalId && clearInterval(intervalId);
-        audio.current.pause();
 
         if (isPlaying && thumbRef.current) {
             // audio.current.load();
