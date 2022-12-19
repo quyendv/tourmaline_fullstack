@@ -34,7 +34,10 @@ function PlaylistItem({ playlistData, className }) {
     const dispatch = useDispatch();
     const [playlistAvatarSrc, setPlaylistAvatarSrc] = useState('');
     const path = `${playlistData.name.replaceAll(' ', '-')}/${playlistData.id}`;
-    const link = (location.pathname === '/library' ? '/playlist/' : '') + path;
+    let link = (location.pathname === '/library' ? '/playlist/' : '') + path;
+    if (location.pathname.startsWith('/search')) {
+        link = '/playlist/' + path
+    }
     const { token } = useSelector((state) => state.auth);
     const { createPlaylist, createAllPlaylist, setIsOpenDeletePlaylistModal } = useSelector((state) => state.actions);
 

@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { BASE_URL } from '../../utils/constant';
 import { images } from '~/assets/images';
+import * as apis from '../../services'
 
 const cx = classNames.bind(styles);
 
@@ -21,6 +22,19 @@ function Profile() {
     const { token } = useSelector((state) => state.auth);
     const { username } = useSelector((state) => state.user);
     const avatarFile = useRef();
+    useEffect(() => {
+        let url;
+        const fetchUserAvtar = async() => {
+            const response = await apis.getAvatar(username)
+            const blob = new Blob([response.data], {type: response.data.type})
+            url = URL.createObjectURL(blob)
+            setAvatarLink(url)
+        }
+        fetchUserAvtar()
+        return () => {
+            URL.revokeObjectURL(url)
+        }
+    }, [])
 
     useEffect(() => {
         const getUserInfo = async () => {
@@ -126,15 +140,11 @@ function Profile() {
     };
 
     return (
-        <form
-            method=""
-            action=""
-            className={cx('profile', 'container mx-auto grid min-h-[65%] w-full grid-cols-12 gap-4 p-4')}
-        >
+        <form method="" action="" className={cx('profile')}>
             {/* Avatar + About */}
             <div className={cx('profile-item1')}>
                 <div className={cx('profile__avatar', 'mb-4')}>
-                    <img src={avatarLink} alt="" className="mx-auto h-[90px] w-[90px] rounded-full object-cover [box-shadow:0_0_1px_#fff]" />
+                    <img src={avatarLink} alt="" className="mx-auto h-[90px] w-[90px] rounded-full object-cover" />
                 </div>
 
                 <div className={cx('profile__name', 'flex flex-col items-center justify-center')}>

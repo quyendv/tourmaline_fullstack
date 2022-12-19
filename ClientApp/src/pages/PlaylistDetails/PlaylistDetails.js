@@ -5,7 +5,8 @@ import Song from '../../components/Song';
 import { icons } from '../../utils/icons';
 import { useEffect, useState } from 'react';
 import * as apis from '../../services';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import * as actions from '../../store/actions'
 
 const {
     BsThreeDots,
@@ -24,6 +25,7 @@ function Playlist() {
     const { pid } = useParams();
     const [playlistInfo, setPlaylistInfo] = useState({});
     const [playlistAvatar, setPlaylistAvatar] = useState('');
+    const dispatch = useDispatch()
 
     const [playlistMenu, setPlaylistMenu] = useState([
          {
@@ -58,6 +60,9 @@ function Playlist() {
     ]);
     const { token } = useSelector((state) => state.auth);
     const [songs, setSongs] = useState([]);
+    useEffect(() => {
+        dispatch(actions.setPlaylistSong(setSongs))
+    }, [])
     useEffect(() => {
         if(playlistMenu[1].playlistInfo != playlistInfo ) {
             const newArr = playlistMenu
@@ -147,7 +152,7 @@ function Playlist() {
                 {/* ...render playlist */}
                 <div className="flex flex-col">
                     {songs.map((item, index) => (
-                        <Song key={index} songData={item} inPlaylist />
+                        <Song key={index} songData={item} inPlaylist pid={pid} />
                     ))}
                 </div>
             </div>

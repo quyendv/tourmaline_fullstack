@@ -14,7 +14,6 @@ import LazyLoad from 'react-lazy-load';
 
 const {
     BsLink45Deg,
-    BsFillPlayFill,
     AiOutlineDownload,
     FaRegComment,
     BsMusicNoteBeamed,
@@ -31,10 +30,14 @@ const {
 } = icons;
 // TODO: Song list sửa sau
 
-function Song({ songData, inPlaylist }) {
+function Song({ songData, inPlaylist, pid }) {
+    if(typeof(pid) == 'undefined') {
+        pid = 0
+    }
     const [songMenu, setSongMenu] = useState([
         {
             id: songData.id,
+            pid: pid,
             type: 'addToNext',
             icon: <RiPlayListAddLine />,
             title: 'Add to Next up',
@@ -42,6 +45,7 @@ function Song({ songData, inPlaylist }) {
         },
         {
             id: songData.id,
+            pid: pid,
             type: '',
             icon: <FaRegComment />,
             title: 'Comments',
@@ -49,6 +53,7 @@ function Song({ songData, inPlaylist }) {
         },
         {
             id: songData.id,
+            pid: pid ,
             type: '',
             icon: <AiOutlineDownload />,
             title: 'Download',
@@ -56,6 +61,7 @@ function Song({ songData, inPlaylist }) {
         },
         {
             id: songData.id,
+            pid: pid ,
             type: 'addtoplaylist',
 
             icon: <AiOutlinePlusCircle />,
@@ -70,13 +76,16 @@ function Song({ songData, inPlaylist }) {
             },
         },
         {
+
             id: songData.id,
+            pid: pid ,
             icon: <RiShareForwardLine />,
             title: 'Share',
             to: '',
         },
         {
             id: songData.id,
+            pid: pid ,
             type: 'editSong',
             icon: <AiOutlineEdit />,
             title: 'Edit',
@@ -87,6 +96,7 @@ function Song({ songData, inPlaylist }) {
         },
         {
             id: songData.id,
+            pid: pid ,
             type: 'deleteSong',
             to: '',
             icon: <AiFillDelete />,
@@ -124,18 +134,11 @@ function Song({ songData, inPlaylist }) {
     }, []);
     useEffect(() => {
         let indexOfMenu = -1;
-
-        console.log(Array.isArray(songMenu) + ' line: 127');
-
-        Array.isArray(songMenu) &&
-            songMenu.forEach((item, index) => {
-                if (item.type == 'editSong') {
-                    indexOfMenu = index;
-                }
-            });
-        const arr = songMenu;
-        console.log(arr);
-        console.log(songMenu + 'line: 134');
+        songMenu.forEach((item, index) => {
+            if (item.type == 'editSong') {
+                indexOfMenu = index;
+            }
+        });
         if (indexOfMenu != -1) {
             if (songMenu[indexOfMenu].songAvatar != songAvatar) {
                 const newArr = songMenu;
@@ -146,31 +149,33 @@ function Song({ songData, inPlaylist }) {
                 const newArr = songMenu;
                 newArr[indexOfMenu].setInfo = setInfo;
                 setSongMenu(newArr);
-                console.log(typeof songMenu + 'line 144');
-                console.log(newArr[indexOfMenu].setInfo + 'line 145');
             }
             if (songMenu[indexOfMenu].setSongAvatar != setSongAvatar) {
                 const newArr = songMenu;
                 newArr[indexOfMenu].setSongAvatar = setSongAvatar;
                 setSongMenu(newArr);
-                console.log(typeof songMenu);
             }
         }
-    }, [songMenu]);
+    }, [songAvatar]);
 
     useEffect(() => {
         inPlaylist &&
             songMenu[songMenu.length - 1].type != 'removeFromPlaylist' &&
             setSongMenu((prev) =>
                 prev.push({
+                    id: songData.id,
+                    pid: pid,
                     type: 'removeFromPlaylist',
                     to: '',
                     icon: <IoMdRemoveCircleOutline />,
                     title: 'Remove from playlist',
                 }),
             );
-        console.log(typeof songMenu);
-        inPlaylist && songMenu.filter((item) => item.type != 'removeFromPlaylist');
+        if (!inPlaylist) {
+            const newArr = songMenu;
+            newArr.filter((item) => item.type != 'removeFromPlaylist');
+            setSongMenu(newArr)
+        }
         curPlaylist.forEach((item) => {
             const obj = {
                 id: item.id,
@@ -180,15 +185,13 @@ function Song({ songData, inPlaylist }) {
                 title: item.name,
             };
             let indexOfMenu = -1;
-
-            console.log(songMenu + ' line: 180');
             songMenu.forEach((item, index) => {
                 if (item.type == 'addtoplaylist') {
                     indexOfMenu = index;
                 }
             });
             if (indexOfMenu != -1) {
-                console.log(indexOfMenu + 'line: 187');
+                console.log(indexOfMenu);
                 if (!songMenu[indexOfMenu].children.data.some((item) => item.id === obj.id)) {
                     const newArr = songMenu;
                     newArr[indexOfMenu].children.data.push(obj);
@@ -224,10 +227,9 @@ function Song({ songData, inPlaylist }) {
             theme: 'dark',
         });
     };
-
     return (
         <div
-            className="group -mx-2 flex w-full cursor-pointer items-center border-b border-solid border-[#ffffff0d] p-[10px] text-[#ffffff80] hover:bg-[#ffffff1a] [&>*]:px-2"
+            className="Song group -mx-2 flex w-full cursor-pointer items-center border-b border-solid border-[#ffffff0d] p-[10px] text-[#ffffff80] [&>*]:px-2"
             onClick={() => {
                 songData.id !== curSongId && dispatch(actions.setCurSongId(songData.id));
                 dispatch(actions.play(true));
@@ -238,13 +240,10 @@ function Song({ songData, inPlaylist }) {
                 <div>
                     <BsMusicNoteBeamed />
                 </div>
-                <div className="relative">
+                <div>
                     <LazyLoad height={40} width={40} threshold={0.5} place>
                         <img className="h-10 w-10 object-cover" src={songAvatar} alt="song-cover" />
                     </LazyLoad>
-                    <span className="absolute inset-0 hidden place-content-center bg-overlay-30 group-hover:grid">
-                        <BsFillPlayFill size={20} />
-                    </span>
                 </div>
                 <div className="flex flex-col gap-[3px]">
                     <span className="text-sm text-white">{info.name}</span>

@@ -311,14 +311,13 @@ export const removeFromPlaylist = (songId, playlistId, token) =>
     new Promise(async (resolve, reject) => {
         try {
             const response = await axiosConfig({
-                url: '/api/playlist/add',
+                url: '/api/playlist/remove',
                 method: 'delete',
                 params: {
                     playlistId,
+                    songId
                 },
-                data: {
-                    songId,
-                },
+
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

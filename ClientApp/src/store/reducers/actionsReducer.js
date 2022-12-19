@@ -28,23 +28,39 @@ const initState = {
     setIsOpenEditPlaylistModal: function () {
         return 0;
     },
-    setInfo: function() {
+    setInfo: function () {
         return 0;
     },
-    setSongAvatar: function() {
+    setSongAvatar: function () {
         return 0;
     },
-    setIsLoadingLogin: function() {
+    setIsLoadingLogin: function () {
         return 0;
     },
-    setIsLoadingRegister: function() {
+    setIsLoadingRegister: function () {
         return 0;
     },
-    setIsOpenLogginModal: function() {
+    setIsOpenLogginModal: function () {
         return 0;
     },
+    setPlaylistSong: function () {
+        return 0;
+    },
+    searchResultSong: [],
+    searchResultUser: [],
+    searchResultPlaylist: [],
     songAvatar: '',
-    keyword: null
+    keyword: null,
+    searchResult: [],
+    setSongs: function () {
+        return 0;
+    },
+    setPlaylists: function () {
+        return 0;
+    },
+    setUsers: function () {
+        return 0;
+    },
 };
 
 const actionsReducer = (state = initState, action) => {
@@ -90,49 +106,88 @@ const actionsReducer = (state = initState, action) => {
         case actionTypes.SET_KEYWORD:
             return {
                 ...state,
-                keyword: action.keyword
-            }
+                keyword: action.keyword,
+            };
         case actionTypes.SET_IS_OPEN_EDIT_SONG_MODAL:
             return {
                 ...state,
-                setIsOpenEditSongModal: action.setIsOpenEditSongModal
-            }
+                setIsOpenEditSongModal: action.setIsOpenEditSongModal,
+            };
         case actionTypes.SET_IS_OPEN_EDIT_PLAYLIST_MODAL:
             return {
                 ...state,
-                setIsOpenEditPlaylistModal: action.setIsOpenEditPlaylistModal
-            }
+                setIsOpenEditPlaylistModal: action.setIsOpenEditPlaylistModal,
+            };
         case actionTypes.SET_INFO:
             return {
                 ...state,
-                setInfo: action.setInfo
-            }
+                setInfo: action.setInfo,
+            };
         case actionTypes.SET_SONG_AVATAR:
             return {
                 ...state,
-                setSongAvatar: action.setSongAvatar
-            }
+                setSongAvatar: action.setSongAvatar,
+            };
         case actionTypes.SET_IS_LOADING_LOGIN:
             return {
                 ...state,
-                setIsLoadingLogin: action.setIsLoadingLogin
-            }
+                setIsLoadingLogin: action.setIsLoadingLogin,
+            };
         case actionTypes.SET_IS_LOADING_REGISTER:
             return {
                 ...state,
-                setIsLoadingRegister: action.setIsLoadingRegister
-            }
+                setIsLoadingRegister: action.setIsLoadingRegister,
+            };
         case actionTypes.SONG_AVATAR:
             return {
                 ...state,
-                songAvatar: action.songAvatar
-            }
+                songAvatar: action.songAvatar,
+            };
         case actionTypes.SET_IS_OPEN_LOGIN_MODAL:
             return {
                 ...state,
-                setIsOpenLogginModal: action.setIsOpenLogginModal
-            }
-        
+                setIsOpenLogginModal: action.setIsOpenLogginModal,
+            };
+        case actionTypes.SET_PLAYLIST_SONG:
+            return {
+                ...state,
+                setPlaylistSong: action.setPlaylistSong,
+            };
+        case actionTypes.SET_SEARCH_RESULT:
+            return {
+                ...state,
+                searchResult: action.searchResult,
+            };
+        case actionTypes.SET_SEARCH_RESULT_SONG:
+            return {
+                ...state,
+                searchResultSong: action.data,
+            };
+        case actionTypes.SET_SEARCH_RESULT_PLAYLIST:
+            return {
+                ...state,
+                searchResultPlaylist: action.data,
+            };
+        case actionTypes.SET_SEARCH_RESULT_USER:
+            return {
+                ...state,
+                searchResultUser: action.data,
+            };
+        case actionTypes.SET_SEARCH_SONG:
+            return {
+                ...state,
+                setSongs: action.searchSongs,
+            };
+        case actionTypes.SET_SEARCH_PLAYLIST:
+            return {
+                ...state,
+                setPlaylists: action.searchPlaylist,
+            };
+        case actionTypes.SET_SEARCH_USER:
+            return {
+                ...state,
+                setUsers: action.searchUser,
+            };
         default:
             return state;
     }

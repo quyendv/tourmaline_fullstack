@@ -7,27 +7,28 @@
 :root {
     --active-color: #009cf4;
     --second-color: #34234f;
-    --search-btn-width: 46px;
-    --search-bg: #2e4058;
-    --search-width: 400px;
+    --sidebar-background-color: #1e1e1e;
     --border-radius: 20px;
+    --search-btn-width: 46px;
     --header-height: 64px;
     --sidebar-width: 240px;
     --sidebar-width-small: 80px;
+    --bg-main-screen-color: #162a45;
     --sidebar-bg: #21354e;
-    --sidebar-right-bg: #0b274c;
-    --overlay-sidebar: linear-gradient(to right, var(--main-screen-bg), rgba(0, 0, 0, 0.1));
-    --main-screen-bg: #162a45;
+    --search-bg: #2e4058;
     --player-bg: #162f4e;
     --player-border-color: #ffffff1a;
     --player-height: 90px;
     --menuToggle-bg: #162f4e;
+    --sidebar-right-bg: #0b274c;
     --popper-bg: #203d65;
     --popper-active-bg: #375174;
     --favorite-bg: #3b68ef;
+    --overlay-sidebar: linear-gradient(to right, var(--bg-main-screen-color), rgba(0, 0, 0, 0.1));
     --modal-bg: #203d65;
     --follow-btn-bg: #3b68ef;
     --scroll-color: #009bf480;
+    --search-width: 400px;
 }
 
 * {
@@ -66,10 +67,6 @@ html *::-webkit-scrollbar-thumb {
 html *::-webkit-scrollbar-track {
     border-radius: 0;
     background-color: rgba(0, 0, 0, 0);
-}
-
-input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(1);
 }
 
 // body {
