@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import * as apis from '../../../services';
@@ -7,11 +8,14 @@ function DeleteModal() {
     const { setIsOpenDeleteModal, setSongUploaded } = useSelector((state) => state.actions);
     const { deleteSongId } = useSelector((state) => state.music);
     const { token } = useSelector((state) => state.auth);
+    const [isLoading, setIsLoading] = useState(false)
     const navigate = useNavigate();
     const handleDelete = async (e) => {
         e.preventDefault();
         const index = deleteSongId;
+        setIsLoading(true)
         const response = await apis.deleteSong(index, token);
+        setIsLoading(false)
         if (response.status == 200) {
             setSongUploaded((prev) => prev.filter((item) => item.id !== index));
             setIsOpenDeleteModal((prev) => !prev);
@@ -23,12 +27,12 @@ function DeleteModal() {
                 <h2 className="mb-5 text-2xl">Delete Song</h2>
                 <p>Your song will be removed from system. Are you sure?</p>
                 <div className="flex justify-end gap-3">
-                    <span onClick={handleDelete} className="cursor-pointer rounded-full bg-[#3c68ef] px-5 py-1 hover:opacity-75">
+                    <span onClick={handleDelete} className={`cursor-pointer rounded-full bg-[#3c68ef] px-5 py-1 hover:opacity-75 ${isLoading && 'pointer-events-none opacity-30'}`}>
                         Yes
                     </span>
                     <span
                         onClick={() => setIsOpenDeleteModal((prev) => !prev)}
-                        className="cursor-pointer rounded-full bg-[#375174] px-5 py-1 hover:opacity-75"
+                        className={`cursor-pointer rounded-full bg-[#375174] px-5 py-1 hover:opacity-75 ${isLoading && 'pointer-events-none opacity-30'}`}
                     >
                         No
                     </span>

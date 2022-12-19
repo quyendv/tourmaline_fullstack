@@ -14,11 +14,13 @@ function EditPlaylistModal() {
     const [playlistInfo, setPlaylistInfo] = useState({ name: '', username: '', description: '', file: '' });
     const { editPlaylistId } = useSelector((state) => state.music);
     const [coverPreview, setCoverPreview] = useState(images.defaultCoverPlaylist);
+    const [isLoading, setIsLoading] = useState(false)
 
     useEffect(() => {
         const fetchPlaylistInfo = async () => {
+            
             const response = await apis.getPlaylist(editPlaylistId, token);
-
+            
             setPlaylistInfo(response.data);
         };
         fetchPlaylistInfo();
@@ -32,8 +34,9 @@ function EditPlaylistModal() {
             file: coverFile.current,
         };
         const editPlaylist = async () => {
+            setIsLoading(false)
             const response = await apis.editPlaylist(finalPayload, token);
-            console.log(response);
+            setIsLoading(true)
             if(response.status == 200) {
                 setIsOpenEditPlaylistModal(prev => !prev)
             }
@@ -90,11 +93,11 @@ function EditPlaylistModal() {
                         />
                         {/* Confirm */}
                         <div className="mt-2 flex items-center justify-end gap-3">
-                            <div className="cursor-pointer rounded-full bg-[#3c68ef] px-4 py-1.5" onClick={handleEdit}>
+                            <div className={`cursor-pointer rounded-full bg-[#3c68ef] px-4 py-1.5 ${isLoading && 'opacity-30 pointer-events-none'}`} onClick={handleEdit}>
                                 Save
                             </div>
                             <div
-                                className="cursor-pointer rounded-full bg-[#375174] px-4 py-1.5"
+                                className={`cursor-pointer rounded-full bg-[#375174] px-4 py-1.5 ${isLoading && 'opacity-30 pointer-events-none'}`}
                                 onClick={() => setIsOpenEditPlaylistModal(false)}
                             >
                                 Cancel

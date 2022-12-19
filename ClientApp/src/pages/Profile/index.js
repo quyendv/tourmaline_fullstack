@@ -22,6 +22,7 @@ function Profile() {
     const { token } = useSelector((state) => state.auth);
     const { username } = useSelector((state) => state.user);
     const avatarFile = useRef();
+    const [isLoading, setIsLoading] = useState(false)
     useEffect(() => {
         let url;
         const fetchUserAvtar = async() => {
@@ -96,9 +97,9 @@ function Profile() {
             username: username,
             avatar: avatarFile.current,
         };
-
+        setIsLoading(true)
         const response = await setProfile(finalPayload, token);
-
+        setIsLoading(false)
         // console.log(userInfo);
         // Update bio text when profile is successfully updated
         setDisplayUserInfo({
@@ -282,6 +283,7 @@ function Profile() {
                         className={cx(
                             'profile__cancel-btn',
                             'rounded-md bg-gray-300 py-1.5 px-3 text-xl font-semibold',
+                            `${isLoading && 'opacity-30 pointer-events-none'}`
                         )}
                         type="button"
                     >
@@ -291,6 +293,7 @@ function Profile() {
                         className={cx(
                             'profile__save-btn',
                             'ml-4 rounded-md bg-red-500 py-1.5 px-3 text-xl font-semibold',
+                            `${isLoading && 'opacity-30 pointer-events-none'}`
                         )}
                         type="submit"
                         onClick={updateUserInfo}
