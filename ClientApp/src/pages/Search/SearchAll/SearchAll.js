@@ -1,11 +1,10 @@
-import { useDispatch } from 'react-redux';
-import { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import * as actions from '../../../store/actions';
-import Song from '~/components/Song';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import PlaylistItem from '~/components/PlaylistItem';
+import Song from '~/components/Song';
 import UserItem from '~/components/UserItem';
-import * as apis from '../../../services'
+import * as apis from '../../../services';
+import * as actions from '../../../store/actions';
 
 function SearchAll() {
     const dispatch = useDispatch();
@@ -42,11 +41,11 @@ function SearchAll() {
     }, [searchResult]);
     useEffect(() => {
         const fetchSearch = async () => {
-            setSongsResult([])
-            setPlaylistsResult([])
-            setUsersResult([])
+            setSongsResult([]);
+            setPlaylistsResult([]);
+            setUsersResult([]);
             const response = await apis.search(keyword);
-            if(response.status == 200) {
+            if (response.status == 200) {
                 response.data.result.forEach((item) => {
                     if (item.song != null) {
                         setSongsResult((prev) => [...prev, item.song]);
@@ -58,7 +57,7 @@ function SearchAll() {
                         setUsersResult((prev) => [...prev, item.user]);
                     }
                 });
-        
+
                 setPlaylistsResult((prev) =>
                     prev.filter((ele, ind) => ind === prev.findIndex((elem) => elem.id == ele.id && elem.id == ele.id)),
                 );
@@ -70,15 +69,14 @@ function SearchAll() {
                 );
             }
         };
-        fetchSearch()
-
-    }, [keyword])
+        fetchSearch();
+    }, [keyword]);
     return (
-        <div>
+        <>
             {songsResult.length > 0 && (
-                <div>
-                    <h2>Songs</h2>
-                    <div>
+                <div className="mt-12">
+                    <h3 className="mb-5 text-2xl font-bold">Songs</h3>
+                    <div className="max-h-64 overflow-y-auto">
                         {songsResult.map((item) => (
                             <Song songData={item} />
                         ))}
@@ -86,26 +84,26 @@ function SearchAll() {
                 </div>
             )}
             {playlistsResult.length > 0 && (
-                <div>
-                    <h2>Playlists</h2>
-                    <div className="flex">
+                <div className="mt-12">
+                    <h2 className="mb-5 text-2xl font-bold">Playlists</h2>
+                    <div className="grid max-h-72 grid-cols-3 gap-5 overflow-y-auto md:grid-cols-4 lg:grid-cols-5">
                         {playlistsResult.map((item) => (
-                            <PlaylistItem className="w-1/5" playlistData={item} />
+                            <PlaylistItem playlistData={item} />
                         ))}
                     </div>
                 </div>
             )}
             {usersResult.length > 0 && (
-                <div>
-                    <h2>Users</h2>
-                    <div>
+                <div className="mt-12">
+                    <h2 className="mb-5 text-2xl font-bold">Users</h2>
+                    <div className="grid grid-cols-3 gap-7 md:grid-cols-4 lg:grid-cols-5">
                         {usersResult.map((item) => (
                             <UserItem userData={item} />
                         ))}
                     </div>
                 </div>
             )}
-        </div>
+        </>
     );
 }
 

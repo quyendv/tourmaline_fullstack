@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { BASE_URL } from '../../utils/constant';
 import { images } from '~/assets/images';
-import * as apis from '../../services'
+import * as apis from '../../services';
 
 const cx = classNames.bind(styles);
 
@@ -25,17 +25,17 @@ function Profile() {
     const [isLoading, setIsLoading] = useState(false)
     useEffect(() => {
         let url;
-        const fetchUserAvtar = async() => {
-            const response = await apis.getAvatar(username)
-            const blob = new Blob([response.data], {type: response.data.type})
-            url = URL.createObjectURL(blob)
-            setAvatarLink(url)
-        }
-        fetchUserAvtar()
+        const fetchUserAvtar = async () => {
+            const response = await apis.getAvatar(username);
+            const blob = new Blob([response.data], { type: response.data.type });
+            url = URL.createObjectURL(blob);
+            setAvatarLink(url);
+        };
+        fetchUserAvtar();
         return () => {
-            URL.revokeObjectURL(url)
-        }
-    }, [])
+            URL.revokeObjectURL(url);
+        };
+    }, []);
 
     useEffect(() => {
         const getUserInfo = async () => {
@@ -141,7 +141,11 @@ function Profile() {
     };
 
     return (
-        <form method="" action="" className={cx('profile')}>
+        <form
+            method=""
+            action=""
+            className={cx('profile', 'container mx-auto grid min-h-[65%] w-full grid-cols-12 gap-4 p-4')}
+        >
             {/* Avatar + About */}
             <div className={cx('profile-item1')}>
                 <div className={cx('profile__avatar', 'mb-4')}>
