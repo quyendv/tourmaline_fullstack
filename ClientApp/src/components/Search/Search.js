@@ -90,18 +90,13 @@ function Search() {
         <HeadlessTippy
             appendTo={() => document.body}
             // visible={showResult && searchResult.length > 0}
-            visible
-            // visible="true"
+            // visible
+            // trigger="click"
             placement="bottom"
             interactive
             render={(attrs) => (
                 <div className={cx('popper-wrapper')} tabIndex="-1" {...attrs}>
-                    <div
-                        className={cx(
-                            'search-result',
-                            'max-h-[calc(100vh-180px)] overflow-y-auto p-2.5 text-white',
-                        )}
-                    >
+                    <div className={cx('search-result', 'max-h-[calc(100vh-180px)] overflow-y-auto p-2.5 text-white')}>
                         <h4 className={cx('search-title', 'px-2.5 pb-2 font-bold')}>Suggest result</h4>
                         {/* Show result */}
                         <div className="flex flex-col">
