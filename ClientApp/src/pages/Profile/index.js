@@ -134,7 +134,7 @@ function Profile() {
             {/* Avatar + About */}
             <div className={cx('profile-item1')}>
                 <div className={cx('profile__avatar', 'mb-4')}>
-                    <img src={avatarLink} alt="" className="mx-auto h-[90px] w-[90px] rounded-full object-cover" />
+                    <img src={avatarLink} alt="" className="mx-auto h-[90px] w-[90px] rounded-full object-cover [box-shadow:0_0_1px_#fff]" />
                 </div>
 
                 <div className={cx('profile__name', 'flex flex-col items-center justify-center')}>

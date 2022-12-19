@@ -121,7 +121,7 @@
         width: 20px;
         height: 20px;
         border-bottom-right-radius: 20px;
-        box-shadow: 5px 5px 0 5px var(--bg-main-screen-color);
+        box-shadow: 5px 5px 0 5px var(--main-screen-bg);
         transform: scale(0);
         transform-origin: bottom right;
         transition: 0.5s;
@@ -135,7 +135,7 @@
         width: 20px;
         height: 20px;
         border-top-right-radius: 20px;
-        box-shadow: 5px -5px 0 5px var(--bg-main-screen-color);
+        box-shadow: 5px -5px 0 5px var(--main-screen-bg);
         transform: scale(0);
         transform-origin: top right;
         transition: 0.5s;
@@ -168,7 +168,7 @@
 
     &.active {
         color: var(--clr);
-        background-color: var(--bg-main-screen-color);
+        background-color: var(--main-screen-bg);
         transform: translateX(30px);
 
         &::before,

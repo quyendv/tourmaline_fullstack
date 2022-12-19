@@ -10,6 +10,7 @@
 }
 
 .profile-item1 {
+    background-color: var(--main-screen-bg);
     grid-column: span 12 / span 12;
     // @apply col-span-12;
     @media screen and (min-width: 1000px) {
@@ -18,6 +19,7 @@
 }
 
 .profile-item2 {
+    background-color: var(--main-screen-bg);
     grid-column: span 12 / span 12;
     // @apply col-span-12;
     @media screen and (min-width: 1000px) {

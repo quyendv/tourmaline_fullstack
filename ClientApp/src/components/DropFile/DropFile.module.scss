@@ -1,7 +1,7 @@
 $border-color: #4267b2;
 .wrapper {
+    color: #fff;
     padding: 10px 20px 16px;
-
     .upload-area {
         display: flex;
         align-items: center;
@@ -71,10 +71,13 @@ $border-color: #4267b2;
         font-weight: 600;
         border-radius: 9999px;
         border: 1px_solid_#ccc;
-        background: #0000001a;
+        color: var(--active-color);
+        background: #0000003d;
+        transition: all 0.2s;
         cursor: pointer;
         &:hover {
-            background: #0000003d;
+            color: #fff;
+            background: #3b68ef;
         }
         // @apply absolute top-5 right-0 cursor-pointer rounded-full px-3 py-1 text-base font-semibold [border:1px_solid_#ccc] hover:bg-[#0000001a] max-[375px]:top-10;
     }
@@ -85,7 +88,7 @@ $border-color: #4267b2;
 
             label {
                 font-weight: 600;
-                color: #000000b3;
+                // color: #000000b3;
                 display: inline-block;
                 margin-top: 8px;
                 cursor: pointer;
