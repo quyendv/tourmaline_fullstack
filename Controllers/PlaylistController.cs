@@ -56,7 +56,7 @@ public class PlaylistController : ControllerBase
         }
         catch (Exception e)
         {
-            var file = new FileStream($"Assets/defaultPlaylist.png", FileMode.Open, FileAccess.Read,
+            var file = new FileStream($"{homeDir}/storage/default/playlist.png", FileMode.Open, FileAccess.Read,
                 FileShare.ReadWrite, 2048,
                 true);
 
