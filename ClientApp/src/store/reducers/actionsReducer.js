@@ -43,15 +43,7 @@ const initState = {
     setIsOpenLogginModal: function() {
         return 0;
     },
-    setPlaylistInfo: function() {
-        return 0
-    },
-    setPlaylistAvatar: function() {
-        return 0
-    },
     songAvatar: '',
-    playlistAvatar: '',
-    
     keyword: null
 };
 
@@ -140,21 +132,7 @@ const actionsReducer = (state = initState, action) => {
                 ...state,
                 setIsOpenLogginModal: action.setIsOpenLogginModal
             }
-        case actionTypes.SET_PLAYLIST_INFO:
-            return {
-                ...state,
-                setPlaylistInfo: action.setPlaylistInfo
-            }
-        case actionTypes.PLAYLIST_AVATAR:
-            return {
-                ...state,
-                playlistAvatar: action.playlistAvatar
-            }
-        case actionTypes.SET_PLAYLIST_AVATAR:
-            return {
-                ...state,
-                setPlaylistAvatar: action.setPlaylistAvatar
-            }
+        
         default:
             return state;
     }

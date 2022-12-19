@@ -5,12 +5,13 @@ import HeadlessTippy from '@tippyjs/react/headless';
 import { SearchIcon } from '../Icons';
 import { icons } from '~/utils/icons';
 import useDebounce from '~/hooks/useDebounce';
-import * as apis from '../../services'
-import {  searchRoutesConfig } from '../../Routes/routesConfig';
+import * as apis from '../../services';
+import { searchRoutesConfig } from '../../Routes/routesConfig';
 import { useNavigate } from 'react-router-dom';
 import { createSearchParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import * as actions from '../../store/actions'
+import * as actions from '../../store/actions';
+import { SearchResultSong, SearchResultUser } from '../SearchResult';
 
 const cx = classNames.bind(styles);
 const { FaRegTimesCircle, ImSpinner2 } = icons;
@@ -20,8 +21,8 @@ function Search() {
     const [searchResult, setSearchResult] = useState([]);
     const [showResult, setShowResult] = useState(true);
     const [loading, setLoading] = useState(false);
-    const navigate = useNavigate()
-    const dispatch = useDispatch()
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
     const inputRef = useRef();
     const debouncedValue = useDebounce(searchValue, 500);
 
@@ -34,13 +35,13 @@ function Search() {
 
         // Gọi api lấy kết quả search:
         // Chú ý gán kết quả vào searchResult, rồi setLoading(false)
-        const search = async() => {
-            const response = await apis.search(debouncedValue)
-            
-            console.log(response)
-        }
-        search()
-        setLoading(false)
+        const search = async () => {
+            const response = await apis.search(debouncedValue);
+
+            console.log(response);
+        };
+        search();
+        setLoading(false);
         // VD: Tách ra config axios sau:
         // axios
         //     .get('users/search', {
@@ -68,43 +69,113 @@ function Search() {
         inputRef.current.focus();
     };
     const handleSearch = (e) => {
-        if(e.keyCode == 13) {
-            dispatch(actions.setSearchKeyword(searchValue))
-            const pathname = `${searchRoutesConfig.search}${searchRoutesConfig.searchAll}`
+        if (e.keyCode === 13) {
+            dispatch(actions.setSearchKeyword(searchValue));
+            const pathname = `${searchRoutesConfig.search}${searchRoutesConfig.searchAll}`;
             navigate({
                 pathname,
                 search: createSearchParams({
-                  q: searchValue
-                }).toString()
-              })
+                    q: searchValue,
+                }).toString(),
+            });
             const fetchSearchData = async () => {
-                const response = await apis.search(searchValue)
-                console.log(response)
-            }
-            fetchSearchData()
+                const response = await apis.search(searchValue);
+                console.log(response);
+            };
+            fetchSearchData();
         }
-    }
+    };
 
     return (
         <HeadlessTippy
             appendTo={() => document.body}
-            visible={showResult && searchResult.length > 0}
+            // visible={showResult && searchResult.length > 0}
+            visible
             // visible="true"
             placement="bottom"
             interactive
             render={(attrs) => (
                 <div className={cx('popper-wrapper')} tabIndex="-1" {...attrs}>
-                    <div className={cx('search-result')}>
-                        {/* Chưa css lại, chưa biết search ra kết quả gì */}
-                        <h4 className={cx('search-title')}>Suggest for you</h4>
-                        {/* {searchResult.map((result) => (
-                            <AccountItem key={result.id} data={result} />
-                        ))} */}
-                        <div>result1</div>
-                        <div>result2</div>
-                        <div>result3</div>
-                        <div>result4</div>
-                        <div>result5</div>
+                    <div
+                        className={cx(
+                            'search-result',
+                            'max-h-[calc(100vh-180px)] overflow-y-auto p-2.5 text-white',
+                        )}
+                    >
+                        <h4 className={cx('search-title', 'px-2.5 pb-2 font-bold')}>Suggest result</h4>
+                        {/* Show result */}
+                        <div className="flex flex-col">
+                            <SearchResultUser
+                                avatar={
+                                    'https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_webp/avatars/8/a/a/b/8aab7a0386dd9c24b90adcc5ef5a7814.jpg'
+                                }
+                                name={'Sơn Tùng M-TP'}
+                                followers={'2.4M'}
+                            />
+                            <SearchResultSong
+                                cover={
+                                    'https://photo-resize-zmp3.zmdcdn.me/w165_r1x1_webp/covers/c/b/cb61528885ea3cdcd9bdb9dfbab067b1_1504988884.jpg'
+                                }
+                                songName={'Nơi Này Có Anh (Masew Bootleg)'}
+                                singer={'Sơn Tùng M-TP, Masew'}
+                            />
+                            <SearchResultUser
+                                avatar={
+                                    'https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_webp/avatars/8/a/a/b/8aab7a0386dd9c24b90adcc5ef5a7814.jpg'
+                                }
+                                name={'Sơn Tùng M-TP'}
+                                followers={'2.4M'}
+                            />
+                            <SearchResultSong
+                                cover={
+                                    'https://photo-resize-zmp3.zmdcdn.me/w165_r1x1_webp/covers/c/b/cb61528885ea3cdcd9bdb9dfbab067b1_1504988884.jpg'
+                                }
+                                songName={'Nơi Này Có Anh (Masew Bootleg)'}
+                                singer={'Sơn Tùng M-TP, Masew'}
+                            />
+                            <SearchResultUser
+                                avatar={
+                                    'https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_webp/avatars/8/a/a/b/8aab7a0386dd9c24b90adcc5ef5a7814.jpg'
+                                }
+                                name={'Sơn Tùng M-TP'}
+                                followers={'2.4M'}
+                            />
+                            <SearchResultSong
+                                cover={
+                                    'https://photo-resize-zmp3.zmdcdn.me/w165_r1x1_webp/covers/c/b/cb61528885ea3cdcd9bdb9dfbab067b1_1504988884.jpg'
+                                }
+                                songName={'Nơi Này Có Anh (Masew Bootleg)'}
+                                singer={'Sơn Tùng M-TP, Masew'}
+                            />
+                            <SearchResultUser
+                                avatar={
+                                    'https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_webp/avatars/8/a/a/b/8aab7a0386dd9c24b90adcc5ef5a7814.jpg'
+                                }
+                                name={'Sơn Tùng M-TP'}
+                                followers={'2.4M'}
+                            />
+                            <SearchResultSong
+                                cover={
+                                    'https://photo-resize-zmp3.zmdcdn.me/w165_r1x1_webp/covers/c/b/cb61528885ea3cdcd9bdb9dfbab067b1_1504988884.jpg'
+                                }
+                                songName={'Nơi Này Có Anh (Masew Bootleg)'}
+                                singer={'Sơn Tùng M-TP, Masew'}
+                            />
+                            <SearchResultUser
+                                avatar={
+                                    'https://photo-resize-zmp3.zmdcdn.me/w240_r1x1_webp/avatars/8/a/a/b/8aab7a0386dd9c24b90adcc5ef5a7814.jpg'
+                                }
+                                name={'Sơn Tùng M-TP'}
+                                followers={'2.4M'}
+                            />
+                            <SearchResultSong
+                                cover={
+                                    'https://photo-resize-zmp3.zmdcdn.me/w165_r1x1_webp/covers/c/b/cb61528885ea3cdcd9bdb9dfbab067b1_1504988884.jpg'
+                                }
+                                songName={'Nơi Này Có Anh (Masew Bootleg)'}
+                                singer={'Sơn Tùng M-TP, Masew'}
+                            />
+                        </div>
                     </div>
                 </div>
             )}
