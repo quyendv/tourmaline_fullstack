@@ -16,6 +16,8 @@ import { DefaultMenu as UserMenu } from '../Popper';
 import Search from '../Search';
 import styles from './Header.module.scss';
 import { images } from '~/assets/images';
+import { useEffect } from 'react';
+import * as apis from '../../services'
 
 const { AiOutlineCloudUpload } = icons;
 
@@ -62,7 +64,14 @@ function Header() {
     const navigate = useNavigate();
     // TODO: Sửa để demo, revert lại sau
     const { isLoggedIn } = useSelector((state) => state.auth);
-
+    const {username} = useSelector(state => state.user)
+    useEffect(() => {
+        const fetchAvatar = async() => {
+            const response = await apis.getAvatar(username)
+            console.log(response)
+        }
+        fetchAvatar()
+    }, [isLoggedIn])
     return (
         <div className={cx('wrapper')}>
             <Search />
