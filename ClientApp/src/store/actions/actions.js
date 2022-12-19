@@ -76,3 +76,35 @@ export const setIsOpenLogginModal = (setIsOpenLogginModal) => ({
     type: actionTypes.SET_IS_OPEN_LOGIN_MODAL,
     setIsOpenLogginModal
 })
+export const setPlaylistSong = (setPlaylistSong) => ({
+    type: actionTypes.SET_PLAYLIST_SONG,
+    setPlaylistSong
+})
+export const setSearchResult = (searchResult) => ({
+    type: actionTypes.SET_SEARCH_RESULT,
+    searchResult
+})
+export const setSearchResultSong = (data) => ({
+    type: actionTypes.SET_SEARCH_RESULT_SONG,
+    data
+})
+export const setSearchResultPlaylist = (data) => ({
+    type: actionTypes.SET_SEARCH_RESULT_PLAYLIST,
+    data
+})
+export const setSearchResultUser = (data) => ({
+    type: actionTypes.SET_SEARCH_RESULT_USER,
+    data
+})
+export const setSearchSong = (searchSongs) => ({
+    type: actionTypes.SET_SEARCH_SONG,
+    searchSongs
+})
+export const setSearchPlaylist = (searchPlaylist) => ({
+    type: actionTypes.SET_SEARCH_PLAYLIST,
+    searchPlaylist
+})
+export const setSearchUser = (searchUser) => ({
+    type: actionTypes.SET_SEARCH_SONG,
+    searchUser
+})

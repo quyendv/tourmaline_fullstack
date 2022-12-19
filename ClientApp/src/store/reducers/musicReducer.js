@@ -11,7 +11,8 @@ const initState = {
     deleteSongId: null,
     editSongId: null,
     deletePlaylistId: null,
-    editPlaylistId: null
+    editPlaylistId: null,
+    playlistSong: []
 };
 
 //TODOS
@@ -120,6 +121,11 @@ const musicReducer = (state = initState, action) => {
                 ...state,
                 editPlaylistId: action.id
             }
+        // case actionTypes.SET_PLAYLIST_SONG:
+        //     return {
+        //         ...state,
+        //         playlistSong: action
+        //     }
         default:
             return state;
     }

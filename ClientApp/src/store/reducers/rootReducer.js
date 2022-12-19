@@ -33,12 +33,18 @@ const favoriteConfig = {
     key: 'favorite',
     whitelist:['favoriteSongs']
 }
+const actionConfig = {
+    ...commonConfig,
+    key: 'actions',
+    whitelist:['keyword','searchResult', 'searchResultSong','searchResultPlaylist','searchResultUser']
+}
 const rootReducer = combineReducers({
     auth: persistReducer(authConfig, authReducer),
     music: persistReducer(musicConfig, musicReducer),
     user: persistReducer(userConfig, userReducer),
     favorite: persistReducer(favoriteConfig, favoriteReducer),
-    actions: actionsReducer
+    
+    actions: persistReducer(actionConfig, actionsReducer)
 
 });
 

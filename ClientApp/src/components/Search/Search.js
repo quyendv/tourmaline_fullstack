@@ -7,9 +7,9 @@ import { icons } from '~/utils/icons';
 import useDebounce from '~/hooks/useDebounce';
 import * as apis from '../../services';
 import { searchRoutesConfig } from '../../Routes/routesConfig';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { createSearchParams } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import * as actions from '../../store/actions';
 import { SearchResultSong, SearchResultUser } from '../SearchResult';
 
@@ -25,7 +25,7 @@ function Search() {
     const dispatch = useDispatch();
     const inputRef = useRef();
     const debouncedValue = useDebounce(searchValue, 500);
-
+    const location = useLocation()
     useEffect(() => {
         if (!searchValue.trim()) {
             setSearchResult([]);
@@ -39,9 +39,9 @@ function Search() {
             const response = await apis.search(debouncedValue);
 
             console.log(response);
-            setLoading(false);
         };
         search();
+        setLoading(false);
         // VD: Tách ra config axios sau:
         // axios
         //     .get('users/search', {
@@ -71,18 +71,21 @@ function Search() {
     const handleSearch = (e) => {
         if (e.keyCode === 13) {
             dispatch(actions.setSearchKeyword(searchValue));
-            const pathname = `${searchRoutesConfig.search}${searchRoutesConfig.searchAll}`;
-            navigate({
-                pathname,
-                search: createSearchParams({
-                    q: searchValue,
-                }).toString(),
-            });
-            const fetchSearchData = async () => {
+
+            const fetchSearch = async () => {
                 const response = await apis.search(searchValue);
-                console.log(response);
+                setSearchResult(response.data.result);
+                dispatch(actions.setSearchKeyword(searchValue));
             };
-            fetchSearchData();
+            !location.pathname.startsWith('/search') &&fetchSearch();
+            const pathname = `${searchRoutesConfig.search}${searchRoutesConfig.searchAll}`;
+            searchValue != '' &&
+                navigate({
+                    pathname,
+                    search: createSearchParams({
+                        q: searchValue,
+                    }).toString(),
+                });
         }
     };
 
@@ -90,8 +93,8 @@ function Search() {
         <HeadlessTippy
             appendTo={() => document.body}
             // visible={showResult && searchResult.length > 0}
-            // visible
-            // trigger="click"
+            visible={false}
+            // visible="true"
             placement="bottom"
             interactive
             render={(attrs) => (

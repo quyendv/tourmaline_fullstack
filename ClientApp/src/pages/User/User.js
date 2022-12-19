@@ -13,20 +13,19 @@ function User() {
     const [songs, setSongs] = useState([]);
     const { token } = useSelector((state) => state.auth);
     const { username } = useSelector((state) => state.user);
-    const [isFollowing, setIsFollowing] = useState(false);
-    const [followers, setFollowers] = useState([]);
-    const [following, setFollowing] = useState([]);
+    const [isFollowing, setIsFollowing] = useState(false ) 
+    const [followers, setFollowers] = useState([])
+    const [following, setFollowing] = useState([])
     useEffect(() => {
         const fetchFollowers = async () => {
             const response = await apis.getFollowers();
-            setFollowers(response.data);
-            console.log(followers);
-            followers.length > 0 &&
-                followers.forEach((item) => {
-                    if (item.username == username) {
-                        setIsFollowing(true);
-                    }
-                });
+            setFollowers(response.data)
+            console.log(followers)
+            followers.length > 0 && followers.forEach((item) => {     
+                if(item.username == username) {
+                    setIsFollowing(true)
+                }
+            })
         };
         fetchFollowers();
         const fetchFollowings = async () => {
@@ -64,22 +63,22 @@ function User() {
         };
     }, [usernameParam]);
     const handleFollow = async () => {
-        if (isFollowing) {
-            const response = await apis.unFollow(usernameParam, token);
-            followers.filter((item) => item.username != username);
-            setIsFollowing((prev) => !prev);
-            console.log(response);
+        if(isFollowing) {
+            const response = await apis.unFollow(usernameParam, token)
+            followers.filter(item => item.username != username)
+            setIsFollowing(prev => !prev)
+            console.log(response)
         }
-        if (!isFollowing) {
-            const response = await apis.follow(usernameParam, token);
-            setIsFollowing((prev) => !prev);
-            console.log(response);
+        if(!isFollowing) {
+            const response = await apis.follow(usernameParam, token)
+            setIsFollowing(prev => !prev)
+            console.log(response)
         }
-    };
+    }
     return (
         <div className="h-[calc(100vh-var(--header-height))] w-full overflow-y-auto px-14 pt-16 pb-24 text-white">
             {/* header */}
-            <div className="mb-5 flex items-center justify-between">
+            <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4 ">
                     <img className="h-[190px] w-[190px] rounded-full object-cover" src={userAvatar} alt="" />
                     <span className="flex flex-col">
@@ -88,7 +87,7 @@ function User() {
                         <span>{userInfo.bio}</span>
                     </span>
                 </div>
-                <div className="flex flex-col gap-8">
+                <div className="flex flex-col gap-2">
                     <div className="flex items-center gap-6">
                         <div className="flex flex-col">
                             <span>Followers</span>
@@ -106,10 +105,7 @@ function User() {
                     </div>
                     {usernameParam != username && (
                         <div className="flex w-full items-center justify-center ">
-                            <span
-                                onClick={handleFollow}
-                                className="cursor-pointer rounded-l-full rounded-r-full border border-gray-300 px-8 hover:border-active-color hover:text-active-color"
-                            >
+                            <span onClick={handleFollow} className="rounded-l-full cursor-pointer rounded-r-full border border-gray-300 px-8">
                                 <button>{isFollowing ? 'Unfollow' : 'Follow'}</button>
                             </span>
                         </div>

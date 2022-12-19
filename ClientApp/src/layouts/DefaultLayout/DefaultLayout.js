@@ -14,7 +14,7 @@ import {
     DeleteModal,
     DeletePlaylistModal,
     EditSongModal,
-    LoginModal,
+    LoginModal
 } from '~/components/Modal';
 import EditPlaylistModal from '~/components/Modal/EditPlaylistModal/EditPlaylistModal';
 // import { CommentModal, CrePlaylistModal, DeleteModal, DeletePlaylistModal } from '../../components/Modal';
@@ -27,18 +27,18 @@ function DefaultLayout() {
     const [isOpenDeletePlaylistModal, setIsOpenDeletePlaylistModal] = useState(false);
     const [isOpenEditSongModal, setIsOpenEditSongModal] = useState(false);
     const [isOpenEditPlaylistModal, setIsOpenEditPlaylistModal] = useState(false);
-    const [isOpenLogginModal, setIsOpenLogginModal] = useState(false);
+    const [isOpenLogginModal, setIsOpenLogginModal] = useState(false)
     const { token } = useSelector((state) => state.auth);
     const [title, setTitle] = useState('');
     const { curSongId } = useSelector((state) => state.music);
     const dispatch = useDispatch();
-    const { pathname } = useLocation();
-    const { isLoggedIn } = useSelector((state) => state.auth);
+    const {pathname} = useLocation()
+    const {isLoggedIn} = useSelector(state => state.auth)
     useEffect(() => {
-        if (pathname != '/' && !isLoggedIn) {
-            setIsOpenLogginModal((prev) => !prev);
+        if(pathname != '/' && !isLoggedIn) {
+            setIsOpenLogginModal(prev => !prev)
         }
-    }, [pathname]);
+    }, [pathname])
     useEffect(() => {
         dispatch(actions.setIsOpenCrePlaylistModal(setIsOpenCrePlaylistModal));
         dispatch(actions.setIsOpenCommentModal(setIsOpenCommentModal));
@@ -65,7 +65,7 @@ function DefaultLayout() {
     };
     return (
         // Làm effect sidebar cần bg-color cố định, sửa gradient nhé
-        <div className="relative flex flex-col overflow-x-hidden bg-[var(--main-screen-bg)]">
+        <div className="relative flex flex-col overflow-x-hidden bg-[var(--bg-main-screen-color)]">
             {isOpenCrePlaylistModal && <CrePlaylistModal />}
             {isOpenCommentModal && <CommentModal />}
             {isOpenDeleteModal && <DeleteModal />}

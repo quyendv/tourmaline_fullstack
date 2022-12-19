@@ -16,7 +16,7 @@ import { DefaultMenu as UserMenu } from '../Popper';
 import Search from '../Search';
 import styles from './Header.module.scss';
 import { images } from '~/assets/images';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import * as apis from '../../services'
 
 const { AiOutlineCloudUpload } = icons;
@@ -65,12 +65,21 @@ function Header() {
     // TODO: Sửa để demo, revert lại sau
     const { isLoggedIn } = useSelector((state) => state.auth);
     const {username} = useSelector(state => state.user)
+    const [userAvatar, setUserAvatar] = useState('')
     useEffect(() => {
+        let url;
         const fetchAvatar = async() => {
             const response = await apis.getAvatar(username)
-            console.log(response)
+            if(response.status == 200) {
+                const blob = new Blob([response.data], {type: response.data.type})
+                url = URL.createObjectURL(blob)
+                setUserAvatar(url)
+            }
         }
         fetchAvatar()
+        return() => {
+            URL.revokeObjectURL(url)
+        }
     }, [isLoggedIn])
     return (
         <div className={cx('wrapper')}>
@@ -88,7 +97,7 @@ function Header() {
                     </span>
                     {/* Avatar */}
                     <UserMenu menuList={userMenuList}>
-                        <img alt="User Avatar" className={cx('user-avatar')} src={images.defaultAvatar} />
+                        <img alt="User Avatar" className={cx('user-avatar')} src={userAvatar} />
                     </UserMenu>
                 </div>
             ) : (

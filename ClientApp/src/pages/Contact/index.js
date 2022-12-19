@@ -21,7 +21,7 @@ function Contact() {
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-            theme: 'dark',
+            theme: 'light',
         };
 
         const toastId = toast.loading('Please wait...');
@@ -116,7 +116,7 @@ function Contact() {
             </div>
 
             {/* Contact Info */}
-            <div className="p-10 lg:p-12 bg-[var(--main-screen-bg)]">
+            <div className="p-10 lg:p-12">
                 {/* General info */}
                 <h1 className="mb-2 text-3xl font-semibold">Contact us</h1>
                 <p className="mb-6 text-lg text-pink-500">We're open for any suggestion!</p>

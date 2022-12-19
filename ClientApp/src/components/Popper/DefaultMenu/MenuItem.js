@@ -1,6 +1,6 @@
 import classNames from 'classnames/bind';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { icons } from '~/utils/icons';
 import * as actions from '../../../store/actions';
 import * as apis from '../../../services';
@@ -18,11 +18,13 @@ function MenuItem({ data, isParent = 'false', songId, onClick = () => {} }, ref)
         setIsOpenDeletePlaylistModal,
         setIsOpenEditSongModal,
         setIsOpenEditPlaylistModal,
+        setPlaylistSong,
     } = useSelector((state) => state.actions);
+    const {pid} = useParams()
     const { token } = useSelector((state) => state.auth);
     const Component = data.to ? Link : 'div';
     const dispatch = useDispatch();
-    const {setSongAvatar} = useSelector(state => state.actions)
+    const { setSongAvatar } = useSelector((state) => state.actions);
     const handleOpenCommentModal = (e) => {
         e.stopPropagation();
         setIsOpenCommentModal((prev) => !prev);
@@ -34,12 +36,12 @@ function MenuItem({ data, isParent = 'false', songId, onClick = () => {} }, ref)
         if (data.title === 'Logout') {
             e.stopPropagation();
             dispatch(actions.logout());
-            dispatch(actions.setUsername(null))
-            dispatch(actions.setCurSongId(null))
-            dispatch(actions.setFavorite([]))
-            dispatch(actions.setCurPlaylist([]))
-            dispatch(actions.setNextUp([]))
-            dispatch(actions.setPrev([]))
+            dispatch(actions.setUsername(null));
+            dispatch(actions.setCurSongId(null));
+            dispatch(actions.setFavorite([]));
+            dispatch(actions.setCurPlaylist([]));
+            dispatch(actions.setNextUp([]));
+            dispatch(actions.setPrev([]));
         }
         if (data.title === 'Comments') {
             handleOpenCommentModal(e);
@@ -101,16 +103,25 @@ function MenuItem({ data, isParent = 'false', songId, onClick = () => {} }, ref)
         if (data.type == 'editSong') {
             setIsOpenEditSongModal((prev) => !prev);
             dispatch(actions.editSongId(data.id));
-            dispatch(actions.setSongAvatar(data.setSongAvatar))
-            console.log(data.songAvatar)
-            dispatch(actions.songAvatar(data.songAvatar))
-            dispatch(actions.setInfo(data.setInfo))
-
+            dispatch(actions.setSongAvatar(data.setSongAvatar));
+            console.log(data.songAvatar);
+            dispatch(actions.songAvatar(data.songAvatar));
+            dispatch(actions.setInfo(data.setInfo));
         }
         if (data.type == 'editPlaylist') {
-            setIsOpenEditPlaylistModal(prev => !prev)
-            dispatch(actions.editPlaylistId(data.id))
-            dispatch(actions.setPlaylistInfo(data.setPlaylistInfo))
+            setIsOpenEditPlaylistModal((prev) => !prev);
+            dispatch(actions.editPlaylistId(data.id));
+            dispatch(actions.setPlaylistInfo(data.setPlaylistInfo));
+        }
+        if (data.type == 'removeFromPlaylist') {
+            const removeFromPlaylist = async () => {
+                console.log(data.id)
+                const response = await apis.removeFromPlaylist(data.id, pid, token);
+                if(response.status == 200) {
+
+                }
+            };
+            data.pid != 0 && removeFromPlaylist();
         }
         if (!isParent) {
             ref.current._tippy.hide();
