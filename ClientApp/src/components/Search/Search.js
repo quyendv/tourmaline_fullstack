@@ -39,9 +39,9 @@ function Search() {
             const response = await apis.search(debouncedValue);
 
             console.log(response);
+            setLoading(false);
         };
         search();
-        setLoading(false);
         // VD: Tách ra config axios sau:
         // axios
         //     .get('users/search', {
