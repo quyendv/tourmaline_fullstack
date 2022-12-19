@@ -306,9 +306,9 @@ BEGIN
 		FROM song
 		INNER JOIN songtags ON song.id = songtags.id)
         AS rawSearchResult
-	GROUP BY id
-    HAVING (score >= 0.03) OR (scoreTags >= 0.03)
-    ORDER BY (score * 0.8 + scoreTags * 0.2) DESC;
+    GROUP BY id
+    HAVING (AVG(score) >= 0.03) OR (SUM(scoreForTagSearch) >= 0.03)
+    ORDER BY (AVG(score)* 0.8 + SUM(scoreForTagSearch)* 0.2) DESC;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
