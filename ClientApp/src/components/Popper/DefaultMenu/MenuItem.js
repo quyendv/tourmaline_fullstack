@@ -22,7 +22,7 @@ function MenuItem({ data, isParent = 'false', songId, onClick = () => {} }, ref)
     const { token } = useSelector((state) => state.auth);
     const Component = data.to ? Link : 'div';
     const dispatch = useDispatch();
-
+    const {setSongAvatar} = useSelector(state => state.actions)
     const handleOpenCommentModal = (e) => {
         e.stopPropagation();
         setIsOpenCommentModal((prev) => !prev);
@@ -95,6 +95,11 @@ function MenuItem({ data, isParent = 'false', songId, onClick = () => {} }, ref)
         if (data.type == 'editSong') {
             setIsOpenEditSongModal((prev) => !prev);
             dispatch(actions.editSongId(data.id));
+            dispatch(actions.setSongAvatar(data.setSongAvatar))
+            console.log(data.songAvatar)
+            dispatch(actions.songAvatar(data.songAvatar))
+            dispatch(actions.setInfo(data.setInfo))
+
         }
         if (data.type == 'editPlaylist') {
             setIsOpenEditPlaylistModal(prev => !prev)

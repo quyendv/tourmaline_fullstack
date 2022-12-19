@@ -1,10 +1,11 @@
 import { useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { icons } from '../../../utils/icons';
 import * as apis from '../../../services';
 import moment from 'moment';
 import ModalWrapper from '../ModalWrapper';
 import CommentItem from '~/components/CommentItem';
+import {Loading} from '../../Load'
 
 const { AiOutlineClose, FaRegComment, BsThreeDots } = icons;
 
@@ -13,14 +14,14 @@ function CommentModal() {
     const [commentValue, setCommentValue] = useState('');
     const { token } = useSelector((state) => state.auth);
     const { commentSongId } = useSelector((state) => state.music);
-    
+    const [isLoading, setIsLoading] = useState(false)
     const [comments, setComments] = useState([]);
-
+    const {username} = useSelector(state => state.user)
+    const loadingCommentValue = useRef()
     useEffect(() => {
         const fetchComment = async () => {
             const response = await apis.getAllComment(commentSongId, token);
             if (response.status === 200) {
-                console.log(response);
                 setComments(response.data.reverse());
             }
         };
@@ -31,10 +32,15 @@ function CommentModal() {
             id: commentSongId,
             content: commentValue,
         };
+
         if (e.keyCode === 13) {
+            setIsLoading(true)
+            loadingCommentValue.current = commentValue
+
             const response = await apis.postComment(finalPayload, token);
+            setIsLoading(false)
             console.log(response);
-            if (response.status === 200) {
+            if (response.status == 200) {
                 setCommentValue('');
                 setComments((prev) => [response.data, ...prev]);
             }
@@ -77,6 +83,10 @@ function CommentModal() {
                         </div>
                     ) : (
                         <>
+                            {isLoading && <CommentItem className="opacity-30" data={{
+                                username: username,
+                                content: loadingCommentValue.current
+                            }} isLoading />}
                             {comments.map((item, index) => (
                                 <CommentItem key={index} data={item} />
                             ))}
@@ -84,7 +94,7 @@ function CommentModal() {
                     )}
                 </div>
                 {/* Comment Input */}
-                <div className="mt-5 rounded-full bg-[#375174] px-4 py-1.5">
+                <div className="mt-5 rounded-full bg-[#375174] px-4 py-1.5 relative">
                     <input
                         className="w-full"
                         placeholder="Write a comment"

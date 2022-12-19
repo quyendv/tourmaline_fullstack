@@ -22,16 +22,18 @@ export const setProfile =  (payload, token) => new Promise(async(resolve, reject
             url: `/api/user/edit`,
             method: 'put',
             data: payload,
-            params: {
+            data: {
                 username:payload.username,
                 name:payload.name,
                 bio:payload.bio,
                 gender: payload.gender,
                 email: payload.email,
-                birth: payload.birth
+                birth: payload.birth,
+                avatar: payload.avatar
             },
             headers: {
                 'Authorization': `Bearer ${token}`,
+                'Content-Type' :'multipart/form-data'
             }
         })
         resolve(response)

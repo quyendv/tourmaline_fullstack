@@ -10,6 +10,7 @@ import { DefaultMenu as SongMenu } from '../Popper';
 import Pop from '../../assets/images/Pop.svg';
 import moment from 'moment';
 import { memo } from 'react';
+import LazyLoad from 'react-lazy-load';
 
 const {
     BsLink45Deg,
@@ -25,80 +26,121 @@ const {
     AiOutlinePlusCircle,
     RiPlayListAddLine,
     AiOutlineEdit,
-    IoMdRemoveCircleOutline
+    IoMdRemoveCircleOutline,
 } = icons;
 // TODO: Song list sửa sau
-const songMenu = [
-    {
-        type: 'addToNext',
-        icon: <RiPlayListAddLine />,
-        title: 'Add to Next up',
-        to: '',
-    },
-    {
-        type: '',
-        icon: <FaRegComment />,
-        title: 'Comments',
-        to: '',
-    },
-    {
-        type: '',
-        icon: <AiOutlineDownload />,
-        title: 'Download',
-        to: '',
-    },
-    {
-        type: 'addtoplaylist',
-
-        icon: <AiOutlinePlusCircle />,
-        title: 'Add to Playlist',
-        to: '',
-        // rightIcon: ''
-        children: {
-            title: 'Playlist',
-            data: [
-                // Cái này khả năng đưa vào trong component gọi ra thôi
-            ],
-        },
-    },
-    {
-        icon: <RiShareForwardLine />,
-        title: 'Share',
-        to: '',
-    },
-    {
-        id:null,
-        type:'editSong',
-        icon: <AiOutlineEdit />,
-        title:'Edit',
-        to:''
-
-    },
-    {
-        id: null,
-        type:'deleteSong',
-        to: '',
-        icon: <AiFillDelete />,
-        title:'Delete'
-    }
-
-];
 
 function Song({ songData, inPlaylist }) {
+    const [songMenu, setSongMenu] = useState([
+        {
+            id: songData.id,
+            type: 'addToNext',
+            icon: <RiPlayListAddLine />,
+            title: 'Add to Next up',
+            to: '',
+        },
+        {
+            id: songData.id,
+            type: '',
+            icon: <FaRegComment />,
+            title: 'Comments',
+            to: '',
+        },
+        {
+            id: songData.id,
+            type: '',
+            icon: <AiOutlineDownload />,
+            title: 'Download',
+            to: '',
+        },
+        {
+            id: songData.id,
+            type: 'addtoplaylist',
+
+            icon: <AiOutlinePlusCircle />,
+            title: 'Add to Playlist',
+            to: '',
+            // rightIcon: ''
+            children: {
+                title: 'Playlist',
+                data: [
+                    // Cái này khả năng đưa vào trong component gọi ra thôi
+                ],
+            },
+        },
+        {
+            id: songData.id,
+            icon: <RiShareForwardLine />,
+            title: 'Share',
+            to: '',
+        },
+        {
+            id: songData.id,
+            type: 'editSong',
+            icon: <AiOutlineEdit />,
+            title: 'Edit',
+            to: '',
+            songAvatar: '',
+            setInfo: function () {},
+            setSongAvatar: function () {},
+        },
+        {
+            id: songData.id,
+            type: 'deleteSong',
+            to: '',
+            icon: <AiFillDelete />,
+            title: 'Delete',
+        },
+    ]);
+    console.log(songMenu);
     const dispatch = useDispatch();
     const { curSongId, isPlaying, curPlaylist } = useSelector((state) => state.music);
     const { token } = useSelector((state) => state.auth);
     const { favoriteSongs } = useSelector((state) => state.favorite);
-    const [favorite, setFavorite] = useState(favoriteSongs.indexOf(songData.id) !== -1); // lấy trạng thái init từ db truyền vào
+    const [favorite, setFavorite] = useState(false); // lấy trạng thái init từ db truyền vào
+    useEffect(() => {
+        favoriteSongs.forEach((item) => {
+            if (item.id == songData.id) {
+                setFavorite(true);
+            }
+        });
+    }, []);
+    const [info, setInfo] = useState(songData);
+    const [songAvatar, setSongAvatar] = useState('');
 
     useEffect(() => {
-        inPlaylist && songMenu[songMenu.length - 1].type != 'removeFromPlaylist' && songMenu.push({
-            type:'removeFromPlaylist',
-            to:'',
-            icon: <IoMdRemoveCircleOutline/>,
-            title: 'Remove from playlist'
-        })
-        inPlaylist && songMenu.filter(item => item.type != 'removeFromPlaylist')
+        songAvatar && URL.revokeObjectURL(songAvatar);
+        let url;
+        const fetchAvatar = async () => {
+            const response = await apis.getCover(songData.id);
+            const blob = new Blob([response.data], { type: 'image/png' });
+            url = URL.createObjectURL(blob);
+            setSongAvatar(url);
+        };
+        fetchAvatar();
+        return () => {
+            URL.revokeObjectURL(url);
+        };
+    }, []);
+    useEffect(() => {
+        if (songMenu[5].songAvatar != songAvatar) {
+            const newArr = songMenu;
+            newArr[5].songAvatar = songAvatar;
+        }
+    }, [songAvatar]);
+
+    useEffect(() => {
+        inPlaylist &&
+            songMenu[songMenu.length - 1].type != 'removeFromPlaylist' &&
+            setSongMenu((prev) =>
+                prev.push({
+                    type: 'removeFromPlaylist',
+                    to: '',
+                    icon: <IoMdRemoveCircleOutline />,
+                    title: 'Remove from playlist',
+                }),
+            );
+        inPlaylist && songMenu.filter((item) => item.type != 'removeFromPlaylist');
         curPlaylist.forEach((item) => {
             const obj = {
                 id: item.id,
@@ -107,14 +149,24 @@ function Song({ songData, inPlaylist }) {
                 icon: '',
                 title: item.name,
             };
-            !songMenu[3].children.data.some((item) => item.id === obj.id) && songMenu[3].children.data.push(obj);
+            if (!songMenu[3].children.data.some((item) => item.id === obj.id)) {
+                const newArr = songMenu;
+                newArr[3].children.data.push(obj);
+                console.log(newArr);
+                setSongMenu(newArr);
+            }
+            if (songMenu[5].setInfo != setInfo) {
+                const newArr = songMenu;
+                newArr[5].setInfo = setInfo;
+                setSongMenu(newArr);
+            }
+            if (songMenu[5].setSongAvatar != setSongAvatar) {
+                const newArr = songMenu;
+                newArr[5].setSongAvatar = setSongAvatar;
+                setSongMenu(newArr);
+            }
         });
-
-        songMenu.forEach(item => {
-            item.id = songData.id
-        })
-
-    }, []);
+    }, [songData.id]);
     // Đoạn delete này đưa vào cái songMenu ấy, có phần delete
 
     const handleAddFavorite = async (e) => {
@@ -157,20 +209,18 @@ function Song({ songData, inPlaylist }) {
                     <BsMusicNoteBeamed />
                 </div>
                 <div>
-                    <img
-                        className="h-10 w-10 object-cover"
-                        src={`${BASE_URL}/api/song/getCover?id=${songData.id}`}
-                        alt="song-cover"
-                    />
+                    <LazyLoad height={40} width={40} threshold={0.5} place>
+                        <img className="h-10 w-10 object-cover" src={songAvatar} alt="song-cover" />
+                    </LazyLoad>
                 </div>
                 <div className="flex flex-col gap-[3px]">
-                    <span className="text-sm text-white">{songData.name}</span>
+                    <span className="text-sm text-white">{info.name}</span>
                     <span className="text-sm hover:text-[#c273ed] hover:underline">Various artist</span>
                 </div>
             </div>
             {/* Content Part */}
             <div className="flex-1 text-sm">
-                <p>{songData.description} (Single)</p>
+                <p>{info.description} (Single)</p>
             </div>
 
             {/* Right Part: time and actions */}

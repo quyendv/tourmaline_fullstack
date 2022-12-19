@@ -82,10 +82,8 @@ function Profile() {
             username: username,
             avatar: avatarFile.current,
         };
-        console.log(finalPayload)
 
         const response = await setProfile(finalPayload, token);
-        console.log(response);
 
         // console.log(userInfo);
         // Update bio text when profile is successfully updated

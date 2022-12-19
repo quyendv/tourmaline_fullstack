@@ -1,10 +1,14 @@
 // import { apiLogin } from '~/services/auth';
+import { useSelector } from "react-redux";
 import {apiLogin, apiRegister} from "../../services/auth";
 import {actionTypes} from '../actions/actionTypes'
 
-export const login = (payload) => async (dispatch) => {
+export const login = (payload, setIsLoadingLogin) => async (dispatch) => {
+    // const {setIsLoadingLogin} = useSelector(state => state.actions)
     try {
+        setIsLoadingLogin(false)
         const response = await apiLogin(payload);
+        setIsLoadingLogin(true)
         console.log(response)
         if (response.data != null) {
             dispatch({

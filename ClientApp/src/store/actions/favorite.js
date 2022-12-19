@@ -10,3 +10,7 @@ export const removeFavorite = (id) => ({
     type: actionTypes.REMOVE_FAVORITE,
     id
 })
+export const fetchFavorite = (data) => ({
+    type: actionTypes.FETCH_FAVORITE,
+    data
+})
