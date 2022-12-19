@@ -123,31 +123,41 @@ function Song({ songData, inPlaylist }) {
     }, []);
     useEffect(() => {
         let indexOfMenu = -1;
+
+        console.log(Array.isArray(songMenu) + " line: 127");
+
+        Array.isArray(songMenu) &&
         songMenu.forEach((item, index) => {
             if (item.type == 'editSong') {
                 indexOfMenu = index;
             }
-        });
+         });
+        const arr = songMenu;
+        console.log(arr)
+        console.log(songMenu + "line: 134")
         if (indexOfMenu != -1) {
             if (songMenu[indexOfMenu].songAvatar != songAvatar) {
                 const newArr = songMenu;
                 newArr[indexOfMenu].songAvatar = songAvatar;
                 setSongMenu(newArr);
+               
             }
             if (songMenu[indexOfMenu].setInfo != setInfo) {
                 const newArr = songMenu;
                 newArr[indexOfMenu].setInfo = setInfo;
                 setSongMenu(newArr);
-                console.log(newArr[indexOfMenu].setInfo)
+                console.log(typeof (songMenu) +"line 144");
+                console.log(newArr[indexOfMenu].setInfo + "line 145")
                 
             }
             if (songMenu[indexOfMenu].setSongAvatar != setSongAvatar) {
                 const newArr = songMenu;
                 newArr[indexOfMenu].setSongAvatar = setSongAvatar;
                 setSongMenu(newArr);
+                console.log(typeof (songMenu));
             }
         }
-    }, [songAvatar]);
+    }, [songMenu]);
 
     useEffect(() => {
         inPlaylist &&
@@ -160,6 +170,7 @@ function Song({ songData, inPlaylist }) {
                     title: 'Remove from playlist',
                 }),
             );
+        console.log(typeof (songMenu));
         inPlaylist && songMenu.filter((item) => item.type != 'removeFromPlaylist');
         curPlaylist.forEach((item) => {
             const obj = {
@@ -170,13 +181,15 @@ function Song({ songData, inPlaylist }) {
                 title: item.name,
             };
             let indexOfMenu = -1;
+            
+            console.log(songMenu +" line: 180");
             songMenu.forEach((item, index) => {
                 if (item.type == 'addtoplaylist') {
                     indexOfMenu = index;
                 }
             });
             if (indexOfMenu != -1) {
-                console.log(indexOfMenu)
+                console.log(indexOfMenu + "line: 187")
                 if (!songMenu[indexOfMenu].children.data.some((item) => item.id === obj.id)) {
                     const newArr = songMenu;
                     newArr[indexOfMenu].children.data.push(obj);
