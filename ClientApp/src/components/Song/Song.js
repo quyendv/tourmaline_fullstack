@@ -250,13 +250,13 @@ function Song({ songData, inPlaylist, pid }) {
                     </span>
                 </div>
                 <div className="flex flex-col gap-[3px]">
-                    <span className="text-sm text-white">{info.name}</span>
+                    <span className="text-sm text-white">{`${info.name.length > 30 ? `${info.name.slice(0,30)}...` : `${ info.name}`}`}</span>
                     <span className="text-sm hover:text-[#c273ed] hover:underline">Various artist</span>
                 </div>
             </div>
             {/* Content Part */}
             <div className="flex-1 text-sm">
-                <p>{info.description} (Single)</p>
+                <p>{`${info.description.length > 30 ? `${info.description.slice(0,30)}...` : `${ info.description}`}`} (Single)</p>
             </div>
 
             {/* Right Part: time and actions */}
