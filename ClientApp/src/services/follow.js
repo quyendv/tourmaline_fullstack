@@ -36,14 +36,14 @@ export const unFollow = (username, token) => new Promise(async(resolve, reject) 
         reject(error)
     }
 })
-export const getFollowers = (token) => new Promise(async(resolve, reject) => {
+export const getFollowers = (username) => new Promise(async(resolve, reject) => {
     try {
         const response = await axiosConfig({
             url:'api/follow/followers',
             method:'get',
 
-            headers: {
-                'Authorization' :`Bearer ${token}`,
+            params:{
+                username
             }
             
         })
@@ -53,14 +53,13 @@ export const getFollowers = (token) => new Promise(async(resolve, reject) => {
     }
 })
 
-export const getFollowings = (token) => new Promise(async(resolve, reject) => {
+export const getFollowings = (username) => new Promise(async(resolve, reject) => {
     try {
         const response = await axiosConfig({
             url:'api/follow/followings',
             method:'get',
-
-            headers: {
-                'Authorization' :`Bearer ${token}`,
+            params: {
+                username
             }
             
         })

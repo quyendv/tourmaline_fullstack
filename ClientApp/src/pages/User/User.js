@@ -16,24 +16,28 @@ function User() {
     const [isFollowing, setIsFollowing] = useState(false ) 
     const [followers, setFollowers] = useState([])
     const [following, setFollowing] = useState([])
+    const[numberFollowers, setNumberFollower] = useState(0)
     useEffect(() => {
         const fetchFollowers = async () => {
-            const response = await apis.getFollowers();
+            const response = await apis.getFollowers(usernameParam);
             setFollowers(response.data)
-            console.log(followers)
-            followers.length > 0 && followers.forEach((item) => {     
-                if(item.username == username) {
-                    setIsFollowing(true)
-                }
-            })
         };
         fetchFollowers();
         const fetchFollowings = async () => {
-            const response = await apis.getFollowings();
-            console.log(response);
+            const response = await apis.getFollowings(usernameParam);
+            setFollowing(response.data)
         };
         fetchFollowings();
-    }, []);
+    }, [username]);
+    useEffect(() => {
+        followers.length > 0 && followers.forEach((item) => {   
+            console.log(item.username == username)  
+            if(item.username == username) {
+                setIsFollowing(true)
+            }
+        })
+        followers.length > 0 && setNumberFollower(followers.length)
+    }, [followers.length])
 
     useEffect(() => {
         const fetchUserInfo = async () => {
@@ -64,13 +68,17 @@ function User() {
     }, [usernameParam]);
     const handleFollow = async () => {
         if(isFollowing) {
+            setNumberFollower(prev => prev -1)
             const response = await apis.unFollow(usernameParam, token)
             followers.filter(item => item.username != username)
             setIsFollowing(prev => !prev)
             console.log(response)
         }
         if(!isFollowing) {
+            setNumberFollower(prev => prev + 1)
+            console.log(usernameParam)
             const response = await apis.follow(usernameParam, token)
+
             setIsFollowing(prev => !prev)
             console.log(response)
         }
@@ -91,7 +99,7 @@ function User() {
                     <div className="flex items-center gap-6">
                         <div className="flex flex-col">
                             <span>Followers</span>
-                            <span>{followers.length}</span>
+                            <span>{numberFollowers}</span>
                         </div>
 
                         <div className="flex flex-col border-l border-l-gray-400 pl-3">

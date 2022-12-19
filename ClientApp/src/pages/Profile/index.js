@@ -81,7 +81,7 @@ function Profile() {
     const handleChangeAvatarFileInput = (e) => {
         avatarFile.current = e.target.files[0];
         const avatarLocalLink = URL.createObjectURL(avatarFile.current);
-
+        setAvatarLink(avatarLocalLink)
         setAvatarLink(avatarLocalLink);
 
         return () => URL.revokeObjectUrl(avatarLocalLink);
