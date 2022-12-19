@@ -14,6 +14,7 @@ import LazyLoad from 'react-lazy-load';
 
 const {
     BsLink45Deg,
+    BsFillPlayFill,
     AiOutlineDownload,
     FaRegComment,
     BsMusicNoteBeamed,
@@ -229,7 +230,7 @@ function Song({ songData, inPlaylist, pid }) {
     };
     return (
         <div
-            className="Song group -mx-2 flex w-full cursor-pointer items-center border-b border-solid border-[#ffffff0d] p-[10px] text-[#ffffff80] [&>*]:px-2"
+            className="group -mx-2 flex w-full cursor-pointer items-center border-b border-solid border-[#ffffff0d] p-[10px] text-[#ffffff80] hover:bg-[#ffffff1a] [&>*]:px-2"
             onClick={() => {
                 songData.id !== curSongId && dispatch(actions.setCurSongId(songData.id));
                 dispatch(actions.play(true));
@@ -240,10 +241,13 @@ function Song({ songData, inPlaylist, pid }) {
                 <div>
                     <BsMusicNoteBeamed />
                 </div>
-                <div>
+                <div className="relative">
                     <LazyLoad height={40} width={40} threshold={0.5} place>
                         <img className="h-10 w-10 object-cover" src={songAvatar} alt="song-cover" />
                     </LazyLoad>
+                    <span className="absolute inset-0 hidden place-content-center bg-overlay-30 group-hover:grid">
+                        <BsFillPlayFill size={20} />
+                    </span>
                 </div>
                 <div className="flex flex-col gap-[3px]">
                     <span className="text-sm text-white">{info.name}</span>

@@ -12,7 +12,7 @@ function Feed() {
     useEffect(() => {
         const fetchRecentUploaded = async () => {
             const response = await apis.getRecentlyUploaded(token);
-            console.log(response)
+            console.log(response);
             setRecentlyUploaded(response.data);
         };
         fetchRecentUploaded();
@@ -22,12 +22,14 @@ function Feed() {
             <h2 className="mb-5 text-2xl">Hear the latest posts from the people you’re following:</h2>
             <div className="flex flex-col ">
                 {recentlyUploaded.map((item, index) => (
-                    <div key={index}>
+                    <div key={index} className="mb-2">
                         <span
                             onClick={() => navigate(`/user/${item.uploader}`)}
-                            className="cursor-pointer hover:underline"
-                        >{`${item.uploader} `}</span>
-                        <span>{`post a track ${moment(item.uploadTime).fromNow()} `}</span>
+                            className="cursor-pointer px-2.5 text-base font-semibold hover:text-active-color hover:underline"
+                        >{`${item.uploader}`}</span>
+                        <span className="text-sm text-[#ffffff80]">{`post a track ${moment(
+                            item.uploadTime,
+                        ).fromNow()} `}</span>
                         <div>
                             <Song songData={item}></Song>
                         </div>

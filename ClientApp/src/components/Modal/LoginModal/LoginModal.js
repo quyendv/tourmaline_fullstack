@@ -1,118 +1,43 @@
-import styles from './LoginModal.module.scss';
-import classNames from 'classnames/bind';
+import { AiOutlineClose } from 'react-icons/ai';
+import { useSelector } from 'react-redux';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import ModalWrapper from '../ModalWrapper';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
-import * as yup from 'yup';
-import { routesConfigPublicDefault } from '../../../Routes/routesConfig';
-import * as actions from '../../../store/actions';
-import { Loading } from '~/components/Load';
-
-const cx = classNames.bind(styles);
-const yupSchema = yup
-    .object({
-        username: yup.string().required('Username is required!'),
-        password: yup.string().required('Password is required!'),
-        // .matches(
-        //     /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/,
-        //     'Must contain at least 6 characters, one uppercase, one lowercase, one number and one special case character',
-        // ),
-    })
-    .required();
 
 function LoginModal() {
-    const dispatch = useDispatch();
-    const { isLoggedIn, msg } = useSelector((state) => state.auth);
+    const { setIsOpenLogginModal } = useSelector((state) => state.actions);
     const navigate = useNavigate();
-    const [isLoading, setIsLoading] = useState(false)
-    // Validate resolver
-    const {
-        register,
-        handleSubmit,
-        setError,
-        clearErrors,
-        formState: { errors },
-    } = useForm({
-        resolver: yupResolver(yupSchema),
-    });
-    useEffect(() => {
-        dispatch(actions.setLoadingLogin(setIsLoading))
-    }, [])
 
-    const handleLogin = (data) => {
-        // e.preventDefault(); // if have errors auto preventDefault
-        // K cần check object empty (errors), handleSubmit chỉ khi hết lỗi mới thực hiện hàm
-
-        dispatch(actions.logout()); // đoạn này t tưởng luôn logout trước khi vào đăng nhập rồi?
-        // console.log(data); // data form
-        dispatch(actions.login(data, setIsLoading)); // or getValue("root")
-        // console.log([isLoggedIn, msg]);
-        dispatch(actions.setUsername(data.username)); // setUsername để làm gì đây, t k thấy dispatch nó như nào??
-
-    };
-
-    useEffect(() => {
-        if (msg) {
-            setError('password', { type: 'custom', message: 'Invalid user or password' }, { shouldFocus: true });
-        } else {
-            clearErrors('password');
-            if (isLoggedIn) navigate(routesConfigPublicDefault.homeRoute);
-        }
-    }, [isLoggedIn, msg]);
     return (
         <ModalWrapper>
-            <div className={cx('login-page')}>
-                <div className={cx('login-form')}>
-                    <h2 className={cx('title')}>Login</h2>
-                    <form onSubmit={handleSubmit(handleLogin)}>
-                        {/* Username */}
-                        <div className={cx('user-box')}>
-                            <input
-                                type="text"
-                                placeholder="&nbsp;"
-                                className={cx('login-input')}
-                                {...register('username')}
-                            />
-                            <label>Username</label>
-                            {errors.username && <p className={cx('form-msg')}>{errors.username.message}</p>}
-                        </div>
-                        {/* Password */}
-                        <div className={cx('user-box')}>
-                            <input
-                                type="password"
-                                placeholder="&nbsp;"
-                                className={cx('login-input')}
-                                {...register('password')}
-                            />
-                            <label>Password</label>
-                            {errors.password && <p className={cx('form-msg')}>{errors.password.message}</p>}
-                        </div>
-                        {/* Submit btn */}
-                        <button type="submit" className={cx('login-btn')}>
-                            {!isLoading ? 'Login' : <Loading />}
-                        </button>
-                        {/* Link register */}
-                        <div className="mt-6 py-2 tracking-wide text-white">
-                            Don't have an account?{' '}
-                            <Link className={cx('register-link')} to="/register">
-                                Register now
-                            </Link>
-                        </div>
-                        {/* Forgot password */}
-                        <div className="tracking-wide">
-                            <Link to="/forgot-password" className={cx('forgot-password-link', '-ml-2')}>
-                                Forgot password?
-                            </Link>
-                        </div>
-                    </form>
+            <div className="w-[600px]">
+                <span
+                    className="absolute top-2.5 right-2.5 grid cursor-pointer place-content-center"
+                    onClick={() => {
+                        setIsOpenLogginModal(false);
+                        navigate('/');
+                    }}
+                >
+                    <AiOutlineClose size={20} />
+                </span>
+                <h3 className="mb-6 border-b border-gray-500 pb-1 text-center text-2xl font-bold">Required Login</h3>
+                <div className="">You need to be logged in to access this feature!</div>
+                <div className="mt-4 flex items-center justify-end gap-3">
+                    <Link to={'/login'} className="rounded-full bg-[#3c68ef] px-4 py-1.5 first-line:cursor-pointer">
+                        Go to Login
+                    </Link>
+                    <div
+                        className="cursor-pointer rounded-full bg-[#375174] px-4 py-1.5"
+                        onClick={() => {
+                            setIsOpenLogginModal(false);
+                            navigate('/');
+                        }}
+                    >
+                        Cancel
+                    </div>
                 </div>
             </div>
         </ModalWrapper>
     );
 }
 
-
-export default LoginModal
+export default LoginModal;

@@ -215,7 +215,7 @@ function Player({ setIsShowSidebar }) {
                     >
                         <div
                             ref={thumbRef}
-                            className="bg-activecolor absolute top-0 left-0 bottom-0 rounded-r-full rounded-l-full"
+                            className="bg-active-color absolute top-0 left-0 bottom-0 rounded-r-full rounded-l-full"
                         ></div>
                     </div>
                     <span>{moment.utc((songInfo?.duration || 0) * 1000).format('mm:ss')}</span>
