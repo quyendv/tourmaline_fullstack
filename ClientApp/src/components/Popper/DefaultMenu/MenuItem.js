@@ -36,7 +36,7 @@ function MenuItem({ data, isParent = 'false', songId, onClick = () => {} }, ref)
             dispatch(actions.logout());
             dispatch(actions.setUsername(null))
             dispatch(actions.setCurSongId(null))
-            dispatch(actions.setFavorite([]))
+            dispatch(actions.fetchFavorite([]))
             dispatch(actions.setCurPlaylist([]))
             dispatch(actions.setNextUp([]))
             dispatch(actions.setPrev([]))
@@ -111,6 +111,8 @@ function MenuItem({ data, isParent = 'false', songId, onClick = () => {} }, ref)
             setIsOpenEditPlaylistModal(prev => !prev)
             dispatch(actions.editPlaylistId(data.id))
             dispatch(actions.setPlaylistInfo(data.setPlaylistInfo))
+            dispatch(actions.playlistAvatar(data.playlistAvatar))
+            dispatch(actions.setPlaylistAvatar(data.setPlaylistAvatar))
         }
         if (!isParent) {
             ref.current._tippy.hide();

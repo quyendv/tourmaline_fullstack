@@ -11,31 +11,41 @@ function EditPlaylistModal() {
     const { setIsOpenEditPlaylistModal } = useSelector((state) => state.actions);
     const { token } = useSelector((state) => state.auth);
     const coverFile = useRef();
-    const [playlistInfo, setPlaylistInfo] = useState({ name: '', username: '', description: '', file: '' });
+    const [playlistInfoModal, setPlaylistInfoModal] = useState({ name: '', username: '', description: '', file: '' });
     const { editPlaylistId } = useSelector((state) => state.music);
-    const [coverPreview, setCoverPreview] = useState(images.defaultCoverPlaylist);
+    const { playlistAvatar, setPlaylistInfo, setPlaylistAvatar } = useSelector((state) => state.actions);
+    const [coverPreview, setCoverPreview] = useState(playlistAvatar);
 
     useEffect(() => {
-        const fetchPlaylistInfo = async () => {
+        const fetchPlaylistInfoModal = async () => {
             const response = await apis.getPlaylist(editPlaylistId, token);
 
-            setPlaylistInfo(response.data);
+            setPlaylistInfoModal(response.data);
         };
-        fetchPlaylistInfo();
+        fetchPlaylistInfoModal();
     }, [editPlaylistId]);
 
     const handleEdit = async () => {
         const finalPayload = {
             id: editPlaylistId,
-            name: playlistInfo.name,
-            description: playlistInfo.description,
+            name: playlistInfoModal.name,
+            description: playlistInfoModal.description,
             file: coverFile.current,
         };
         const editPlaylist = async () => {
             const response = await apis.editPlaylist(finalPayload, token);
-            console.log(response);
-            if(response.status == 200) {
-                setIsOpenEditPlaylistModal(prev => !prev)
+            if (response.status == 200) {
+                setIsOpenEditPlaylistModal((prev) => !prev);
+                setPlaylistInfo((prev) => ({
+                    ...prev,
+                    name: finalPayload.name,
+                    description: finalPayload.description,
+                }));
+                if (coverFile.current) {
+                    const blob = new Blob([coverFile.current], { type: coverFile.current.type });
+                    const url = URL.createObjectURL(blob);
+                    setPlaylistAvatar(url);
+                }
             }
         };
         editPlaylist();
@@ -79,14 +89,14 @@ function EditPlaylistModal() {
                         <input
                             className="w-full rounded-md px-2 py-1.5 [border:1px_solid_#ffffff1a]"
                             placeholder="Name"
-                            value={playlistInfo.name}
-                            onChange={(e) => setPlaylistInfo((prev) => ({ ...prev, name: e.target.value }))}
+                            value={playlistInfoModal.name}
+                            onChange={(e) => setPlaylistInfoModal((prev) => ({ ...prev, name: e.target.value }))}
                         />
                         <input
                             className="w-full rounded-md px-2 py-1.5 [border:1px_solid_#ffffff1a]"
                             placeholder="Description"
-                            value={playlistInfo.description}
-                            onChange={(e) => setPlaylistInfo((prev) => ({ ...prev, description: e.target.value }))}
+                            value={playlistInfoModal.description}
+                            onChange={(e) => setPlaylistInfoModal((prev) => ({ ...prev, description: e.target.value }))}
                         />
                         {/* Confirm */}
                         <div className="mt-2 flex items-center justify-end gap-3">

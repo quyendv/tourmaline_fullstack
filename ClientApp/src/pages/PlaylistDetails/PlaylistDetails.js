@@ -40,6 +40,8 @@ function Playlist() {
             title: 'Edit',
             playlistInfo: function() {},
             setPlaylistInfo: function() {},
+            setPlaylistAvatar: function() {},
+            playlistAvatar:'',
             to: '',
         },
         {
@@ -62,12 +64,17 @@ function Playlist() {
         if(playlistMenu[1].playlistInfo != playlistInfo ) {
             const newArr = playlistMenu
             newArr[1].playlistInfo = playlistInfo
-            setPlaylistInfo(newArr)
+            setPlaylistMenu(newArr)
         }
         if(playlistMenu[1].setPlaylistInfo != setPlaylistInfo ) {
             const newArr = playlistMenu
             newArr[1].setPlaylistInfo = setPlaylistInfo
-            setPlaylistInfo(newArr)
+            setPlaylistMenu(newArr)
+        }
+        if(playlistMenu[1].setPlaylistAvatar != setPlaylistAvatar) {
+            const newArr = playlistMenu
+            newArr[1].setPlaylistAvatar = setPlaylistAvatar
+            setPlaylistMenu(newArr)
         }
     }, [])
     useEffect(() => {
@@ -84,13 +91,20 @@ function Playlist() {
             const blob = new Blob([response.data], { type: 'image/jpeg' });
             url = URL.createObjectURL(blob);
             setPlaylistAvatar(url);
+            
             return () => {
                 URL.revokeObjectURL(url);
             };
         };
         fetchAvatar();
     }, []);
-
+    useEffect(() => {
+       if( playlistMenu[1].playlistAvatar != playlistAvatar ) {
+        const newArr = playlistMenu
+        newArr[1].playlistAvatar = playlistAvatar
+        setPlaylistMenu(newArr)
+       }
+    }, [playlistAvatar])
 
     return (
         <div className="flex max-h-[calc(100vh-120px)] w-full gap-4 overflow-y-auto px-14 py-10 text-white">
