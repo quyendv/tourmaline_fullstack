@@ -122,9 +122,30 @@ function Song({ songData, inPlaylist }) {
         };
     }, []);
     useEffect(() => {
-        if (songMenu[5].songAvatar != songAvatar) {
-            const newArr = songMenu;
-            newArr[5].songAvatar = songAvatar;
+        let indexOfMenu = -1;
+        songMenu.forEach((item, index) => {
+            if (item.type == 'editSong') {
+                indexOfMenu = index;
+            }
+        });
+        if (indexOfMenu != -1) {
+            if (songMenu[indexOfMenu].songAvatar != songAvatar) {
+                const newArr = songMenu;
+                newArr[indexOfMenu].songAvatar = songAvatar;
+                setSongMenu(newArr);
+            }
+            if (songMenu[indexOfMenu].setInfo != setInfo) {
+                const newArr = songMenu;
+                newArr[indexOfMenu].setInfo = setInfo;
+                setSongMenu(newArr);
+                console.log(newArr[indexOfMenu].setInfo)
+                
+            }
+            if (songMenu[indexOfMenu].setSongAvatar != setSongAvatar) {
+                const newArr = songMenu;
+                newArr[indexOfMenu].setSongAvatar = setSongAvatar;
+                setSongMenu(newArr);
+            }
         }
     }, [songAvatar]);
 
@@ -148,20 +169,20 @@ function Song({ songData, inPlaylist }) {
                 icon: '',
                 title: item.name,
             };
-            if (!songMenu[3].children.data.some((item) => item.id === obj.id)) {
-                const newArr = songMenu;
-                newArr[3].children.data.push(obj);
-                setSongMenu(newArr);
-            }
-            if (songMenu[5].setInfo != setInfo) {
-                const newArr = songMenu;
-                newArr[5].setInfo = setInfo;
-                setSongMenu(newArr);
-            }
-            if (songMenu[5].setSongAvatar != setSongAvatar) {
-                const newArr = songMenu;
-                newArr[5].setSongAvatar = setSongAvatar;
-                setSongMenu(newArr);
+            let indexOfMenu = -1;
+            songMenu.forEach((item, index) => {
+                if (item.type == 'addtoplaylist') {
+                    indexOfMenu = index;
+                }
+            });
+            if (indexOfMenu != -1) {
+                console.log(indexOfMenu)
+                if (!songMenu[indexOfMenu].children.data.some((item) => item.id === obj.id)) {
+                    const newArr = songMenu;
+                    newArr[indexOfMenu].children.data.push(obj);
+                    setSongMenu(newArr);
+                }
+
             }
         });
     }, [songData.id]);

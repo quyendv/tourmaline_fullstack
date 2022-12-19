@@ -20,7 +20,7 @@ function MainScreen() {
     const [top50, setTop50] = useState([]);
     const [suggestion, setSuggestion] = useState([]);
     const { username } = useSelector((state) => state.user);
-    const { isLoggedin } = useSelector((state) => state.auth);
+    const { isLoggedIn } = useSelector((state) => state.auth);
 
     useEffect(() => {
         const fetchSuggestion = async () => {
@@ -30,7 +30,7 @@ function MainScreen() {
                 setSuggestion(response.data);
             }
         };
-        fetchSuggestion();
+        isLoggedIn && fetchSuggestion();
 
         const fetchNew = async () => {
             const response = await apis.getNew();
@@ -55,21 +55,21 @@ function MainScreen() {
                 setRecentlyPlayed(response.data);
             }
         };
-        fetchRecentlyPlays();
+        isLoggedIn && fetchRecentlyPlays();
         const fetchRecentlyUploaded = async () => {
             const response = await apis.getRecentlyUploaded(token);
             if (response.status === 200) {
                 console.log(response);
             }
         };
-        fetchRecentlyUploaded();
+        isLoggedIn && fetchRecentlyUploaded();
         const fetchRelatedArtists = async () => {
             const response = await apis.getRelatedArtist(token);
             if (response.status === 200) {
                 setRelatedArtists(response.data);
             }
         };
-        fetchRelatedArtists();
+        isLoggedIn && fetchRelatedArtists();
         const fetchAllPlaylist = async () => {
             const response = await apis.getAllPlaylist(token);
             if (response.status === 200) {
@@ -77,13 +77,13 @@ function MainScreen() {
             }
         };
 
-        fetchAllPlaylist();
+        isLoggedIn && fetchAllPlaylist();
         const fetchFavoriteSongs = async () => {
             const response = await apis.getFavorite(token);
             dispatch(actions.fetchFavorite(response.data.songs));
         };
 
-        fetchFavoriteSongs();
+        isLoggedIn && fetchFavoriteSongs();
     }, []);
     return (
         <div className="h-[calc(100vh-var(--header-height))] w-full overflow-y-auto px-14 pt-16 pb-24 text-white">
