@@ -5,6 +5,7 @@ import styles from './DropFile.module.scss';
 import FileItem from './FileItem';
 import { useSelector } from 'react-redux';
 import { uploadFile } from '../../services/music';
+import { Loading } from '../Load';
 
 const cx = classNames.bind(styles);
 
@@ -20,7 +21,7 @@ function DropFile({ onFileChange }) {
     const newData = useRef(); // newData is obj { audioFile: , infos: } (is child of fileList)
     const dropAreaRef = useRef(); // to css dragover
     const songDetailsRef = useRef(); // to css songInfos invalid
-
+    const [isLoading, setIsLoading] = useState(false);
     const { token } = useSelector((state) => state.auth);
 
     // --------- handle toggle class (css) -------------
@@ -66,7 +67,7 @@ function DropFile({ onFileChange }) {
                 media: audioFileRef.current.file,
                 cover: coverImgRef.current.file,
                 name: infos.songName,
-                description: infos.description
+                description: infos.description,
             };
             handleUploadAPI(finalPayload, token);
 
@@ -81,7 +82,9 @@ function DropFile({ onFileChange }) {
     }, [description, fileList, songName]);
 
     const handleUploadAPI = async (finalPayload, token) => {
+        setIsLoading(true);
         const response = await uploadFile(finalPayload, token);
+        setIsLoading(false);
         console.log(response);
     };
 
@@ -143,8 +146,9 @@ function DropFile({ onFileChange }) {
                 {/* Info */}
                 <div className={cx('song-details')} ref={songDetailsRef}>
                     <h3 className="text-2xl font-semibold max-[375px]:mb-4">The song's information</h3>
-                    <button className={cx('add')} onClick={handleAddToPreview}>
+                    <button className={cx('add', isLoading && 'loading')} onClick={handleAddToPreview}>
                         Upload
+
                     </button>
 
                     <div className={cx('song-info')}>

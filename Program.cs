@@ -28,10 +28,10 @@ var connHostNameEnv = Environment.GetEnvironmentVariable("MYSQL_SERVICE_HOST");
 var connHostPortEnv = Environment.GetEnvironmentVariable("MYSQL_SERVICE_PORT");
 
 var connString = $"Server={connHostNameEnv ?? "localhost"};" +
-                 $"User ID=root;Password=password;" +
+                 $"User ID=root;Password=123321asdson;" +
                  $"Port={connHostPortEnv ?? "3306"};" +
-                 $"Database=tourmaline;" +
-                 $"TlsCipherSuites=TLS_DHE_RSA_WITH_AES_256_GCM_SHA384";
+                 $"Database=tourmaline;";
+                 
 
 var database = new Database(connString);
 services.AddSingleton(_ => database);
