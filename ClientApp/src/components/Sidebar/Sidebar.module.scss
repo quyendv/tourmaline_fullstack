@@ -16,8 +16,7 @@
     &:has(.menu-toggle.active) {
         width: var(--sidebar-width-small);
         .logo {
-            --transform-translate-x: -0.5rem;
-            transform: translateX(--transform-translate-x);
+            transform: translateX(-0.5rem);
             // @apply -translate-x-2;
         }
         .logo .app-name,
