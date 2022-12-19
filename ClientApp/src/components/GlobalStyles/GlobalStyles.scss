@@ -68,7 +68,7 @@ html *::-webkit-scrollbar-track {
     background-color: rgba(0, 0, 0, 0);
 }
 
-input[type="date"]::-webkit-calendar-picker-indicator {
+input[type='date']::-webkit-calendar-picker-indicator {
     filter: invert(1);
 }
 
@@ -88,6 +88,15 @@ textarea {
 
 a {
     text-decoration: none;
+}
+
+@layer components {
+    .dark-neumorphism {
+        box-shadow: 20px 20px 40px #11243b, -20px -20px 40px #ffffff0d;
+        &:hover {
+            box-shadow: 10px 10px 20px #11243b, -10px -10px 20px #ffffff0d;
+        }
+    }
 }
 
 //fonts

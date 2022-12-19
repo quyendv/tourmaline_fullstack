@@ -4,10 +4,10 @@ import { routesConfigPublicDefault } from '../../Routes/routesConfig';
 
 function OnlyBodyLayout() {
     return (
-        <div className="h-screen w-screen bg-[var(--sidebar-bg)] text-white">
+        <div className="min-w-screen min-h-screen bg-[var(--sidebar-bg)] text-white">
             {/* Icon Home */}
             <Link
-                className="my-8 ml-4 inline-flex items-center self-start p-2 text-2xl text-[color:var(--active-color)] shadow-md hover:shadow-2xl md:ml-8 bg-[var(--main-screen-bg)]"
+                className="dark-neumorphism my-8 ml-4 inline-flex items-center self-start bg-[var(--main-screen-bg)] p-2 text-2xl text-[color:var(--active-color)] md:ml-8"
                 to={routesConfigPublicDefault.homeRoute}
             >
                 <LogoIcon />
